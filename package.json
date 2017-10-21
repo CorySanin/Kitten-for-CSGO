@@ -1,0 +1,22 @@
+{
+  "name": "Kitten",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "",
+  "keywords": [
+    "Mew2king",
+    "does",
+    "HOT",
+    "boobie",
+    "drugs"
+  ],
+  "author": "Cory \"WORM\"",
+  "license": "?",
+  "devDependencies": {
+    "electron": "~1.7.9"
+  }
+}

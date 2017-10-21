@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Kitten</title>
+    <script>
+      const ipc = require('electron').ipcRenderer
+      ipc.on('command', function (event, message) {
+        document.getElementById('h1').innerHTML = `WOW: ${message}`
+      })
+      ipc.on('mvp', function (event, message) {
+        document.getElementById("wow").play()
+      })
+    </script>
+  </head>
+  <body>
+    <h1 id="h1">Hello World!</h1>
+    <audio controls id="wow">
+      <source src="audio/croint/roundmvpanthem_01.mp3" type="audio/mpeg">
+    </audio>
+  </body>
+</html>
