@@ -151,7 +151,7 @@ function updateRoundNum(data){
 }
 
 function updateTeam(data){
-  if(parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid){
+  if(data.player.hasOwnProperty('steamid') && data.player.steamid == steamid){
     if(data.hasOwnProperty('player') && data.player.hasOwnProperty('team'))
       teamCT = data.player.team == 'CT'
   }
