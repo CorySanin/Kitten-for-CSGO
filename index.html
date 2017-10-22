@@ -27,22 +27,7 @@
 
       ipc.on('command', function (event, message) {
         console.log(message)
-        if(message != state){
-          if(message == 'mvp'){
-            let player = getPlayer(getKitPath()+'roundmvpanthem_01'+audioExt)
-            player.oncanplay = function(){
-              player.play()
-            }
-            player.onpause  = function(){
-              state = ''
-            }
-            player.load()
-          }
-          else {
-            console.log('if you\'re seeing this, javascript determined that '+message+' != mvp')
-          }
-          state = message
-        }
+        doCommand(message)
       })
 
       function init(){
@@ -77,6 +62,20 @@
         })
       }
 
+      //returns the current audio player
+      function getCurPlayer(){
+        let elId = null
+        if(curPlayer){
+          elId = 'player1'
+        }
+        else {
+          elId = 'player0'
+        }
+        return document.getElementById(elId)
+      }
+
+      //sets up and returns the next audio player.
+      //src: the audio to play
       function getPlayer(src){
         let elId = null
         if(curPlayer){
@@ -119,6 +118,60 @@
         }
 
         return kitSelect.value + dirSep
+      }
+
+      function doCommand(message){
+        if(message != state){
+          if(message == 'mvp'){
+            let player = getPlayer(getKitPath()+'roundmvpanthem_01'+audioExt)
+            player.oncanplay = function(){
+              player.play()
+            }
+            player.load()
+          }
+          else if (message == 'test') {
+            if(state == 'mvp'){
+              fadeOut(getCurPlayer())
+            }
+          }
+          else {
+            console.log('if you\'re seeing this, javascript determined that '+message+' != mvp')
+          }
+          state = message
+        }
+      }
+
+      //heavily inspired by fade.js by miohtama
+      //ramp() is is almost identical to original implementation
+      //https://github.com/miohtama/Krusovice/blob/master/src/tools/fade.js
+      function fadeOut(player)
+      {
+        if(player != null){
+          let oVol = player.volume
+          if(oVol != 0){
+            let timeToFade = 500
+            let tick = 50
+
+            let volumeStep = oVol / (timeToFade / tick)
+
+            function ramp() {
+              let vol = Math.max(0, player.volume - volumeStep)
+
+              player.volume = vol
+
+              // Have we reached target volume level yet?
+              if(player.volume > 0) {
+                // Keep up going until 11
+                setTimeout(ramp, tick)
+              } else {
+                player.pause()
+                // Reset audio volume so audio can be played again
+                player.volume = orignalVolume
+              }
+            }
+            ramp()
+          }
+        }
       }
     </script>
   </head>
