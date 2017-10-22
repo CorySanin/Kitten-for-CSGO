@@ -81,23 +81,35 @@ let server = http.createServer( function(req, res) {
         if(parsed.hasOwnProperty('auth') && parsed.auth.hasOwnProperty('token') &&
             parsed.auth.token == 'WooMeowWoo') {
           delete parsed.auth
-          console.log("POST payload: \n")
+          console.log("\nPOST payload:")
           console.log(parsed)
-          if(parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid){
-            console.log('steam id matched')
-            if(parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats != NaN){
-              if(parsed.player.match_stats.mvps > mvps){
-                if(parsed.round.phase == 'over') {
-                  console.log('sending an mvp')
-                  mainWindow.send('command', 'mvp')
+          if(parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')){
+            if(parsed.round.phase == 'freezetime' || parsed.round.phase == 'live'){
+              console.log('sending a '+parsed.round.phase)
+              mainWindow.send('command', parsed.round.phase)
+            }
+            else if(parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid){
+              if(parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats != NaN){
+                if(parsed.player.match_stats.mvps > mvps){
+                  if(parsed.round.phase == 'over') {
+                    console.log('sending an mvp')
+                    mainWindow.send('command', 'mvp')
+                  }
+                  mvps = parsed.player.match_stats.mvps
                 }
-                mvps = parsed.player.match_stats.mvps
-              }
-              else if(parsed.player.match_stats.mvps < mvps){
-                console.log('node.js says that '+parsed.player.match_stats.mvps+'<'+mvps)
-                mvps = 0
+                else if(parsed.player.match_stats.mvps < mvps){
+                  console.log('node.js says that '+parsed.player.match_stats.mvps+'<'+mvps)
+                  mvps = 0
+                }
               }
             }
+            else {
+              console.log('steam id did not match.')
+            }
+          }
+          else if(parsed.player.hasOwnProperty('activity') && parsed.player.activity == 'menu'){
+            console.log('sending a menu')
+            mainWindow.send('command', 'menu')
           }
         }
       	res.end( '' )

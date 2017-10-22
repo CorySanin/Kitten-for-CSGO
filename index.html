@@ -20,6 +20,8 @@
       let dirSep = '/'
       let audioDir = ''
       let audioExt = '.meow'
+      let roundActionFlag = false
+      let roundActionPlayer = null
 
       ipc.on('message', function (event, message) {
         console.log(`Message from main: ${message}`)
@@ -62,6 +64,11 @@
         })
       }
 
+      //returns the volume to be used by all audio elements
+      function getVolume(){
+        return document.getElementById('volSlider').value
+      }
+
       //returns the current audio player
       function getCurPlayer(){
         let elId = null
@@ -96,6 +103,7 @@
         srcel.src = src.replace(/\\/g,'/')
 
         let plyr = document.getElementById(elId)
+        plyr.volume = getVolume()
 
         plyr.appendChild(srcel)
 
@@ -129,27 +137,68 @@
             }
             player.load()
           }
-          else if (message == 'test') {
-            if(state == 'mvp'){
-              fadeOut(getCurPlayer())
+          else if (message == 'freezetime') {
+            fadeOut(getCurPlayer(),500)
+            let roundnum = Math.floor((Math.random() * 3) + 1)
+            roundActionFlag = true
+            loopAudio('startround_0'+roundnum,message,true,function(){
+              if(state == 'live'){
+                let liveplayer = getPlayer(getKitPath()+'startaction_0'+roundnum+audioExt)
+                liveplayer.oncanplay = function(){
+                  if(roundActionFlag)
+                    liveplayer.play()
+                }
+                liveplayer.load
+              }
+            })
+          }
+          else if (message == 'live') {
+            if(state == 'menu'){
+              fadeOut(getCurPlayer(),1000)
+            }
+            if(roundActionFlag){
+
+              setTimeout(function(){
+                roundActionFlag = false
+                fadeOut(getCurPlayer(),3500)
+              },8500)
             }
           }
-          else {
-            console.log('if you\'re seeing this, javascript determined that '+message+' != mvp')
+          else if (message == 'menu'){
+            fadeOut(getCurPlayer(),500)
+            loopAudio('mainmenu',message,true,function(){
+            })
           }
           state = message
         }
       }
 
+      function loopAudio(audfile,loopstate,doFadeIn,func){
+        let player = getPlayer(getKitPath()+audfile+audioExt)
+        player.oncanplay = function(){
+          setTimeout(function(){
+            if(state == loopstate){
+              loopAudio(audfile,loopstate,false,func)
+            }
+            else{
+              func()
+            }
+          },player.duration * 1000 - 25)
+          if(doFadeIn){
+            fadeIn(player)
+          }
+          player.play()
+        }
+        player.load()
+      }
+
       //heavily inspired by fade.js by miohtama
       //ramp() is is almost identical to original implementation
       //https://github.com/miohtama/Krusovice/blob/master/src/tools/fade.js
-      function fadeOut(player)
-      {
+      function fadeOut(player,timeToFade){
         if(player != null){
           let oVol = player.volume
           if(oVol != 0){
-            let timeToFade = 500
             let tick = 50
 
             let volumeStep = oVol / (timeToFade / tick)
@@ -159,18 +208,41 @@
 
               player.volume = vol
 
-              // Have we reached target volume level yet?
               if(player.volume > 0) {
-                // Keep up going until 11
                 setTimeout(ramp, tick)
               } else {
                 player.pause()
-                // Reset audio volume so audio can be played again
-                player.volume = orignalVolume
+                player.volume = oVol
               }
             }
             ramp()
           }
+        }
+      }
+
+      //starts volume at 0 and goes up to full volume
+      //modified from fadeOut()
+      //Thanks again to miohtama for fade.js
+      function fadeIn(player){
+        if(player != null){
+          player.volume = 0
+          let destination = getVolume()
+          let timeToFade = 1000
+          let tick = 50
+
+          let volumeStep = destination / (timeToFade / tick)
+
+          function ramp() {
+            let vol = Math.min(destination, player.volume + volumeStep)
+
+            player.volume = vol
+
+            // Have we reached target volume level yet?
+            if(player.volume < destination) {
+              setTimeout(ramp, tick)
+            }
+          }
+          ramp()
         }
       }
     </script>
@@ -178,6 +250,8 @@
   <body onload="init()">
     <div>
       <h1 id="h1">CS:GO Kitten</h1>
+      <label for="volSlider">Volume</label><br/>
+      <input type="range" id="volSlider" min="0" max="1" step=".05" value=".5"/><br/>
       <label for="kit">Music Pack: </label><select id="kit">
       </select>
       <!--<button>Open music directory</button>-->
