@@ -26,12 +26,15 @@
       })
 
       ipc.on('command', function (event, message) {
+        console.log(message)
         if(message != state){
-          console.log(message)
           if(message == 'mvp'){
             let player = getPlayer(getKitPath()+'roundmvpanthem_01'+audioExt)
             player.oncanplay = function(){
               player.play()
+            }
+            player.onpause  = function(){
+              state = ''
             }
             player.load()
           }
