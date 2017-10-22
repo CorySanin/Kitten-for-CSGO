@@ -84,7 +84,11 @@ let server = http.createServer( function(req, res) {
           console.log("\nPOST payload:")
           console.log(parsed)
           if(parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')){
-            if(parsed.round.phase == 'freezetime' || parsed.round.phase == 'live'){
+            if(parsed.round.hasOwnProperty('bomb') && parsed.round.bomb == 'planted'){
+              console.log('sending a planted')
+              mainWindow.send('command', 'planted')
+            }
+            else if(parsed.round.phase == 'freezetime' || parsed.round.phase == 'live'){
               console.log('sending a '+parsed.round.phase)
               mainWindow.send('command', parsed.round.phase)
             }
