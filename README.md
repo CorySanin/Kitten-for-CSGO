@@ -1,1 +1,1 @@
-# kitten-for-csgo
+# Music Kitten for CS:GO
