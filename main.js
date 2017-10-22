@@ -17,8 +17,9 @@ const url = require('url')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-let steamid = '76561198020996622'
+let steamid = ''
 let mvps = 0
+let teamCT = false
 
 function createWindow () {
   // Create the browser window.
@@ -81,6 +82,9 @@ let server = http.createServer( function(req, res) {
         if(parsed.hasOwnProperty('auth') && parsed.auth.hasOwnProperty('token') &&
             parsed.auth.token == 'WooMeowWoo') {
           delete parsed.auth
+          getSteamID(parsed)
+          updateRoundNum(parsed)
+          updateTeam(parsed)
           console.log("\nPOST payload:")
           console.log(parsed)
           if(parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')){
@@ -92,23 +96,29 @@ let server = http.createServer( function(req, res) {
               console.log('sending a '+parsed.round.phase)
               mainWindow.send('command', parsed.round.phase)
             }
-            else if(parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid){
-              if(parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats != NaN){
-                if(parsed.player.match_stats.mvps > mvps){
-                  if(parsed.round.phase == 'over') {
-                    console.log('sending an mvp')
-                    mainWindow.send('command', 'mvp')
+            else if(parsed.round.phase == 'over'){
+              if(parsed.round.hasOwnProperty('win_team')){
+                let teamname = (teamCT)? 'CT':'T'
+                let comSend = 'lose'
+                if(parsed.round.win_team == teamname){
+                  comSend = 'win'
+                  if(parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid){
+                    if(parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats.mvps != NaN){
+                      if(parsed.player.match_stats.mvps > mvps){
+                        comSend = 'mvp'
+                      }
+                      mvps = parsed.player.match_stats.mvps
+                    }
                   }
-                  mvps = parsed.player.match_stats.mvps
                 }
-                else if(parsed.player.match_stats.mvps < mvps){
-                  console.log('node.js says that '+parsed.player.match_stats.mvps+'<'+mvps)
-                  mvps = 0
-                }
+                console.log('sending a '+comSend)
+                mainWindow.send('command', comSend)
               }
             }
-            else {
-              console.log('steam id did not match.')
+            else if(parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid){
+              if(parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats != NaN){
+                mvps = parsed.player.match_stats.mvps
+              }
             }
           }
           else if(parsed.player.hasOwnProperty('activity') && parsed.player.activity == 'menu'){
@@ -117,7 +127,7 @@ let server = http.createServer( function(req, res) {
           }
         }
       	res.end( '' )
-        mainWindow.send('message', parseInt(mvps))
+        //mainWindow.send('message', parseInt(mvps))
       })
     }
     else
@@ -129,6 +139,23 @@ let server = http.createServer( function(req, res) {
     }
 
 })
+
+function getSteamID(data){
+  if(data.hasOwnProperty('provider') && data.provider.hasOwnProperty('steamid'))
+    steamid = data.provider.steamid
+}
+
+function updateRoundNum(data){
+  if(data.hasOwnProperty('map') && data.map.hasOwnProperty('round'))
+    mainWindow.send('roundNum', data.map.round)
+}
+
+function updateTeam(data){
+  if(parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid){
+    if(data.hasOwnProperty('player') && data.player.hasOwnProperty('team'))
+      teamCT = data.player.team == 'CT'
+  }
+}
 
 server.listen(port, host)
 console.log('Listening at http://' + host + ':' + port)

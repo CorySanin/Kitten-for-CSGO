@@ -22,6 +22,7 @@
       let audioExt = '.meow'
       let roundActionFlag = false
       let roundActionPlayer = null
+      let bombPlantFlag = false
 
       ipc.on('message', function (event, message) {
         console.log(`Message from main: ${message}`)
@@ -137,6 +138,7 @@
               player.play()
             }
             player.load()
+            message = 'win'
           }
           else if (message == 'freezetime') {
             fadeOut(getCurPlayer(),500)
@@ -170,9 +172,19 @@
             loopAudio('mainmenu',message,true,function(){
             })
           }
+          else if (message == 'win' || message == 'lose') {
+            fadeOut(getCurPlayer(),500)
+            let roundendtrack = (message == 'win')?'wonround':'lostround'
+            let player = getPlayer(getKitPath()+roundendtrack+audioExt)
+            player.oncanplay = function(){
+              player.play()
+            }
+            player.load()
+          }
           else if (message == 'planted' && state != '10sec'){
             loopAudio('bombplanted',message,false,function(){
               if(state == '10sec'){
+                bombPlantFlag = false
                 let player = getPlayer(getKitPath()+'bombtenseccount'+audioExt)
                 player.oncanplay = function(){
                   player.play()
@@ -184,8 +196,13 @@
             setTimeout(function(){
               if(state == message){
                 state = '10sec'
+                bombPlantFlag = true
               }
             },offset)//start 10 second countdown in 30 seconds
+          }
+          else if(state == '10sec'){
+            if(bombPlantFlag)
+              message = state
           }
           state = message
         }
