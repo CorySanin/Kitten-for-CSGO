@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 960 960" style="enable-background:new 0 0 960 960;" xml:space="preserve">
+<style type="text/css">
+	.st0{opacity:0.15;}
+	.st1{fill:url(#SVGID_1_);}
+	.st2{fill:url(#SVGID_2_);}
+	.st3{fill:url(#SVGID_3_);}
+	.st4{fill:#FFFFFF;}
+</style>
+<g id="Frame">
+	<g id="shadow" class="st0">
+		<circle cx="480" cy="480" r="464"/>
+	</g>
+	<g id="frame">
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="480" y1="23.5983" x2="480" y2="936.4017">
+			<stop  offset="0" style="stop-color:#FFFFFF"/>
+			<stop  offset="1" style="stop-color:#D9D9D9"/>
+		</linearGradient>
+		<circle class="st1" cx="480" cy="480" r="456.4"/>
+	</g>
+</g>
+<g id="Background">
+	<g id="background">
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="480" y1="59" x2="480" y2="901">
+			<stop  offset="0" style="stop-color:#FF5E7D"/>
+			<stop  offset="1" style="stop-color:#FF2D55"/>
+		</linearGradient>
+		<circle class="st2" cx="480" cy="480" r="421"/>
+	</g>
+	<g id="inner-shadow">
+		<radialGradient id="SVGID_3_" cx="480" cy="480" r="421" gradientUnits="userSpaceOnUse">
+			<stop  offset="0.8705" style="stop-color:#000000;stop-opacity:0"/>
+			<stop  offset="0.9822" style="stop-color:#000000;stop-opacity:0.2587"/>
+			<stop  offset="1" style="stop-color:#000000;stop-opacity:0.3"/>
+		</radialGradient>
+		<circle class="st3" cx="480" cy="480" r="421"/>
+	</g>
+</g>
+<g id="mitten-the-kitten">
+	<g id="ears">
+		<path id="ear" class="st4" d="M225,209l21,186l170-109L225,209z M245.7,235l137.6,55.5L260.8,369L245.7,235z"/>
+		<path id="ear_1_" class="st4" d="M544,286l170,109l21-186L544,286z M699.2,369l-122.5-78.5L714.3,235L699.2,369z"/>
+	</g>
+	<g id="pupils">
+		<ellipse id="pupil_3_" class="st4" cx="380.5" cy="444.5" rx="9.5" ry="25.5"/>
+		<ellipse id="pupil_2_" class="st4" cx="579.5" cy="444.5" rx="9.5" ry="25.5"/>
+	</g>
+	<g id="head">
+		<path class="st4" d="M480,245c-146.4,0-265,118.6-265,265s118.6,265,265,265s265-118.6,265-265S626.4,245,480,245z M345,444.5
+			c0-19.6,15.9-35.5,35.5-35.5s35.5,15.9,35.5,35.5c0,19.6-15.9,35.5-35.5,35.5S345,464.1,345,444.5z M533,653.8
+			c-1.5,0-3.1-0.1-4.6-0.2c-23.5-1.7-40.6-16.3-48.4-24.5c-7.9,8.2-24.9,22.8-48.4,24.5c-1.5,0.1-3.1,0.2-4.6,0.2
+			c-20.4,0-40.6-9.9-60.2-29.5l8.5-8.5c18.5,18.5,37.1,27.2,55.3,25.9c26.8-1.9,44.4-25,44.6-25.2l4.8,3.6l-45.7-79.1h91.4L480,620
+			l4.8-3.6c0.2,0.2,17.8,23.3,44.6,25.2c18.3,1.3,36.9-7.4,55.3-25.9l8.5,8.5C573.6,643.9,553.4,653.8,533,653.8z M579.5,480
+			c-19.6,0-35.5-15.9-35.5-35.5c0-19.6,15.9-35.5,35.5-35.5s35.5,15.9,35.5,35.5C615,464.1,599.1,480,579.5,480z"/>
+		<polygon class="st4" points="480,620 480,620 480,620 480,620 		"/>
+	</g>
+</g>
+</svg>
