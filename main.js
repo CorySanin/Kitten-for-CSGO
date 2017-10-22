@@ -1,7 +1,7 @@
 const electron = require('electron')
 const http = require('http')
 const fs = require('fs')
-const ipc = require('electron').ipcMain
+const ipc = electron.ipcMain
 
 const port = 8793
 const host = '127.0.0.1'
@@ -25,7 +25,7 @@ let teamCT = false
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600, icon:
-  (os.platform() == 'win32')?'static\\icon\\icon.ico':'static/icon/icon.svg'})
+  (os.platform() == 'win32')?'static\\icon\\icon.ico':'static/icon/icon_512.png'})
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

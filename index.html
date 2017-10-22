@@ -4,11 +4,21 @@
     <meta charset="UTF-8">
     <title>Kitten</title>
     <script src="player.js"></script>
+    <style>
+      body{
+        background-color:#212121;
+        color:#fff;
+        font-family: sans-serif;
+      }
+      div{
+        line-height: 1.5em;
+      }
+    </style>
   </head>
   <body onload="init()">
     <div>
       <h1 id="h1">CS:GO Kitten</h1>
-      <label for="volSlider">Volume</label><br/>
+      <label for="volSlider">Volume: </label>
       <input type="range" id="volSlider" min="0" max="1" step=".05" value=".5"/><br/>
       <label for="kit">Music Pack: </label><select id="kit">
       </select>

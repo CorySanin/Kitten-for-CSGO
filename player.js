@@ -37,7 +37,11 @@ function init(){
   audioDir = 'audio'+dirSep
 
   //event listeners
-  //document.getElementById('kit').onchange = event =>
+  document.getElementById('volSlider').oninput = function(){
+    let curplay = getCurPlayer()
+    if(curplay != null)
+      curplay.volume = document.getElementById('volSlider').value
+  }
   //end event listeners
 
   //from https://stackoverflow.com/a/24594123/1317558
@@ -90,8 +94,7 @@ function getPlayer(src){
   }
   let containerEl = document.getElementById(elId+'Holder')
 
-  containerEl.innerHTML = '<audio controls id="'+elId+'">'
-  //containerEl.innerHTML += '<source src="'+src.replace(/\\/g,'/')+'"/>'
+  containerEl.innerHTML = '<audio id="'+elId+'">'
   containerEl.innerHTML += '</audio>'
 
   let srcel = document.createElement('SOURCE')
@@ -152,6 +155,9 @@ function doCommand(message){
     else if (message == 'live') {
       if(state == 'menu'){
         fadeOut(getCurPlayer(),1000)
+      }
+      else if(state == 'mvp'|| state == 'win' || state == 'lose'){
+        message = state
       }
       if(roundActionFlag){
 
