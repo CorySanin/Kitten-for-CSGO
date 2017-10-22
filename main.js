@@ -89,7 +89,7 @@ let server = http.createServer( function(req, res) {
               if(parsed.player.match_stats.mvps > mvps){
                 if(parsed.round.phase == 'over') {
                   console.log('sending an mvp')
-                  mainWindow.send('mvp', 'do it')
+                  mainWindow.send('command', 'mvp')
                 }
                 mvps = parsed.player.match_stats.mvps
               }
@@ -101,7 +101,7 @@ let server = http.createServer( function(req, res) {
           }
         }
       	res.end( '' )
-        mainWindow.send('command', parseInt(mvps))
+        mainWindow.send('message', parseInt(mvps))
       })
     }
     else

@@ -5,18 +5,130 @@
     <title>Kitten</title>
     <script>
       const ipc = require('electron').ipcRenderer
+      const fs = require('fs')
+      const path = require('path')
+      //const shell = require('electron').shell
+      const os = require('os')
+
+      let isDirectory = null
+      let getDirectories = null
+      let getFiles = null
+
+      let kitSelect = null
+      let curPlayer = 1
+      let state = ''
+      let dirSep = '/'
+      let audioDir = ''
+      let audioExt = '.meow'
+
+      ipc.on('message', function (event, message) {
+        console.log(`Message from main: ${message}`)
+      })
+
       ipc.on('command', function (event, message) {
-        document.getElementById('h1').innerHTML = `WOW: ${message}`
+        if(message != state){
+          console.log(message)
+          if(message == 'mvp'){
+            let player = getPlayer(getKitPath()+'roundmvpanthem_01'+audioExt)
+            player.oncanplay = function(){
+              player.play()
+            }
+            player.load()
+          }
+          else {
+            console.log('if you\'re seeing this, javascript determined that '+message+' != mvp')
+          }
+          state = message
+        }
       })
-      ipc.on('mvp', function (event, message) {
-        document.getElementById("wow").play()
-      })
+
+      function init(){
+        kitSelect = document.getElementById('kit')
+
+        if(os.platform() == 'win32'){
+          dirSep = '\\'
+        }
+
+        audioDir = 'audio'+dirSep
+
+        //event listeners
+        //document.getElementById('kit').onchange = event =>
+        //end event listeners
+
+        //from https://stackoverflow.com/a/24594123/1317558
+        isDirectory = source => fs.lstatSync(source).isDirectory()
+        getDirectories = source =>
+          fs.readdirSync(source).map(name => path.join(source, name)).filter(isDirectory)
+
+        getFiles = source =>
+          fs.readdirSync(source).map(name => path.join(source, name)).filter
+          (source => !fs.lstatSync(source).isDirectory())
+
+        getDirectories(audioDir).forEach(function(element) {
+          let dir = element.split(dirSep)
+          dir = dir[dir.length -1]
+          let op = document.createElement('OPTION')
+          op.text = dir
+          op.value = element
+          kitSelect.options.add(op)
+        })
+      }
+
+      function getPlayer(src){
+        let elId = null
+        if(curPlayer){
+          curPlayer = 0
+          elId = 'player0'
+        }
+        else {
+          curPlayer++
+          elId = 'player1'
+        }
+        let containerEl = document.getElementById(elId+'Holder')
+
+        containerEl.innerHTML = '<audio controls id="'+elId+'">'
+        //containerEl.innerHTML += '<source src="'+src.replace(/\\/g,'/')+'"/>'
+        containerEl.innerHTML += '</audio>'
+
+        let srcel = document.createElement('SOURCE')
+        srcel.src = src.replace(/\\/g,'/')
+
+        let plyr = document.getElementById(elId)
+
+        plyr.appendChild(srcel)
+
+        return document.getElementById(elId)
+      }
+
+      function getKitPath(){
+        let files = getFiles(kitSelect.value)
+        let exts = []
+        for(let i=0; i<files.length; i++){
+          let ext = files[i].split('.')
+          ext = ext[ext.length - 1]
+          if(typeof exts[ext] !== 'undefined'){
+            audioExt = '.'+ext
+            break;
+          }
+          else{
+            exts[ext] = 1
+          }
+        }
+
+        return kitSelect.value + dirSep
+      }
     </script>
   </head>
-  <body>
-    <h1 id="h1">Hello World!</h1>
-    <audio controls id="wow">
-      <source src="audio/croint/roundmvpanthem_01.mp3" type="audio/mpeg">
-    </audio>
+  <body onload="init()">
+    <div>
+      <h1 id="h1">CS:GO Kitten</h1>
+      <label for="kit">Music Pack: </label><select id="kit">
+      </select>
+      <!--<button>Open music directory</button>-->
+    </div>
+    <div id="player0Holder">
+    </div>
+    <div id="player1Holder">
+    </div>
   </body>
 </html>
