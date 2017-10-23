@@ -139,7 +139,6 @@ let server = http.createServer( function(req, res) {
       let html = '<html><body>Kitten HTTP Server at http://' + host + ':' + port + '</body></html>'
       res.end(html)
     }
-
 })
 
 function getSteamID(data){
@@ -159,5 +158,27 @@ function updateTeam(data){
   }
 }
 
-server.listen(port, host)
-console.log('Listening at http://' + host + ':' + port)
+ipc.on('open-kitten-dir', function (event){
+  electron.dialog.showOpenDialog({
+    properties: ['openDirectory']
+  }, function (files) {
+    if (files) event.sender.send('selected-directory', files)
+  })
+})
+
+ipc.on('dialog', function (event, message) {
+  const options = {
+    type: 'info',
+    title: 'Yo.',
+    message: message,
+    buttons: ['OK']
+  }
+  electron.dialog.showMessageBox(options, function (index) {
+    event.sender.send('information-dialog-selection', index)
+  })
+})
+
+ipc.on('start-server', function (event, port) {
+  server.listen(port, host)
+  console.log('Listening at http://' + host + ':' + port)
+})

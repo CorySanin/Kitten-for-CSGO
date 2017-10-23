@@ -34,7 +34,7 @@ function init(){
     dirSep = '\\'
   }
 
-  audioDir = 'audio'+dirSep
+  audioDir = localStorage.getItem('audioDir')
 
   //event listeners
   document.getElementById('volSlider').oninput = function(){
@@ -53,6 +53,32 @@ function init(){
     fs.readdirSync(source).map(name => path.join(source, name)).filter
     (source => !fs.lstatSync(source).isDirectory())
 
+    if(audioDir == null)
+    {
+      let msg = 'Welcome to Music Kitten! Since this is your first time, you need'
+      msg += ' to pick a folder to store everything. Put it wherever you like.'
+      alert(msg)
+      ipc.send('open-kitten-dir')
+    }
+    else {
+      scanForKits()
+      readSettings()
+      ipc.send('start-server',parseInt(document.getElementById('portNum').value))
+    }
+}
+
+ipc.on('selected-directory', function(event, path){
+  audioDir = path[0]
+  localStorage.setItem('audioDir', audioDir)
+  scanForKits()
+  readSettings()
+  ipc.send('start-server',parseInt(document.getElementById('portNum').value))
+})
+
+function scanForKits(){
+  while(kitSelect.options.length > 0){
+    kitSelect.options.remove(0)
+  }
   getDirectories(audioDir).forEach(function(element) {
     let dir = element.split(dirSep)
     dir = dir[dir.length -1]
@@ -61,6 +87,14 @@ function init(){
     op.value = element
     kitSelect.options.add(op)
   })
+}
+
+function readSettings(){
+
+}
+
+function writeSettings(){
+
 }
 
 //returns the volume to be used by all audio elements
