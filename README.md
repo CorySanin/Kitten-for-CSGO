@@ -1,5 +1,5 @@
 # Music Kitten for CS:GO
-Music Kitten, or simply Kitten, is a Electron application that plays audio
+Music Kitten, or simply Kitten, is an Electron application that plays audio
 tracks when CS:GO gives it certain cues. Essentially, this allows you to
 create and use your own music kits.
 
