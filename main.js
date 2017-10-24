@@ -2,29 +2,32 @@ const electron = require('electron')
 const http = require('http')
 const fs = require('fs')
 const ipc = electron.ipcMain
-
-const port = 8793
-const host = '127.0.0.1'
-// Module to control application life.
 const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
-
+const BrowserWindow = electron.BrowserWindow // Module to create native browser window.
 const path = require('path')
 const url = require('url')
 const os = require('os')
 
+const host = '127.0.0.1'
+
+
+const menu = new electron.Menu()
+menu.append(new electron.MenuItem({ label: 'Launch CS:GO',
+    click: function(){electron.shell.openExternal('steam://rungameid/730')}}))
+menu.append(new electron.MenuItem({ label: 'Developer Tools',
+    click: function(){mainWindow.webContents.openDevTools()}}))
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-
+let port = 8793
 let steamid = ''
 let mvps = 0
 let teamCT = false
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 500, height: 300, icon:
+  mainWindow = new BrowserWindow({width: 300, height: 450, icon:
   (os.platform() == 'win32')?'static\\icon\\icon.ico':'static/icon/icon_512.png'})
 
   // and load the index.html of the app.
@@ -70,6 +73,16 @@ app.on('activate', function () {
   }
 })
 
+app.on('browser-window-created', function (event, win) {
+  win.webContents.on('context-menu', function (e, params) {
+    menu.popup(win, params.x, params.y)
+  })
+})
+
+ipc.on('show-context-menu', function (event) {
+  const win = BrowserWindow.fromWebContents(event.sender)
+  menu.popup(win)
+})
 
 let server = http.createServer( function(req, res) {
 
@@ -160,16 +173,18 @@ function updateTeam(data){
   }
 }
 
-ipc.on('open-kitten-dir', function (event){
+ipc.on('open-kitten-dir', function (event, callback){
   electron.dialog.showOpenDialog({
     properties: ['openDirectory']
   }, function (files) {
     if (files)
-      event.sender.send('selected-directory', files)
+      event.sender.send(callback, files)
     else
-      event.sender.send('selected-directory', [])
+      event.sender.send(callback, [])
   })
 })
+
+
 
 ipc.on('dialog', function (event, message) {
   const options = {
@@ -183,7 +198,8 @@ ipc.on('dialog', function (event, message) {
   })
 })
 
-ipc.on('start-server', function (event, port) {
-  server.listen(port, host)
-  console.log('Listening at http://' + host + ':' + port)
+ipc.on('start-server', function (event, prt) {
+  server.listen(prt, host)
+  console.log('Listening at http://' + host + ':' + prt)
+  port = prt
 })

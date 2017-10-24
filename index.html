@@ -13,18 +13,23 @@
       div{
         line-height: 1.8em;
       }
+      #volSlider{
+        width:175px;
+      }
     </style>
   </head>
   <body onload="init()">
     <div>
       <h1 id="h1">CS:GO Kitten</h1>
       <label for="volSlider">Volume: </label>
-      <input type="range" id="volSlider" min="0" max="1" step=".05" value=".5"/><br/>
+      <input type="range" id="volSlider" min="0" max="1" step=".01" value=".5"/><br/>
       <label for="portNum">Port: </label><input id="portNum" type="number" value="8793"/><br/>
       <label for="kit">Music Pack: </label><select id="kit">
       </select><br/>
       <button id="dirChange">Change Main Directory</button><br/>
-      <button id="saveBtn">Save</button>
+      <button id="genConfig">Generate Config</button><br/>
+      <button id="saveBtn">Save</button><br/>
+      <img id="coverPic" width="150px" height="150px" />
     </div>
     <div id="player0Holder">
     </div>

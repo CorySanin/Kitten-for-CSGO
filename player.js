@@ -1,4 +1,5 @@
 const ipc = require('electron').ipcRenderer
+const shell = require('electron').shell
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
@@ -20,6 +21,7 @@ let volumeSlider
 let portNum
 let dirChange
 let saveBtn
+let genConfig
 
 //handles misc messages from main.js
 ipc.on('message', function (event, message) {
@@ -45,17 +47,20 @@ ipc.on('selected-directory', function(event, path){
     let msg = 'You must select a directory to store everything in. '
     msg += 'This is also where Kitten looks for music kits.'
     alert(msg)
-    ipc.send('open-kitten-dir')
+    ipc.send('open-kitten-dir','selected-directory')
   }
 })
 
 //function that is called once the page is loaded
 function init(){
+  console.log('Music Kitten for CS:GO\nVersion 1.0.0\nBy Cory Sanin')
+
   kitSelect = document.getElementById('kit')
   volumeSlider = document.getElementById('volSlider')
   portNum = document.getElementById('portNum')
   dirChange = document.getElementById('dirChange')
   saveBtn = document.getElementById('saveBtn')
+  genConfig = document.getElementById('genConfig')
 
   audioDir = localStorage.getItem('audioDir')
 
@@ -70,9 +75,11 @@ function init(){
       curplay.volume = volumeSlider.value
   }
   dirChange.onclick = function(){
-    ipc.send('open-kitten-dir')
+    ipc.send('open-kitten-dir','selected-directory')
   }
   saveBtn.onclick = writeSettings
+  genConfig.onclick = writeCSGOConfig
+  kitSelect.onchange = updateKitCover
   //end event listeners
 
   //from https://stackoverflow.com/a/24594123/1317558
@@ -90,7 +97,7 @@ function init(){
       let msg = 'Welcome to Music Kitten! Since this is your first time, you need'
       msg += ' to pick a folder to store everything. Put it wherever you like.'
       alert(msg)
-      ipc.send('open-kitten-dir')
+      ipc.send('open-kitten-dir','selected-directory')
     }
     else {
       scanForKits()
@@ -111,6 +118,7 @@ function scanForKits(){
     op.text = dir
     op.value = element
     kitSelect.options.add(op)
+    updateKitCover()
   })
 }
 
@@ -119,9 +127,27 @@ function selectKit(path){
   for(let i = 0; i< kitSelect.options.length; i++){
     if(kitSelect.options[i].value == path){
       kitSelect.options[i].selected = true
+      updateKitCover()
       return undefined
     }
   }
+}
+
+//find a cover and display it
+function updateKitCover(){
+  let path = getKitPath() + 'cover'
+  let coverPic = document.getElementById('coverPic')
+  if(fs.existsSync(path + '.jpeg')){
+    path = path + '.jpeg'
+  }
+  else if(fs.existsSync(path + '.jpg')){
+    path = path + '.jpg'
+  }
+  else{
+    coverPic.src = ''
+    return
+  }
+  coverPic.src = path
 }
 
 //Updates the current filetype and returns the selected kit location
@@ -172,8 +198,49 @@ function writeSettings(){
   conf.kit = kitSelect.value
   conf.volume = volumeSlider.value
   fs.writeFile(confFile,JSON.stringify(conf,null,'\t'),function(err) {
-    if(err) return console.error(err);
-    console.log('saved settings.');
+    if(err) return console.error(err)
+    console.log('saved settings.')
+  })
+}
+
+//Save a proper config and instructs the user to put in the correct directory
+function writeCSGOConfig(){
+  let conf = '"Kitten State API Config"\n'
+  conf += '{\n'
+  conf += ' "uri" "http://127.0.0.1:'+portNum.value+'"\n'
+  conf += ' "timeout" "5.0"\n'
+  conf += ' "buffer"  "0.1"\n'
+  conf += ' "throttle" "0.1"\n'
+  conf += ' "heartbeat" "30.0"\n'
+  conf += ' "auth"\n'
+  conf += ' {\n'
+  conf += '   "token" "WooMeowWoo"\n'
+  conf += ' }\n'
+  conf += ' "data"\n'
+  conf += ' {\n'
+  conf += '   "provider"            "1"\n'
+  conf += '   "map"                 "1"\n'
+  conf += '   "round"               "1"\n'
+  conf += '   "player_id"           "1"\n'
+  conf += '   "allplayers_id"       "1"\n'
+  conf += '   "player_state"        "1"\n'
+  conf += '   "allplayers_state"    "1"\n'
+  conf += '   "allplayers_match_stats"  "1"\n'
+  conf += '   "allplayers_weapons"  "1"\n'
+  conf += '   "player_match_stats" "1" \n'
+  conf += ' }\n'
+  conf += '}'
+
+  fs.writeFile(audioDir + dirSep + 'gamestate_integration_kitten.cfg',
+      conf,function(err) {
+    if(err){
+      return console.error(err)
+    }
+    shell.showItemInFolder(audioDir + dirSep + 'gamestate_integration_kitten.cfg')
+    console.log('Exported CS:GO config.')
+    let msg = 'Configuration successfully generated. Move it to \n'
+    msg += '[CS:GO install directory]/csgo/cfg/'
+    alert(msg)
   })
 }
 
