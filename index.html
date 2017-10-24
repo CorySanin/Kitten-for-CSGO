@@ -11,7 +11,7 @@
         font-family: sans-serif;
       }
       div{
-        line-height: 1.5em;
+        line-height: 1.8em;
       }
     </style>
   </head>
@@ -22,8 +22,9 @@
       <input type="range" id="volSlider" min="0" max="1" step=".05" value=".5"/><br/>
       <label for="portNum">Port: </label><input id="portNum" type="number" value="8793"/><br/>
       <label for="kit">Music Pack: </label><select id="kit">
-      </select>
-      <!--<button>Open music directory</button>-->
+      </select><br/>
+      <button id="dirChange">Change Main Directory</button><br/>
+      <button id="saveBtn">Save</button>
     </div>
     <div id="player0Holder">
     </div>

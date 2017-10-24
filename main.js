@@ -24,7 +24,7 @@ let teamCT = false
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600, icon:
+  mainWindow = new BrowserWindow({width: 500, height: 300, icon:
   (os.platform() == 'win32')?'static\\icon\\icon.ico':'static/icon/icon_512.png'})
 
   // and load the index.html of the app.
@@ -44,6 +44,8 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  mainWindow.setMenu(null)
 }
 
 // This method will be called when Electron has finished
@@ -162,7 +164,10 @@ ipc.on('open-kitten-dir', function (event){
   electron.dialog.showOpenDialog({
     properties: ['openDirectory']
   }, function (files) {
-    if (files) event.sender.send('selected-directory', files)
+    if (files)
+      event.sender.send('selected-directory', files)
+    else
+      event.sender.send('selected-directory', [])
   })
 })
 
