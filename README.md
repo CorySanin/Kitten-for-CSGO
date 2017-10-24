@@ -93,3 +93,6 @@ isplayed in Kitten when the kit is selected.
 
 Aside from these files, try to refrain from adding too many other files, namely
 files of a type different from the one you chose for the kit's tracks.
+
+Here's a sample music kit: 
+[Big Croint Music Kit](https://drive.google.com/open?id=0Bwif2jHEOIAdaEFqS0k2RWtzbzg)
