@@ -82,12 +82,15 @@ Inside, you'll need to have these audio files:
   \*Due to how CS:GO sends information, this won't play if you're dead and
   spectating another player. in that case, it'll just play wonround.
 
+9. cover.jpeg
+
+  (Optional) This is displayed in Kitten when the kit is selected.
+
+---
+
 You can use any file type that Chrome's audio player can play. I'd recommend
 anything that supports gapless playback (like FLAC). Also, make sure you use the
 same filetype for every track.
-
-Optionally, you can add a cover.jpeg to the music kit's folder. This is
-isplayed in Kitten when the kit is selected.
 
 Aside from these files, try to refrain from adding too many other files, namely
 files of a type different from the one you chose for the kit's tracks.
