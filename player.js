@@ -204,6 +204,9 @@ function writeSettings(){
 }
 
 //Save a proper config and instructs the user to put in the correct directory
+//Note: This is not JSON. It's very close to JSON, so a string replace and
+//      a few other modifications might work, but for now, it's just a hard
+//      coded string to print to a file as-is.
 function writeCSGOConfig(){
   let conf = '"Kitten State API Config"\n'
   conf += '{\n'
@@ -316,7 +319,6 @@ function fadeOut(player,timeToFade){
           setTimeout(ramp, tick)
         } else {
           player.pause()
-          player.volume = oVol
         }
       }
       ramp()
@@ -396,34 +398,30 @@ function doCommand(message){
     }
     else if (message == 'menu'){
       fadeOut(getCurPlayer(),500)
-      loopAudio('mainmenu',message,true,function(){
-      })
+      loopAudio('mainmenu',message,true)
     }
     else if (message == 'win' || message == 'lose') {
       fadeOut(getCurPlayer(),500)
       let roundendtrack = (message == 'win')?'wonround':'lostround'
-      let player = getPlayer(getKitPath()+roundendtrack+audioExt)
-      player.oncanplay = function(){
-        player.play()
-      }
-      player.load()
+      loopAudio(roundendtrack,message,false)
     }
     else if (message == 'planted' && state != '10sec'){
       loopAudio('bombplanted',message,false,function(){
         if(state == '10sec'){
           bombPlantFlag = false
-          let player = getPlayer(getKitPath()+'bombtenseccount'+audioExt)
-          player.oncanplay = function(){
-            player.play()
-          }
-          player.load()
         }
       })
       let offset = 30000
       setTimeout(function(){
         if(state == message){
           state = '10sec'
+          fadeOut(getCurPlayer(),500)
           bombPlantFlag = true
+          let player = getPlayer(getKitPath()+'bombtenseccount'+audioExt)
+          player.oncanplay = function(){
+            player.play()
+          }
+          player.load()
         }
       },offset)//start 10 second countdown in 30 seconds
     }
@@ -435,7 +433,7 @@ function doCommand(message){
   }
 }
 
-function loopAudio(audfile,loopstate,doFadeIn,func){
+function loopAudio(audfile,loopstate,doFadeIn,func=function(){}){
   let player = getPlayer(getKitPath()+audfile+audioExt)
   player.oncanplay = function(){
     setTimeout(function(){
