@@ -385,7 +385,8 @@ function doCommand(message){
       if(state == 'menu'){
         fadeOut(getCurPlayer(),1000)
       }
-      else if(state == 'mvp'|| state == 'win' || state == 'lose'){
+      else if(state == 'mvp'|| state == 'win' || state == 'lose' ||
+      state == 'planted' || state == '10sec'){
         message = state
       }
       if(roundActionFlag){
