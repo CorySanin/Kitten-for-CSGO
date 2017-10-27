@@ -416,7 +416,8 @@ function doCommand(message){
       setTimeout(function(){
         if(state == message){
           state = '10sec'
-          fadeOut(getCurPlayer(),500)
+          getCurPlayer().volume = 0
+          getCurPlayer().pause()
           bombPlantFlag = true
           let player = getPlayer(getKitPath()+'bombtenseccount'+audioExt)
           player.oncanplay = function(){
