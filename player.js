@@ -22,6 +22,7 @@ let portNum
 let dirChange
 let saveBtn
 let genConfig
+let refreshKitsBtn
 
 //handles misc messages from main.js
 ipc.on('message', function (event, message) {
@@ -61,6 +62,7 @@ function init(){
   dirChange = document.getElementById('dirChange')
   saveBtn = document.getElementById('saveBtn')
   genConfig = document.getElementById('genConfig')
+  refreshKitsBtn = document.getElementById('refreshKitsBtn')
 
   audioDir = localStorage.getItem('audioDir')
 
@@ -80,6 +82,12 @@ function init(){
   saveBtn.onclick = writeSettings
   genConfig.onclick = writeCSGOConfig
   kitSelect.onchange = updateKitCover
+  refreshKitsBtn.onclick = function (){
+    let kitToSelect = kitSelect.value
+    scanForKits()
+    selectKit(kitToSelect)
+  }
+
   //end event listeners
 
   //from https://stackoverflow.com/a/24594123/1317558
