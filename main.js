@@ -112,6 +112,11 @@ let server = http.createServer( function(req, res) {
             else if(parsed.round.phase == 'freezetime' || parsed.round.phase == 'live'){
               console.log('sending a '+parsed.round.phase)
               mainWindow.send('command', parsed.round.phase)
+              if(parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid){
+                if(parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats.mvps != NaN){
+                  mvps = parsed.player.match_stats.mvps
+                }
+              }
             }
             else if(parsed.round.phase == 'over'){
               if(parsed.round.hasOwnProperty('win_team')){
