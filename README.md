@@ -4,14 +4,19 @@ tracks when CS:GO gives it certain cues. Essentially, this allows you to
 create and use your own music kits.
 
 ## Getting Started
-For now, you're going to need node.js and npm all set up. In the future, I plan
-on distributing packages for the big three target OS's. If you've never
+Grab the latest release on the
+[releases page](https://github.com/CoryZ40/Kitten-for-CSGO/releases/latest).
+
+To run the latest developer version, you'll need node. If you've never
 configured node before, I recommend using
 [nvm](https://github.com/creationix/nvm#install-script) on Linux and Mac OS,
 or [nvm for Windows](https://github.com/coreybutler/nvm-windows).
 
-Once you have node and npm ready to go, cd to where Kitten was downloaded. Then
-run `npm install` and then `npm start` and you'll be running Kitten.
+Once you have node and npm ready to go, cd to where Kitten was cloned. Next, I
+suggest that you delete the package-lock.json file since it can cause problems.
+Then run `npm install` and `npm start` and you'll be running Kitten.
+
+To build Kitten for your target platform, do `npm run dist`.
 
 ## How to use
 The first thing Kitten is going to do is request a directory to look in for
