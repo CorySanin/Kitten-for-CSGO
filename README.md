@@ -100,3 +100,5 @@ files of a type different from the one you chose for the kit's tracks.
 
 Here's a sample music kit:
 [Big Croint Music Kit](https://drive.google.com/open?id=0Bwif2jHEOIAdaEFqS0k2RWtzbzg)
+
+Remember to mute in-game music if you haven't done so.
