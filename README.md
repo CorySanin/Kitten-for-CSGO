@@ -7,9 +7,8 @@ create and use your own music kits.
 For now, you're going to need node.js and npm all set up. In the future, I plan
 on distributing packages for the big three target OS's. If you've never
 configured node before, I recommend using
-[nvm](https://github.com/creationix/nvm#install-script) on Linux,
-[nvm for Windows](https://github.com/coreybutler/nvm-windows), or
-[homebrew and nvm](http://lmgtfy.com/?s=b&q=mac+os+homebrew+nvm) for Mac OS.
+[nvm](https://github.com/creationix/nvm#install-script) on Linux and Mac OS,
+or [nvm for Windows](https://github.com/coreybutler/nvm-windows).
 
 Once you have node and npm ready to go, cd to where Kitten was downloaded. Then
 run `npm install` and then `npm start` and you'll be running Kitten.
@@ -94,5 +93,5 @@ isplayed in Kitten when the kit is selected.
 Aside from these files, try to refrain from adding too many other files, namely
 files of a type different from the one you chose for the kit's tracks.
 
-Here's a sample music kit: 
+Here's a sample music kit:
 [Big Croint Music Kit](https://drive.google.com/open?id=0Bwif2jHEOIAdaEFqS0k2RWtzbzg)
