@@ -61,6 +61,11 @@
       "createDesktopShortcut": "false",
       "menuCategory": "WORM\\Kitten",
       "shortcutName": "Music Kitten"
+    },
+    "linux": {
+      "target": "deb",
+      "synopsis": "Use custom CS:GO music kits",
+      "category": "Utility"
     }
   }
 }
