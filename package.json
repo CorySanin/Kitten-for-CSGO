@@ -10,7 +10,7 @@
     "dist": "electron-builder",
     "distWin": "electron-builder --x64 --ia32"
   },
-  "repository": "https://github.com/CoryZ40/Kitten-for-CSGO",
+  "repository": "https://github.com/CorySanin/Kitten-for-CSGO",
   "keywords": [
     "Mew2king",
     "does",
