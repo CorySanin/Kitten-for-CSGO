@@ -93,7 +93,7 @@ anything that supports gapless playback (like FLAC). Also, make sure you use the
 same filetype for every track.
 
 Optionally, you can add a cover.jpeg to the music kit's folder. This is
-isplayed in Kitten when the kit is selected.
+displayed in Kitten when the kit is selected.
 
 Aside from these files, try to refrain from adding too many other files, namely
 files of a type different from the one you chose for the kit's tracks.
