@@ -18,22 +18,25 @@ let bombPlantFlag = false
 let roundActionPlayer
 let kitSelect
 let volumeSlider
+let mvpToggle
 let portNum
 let dirChange
 let saveBtn
 let genConfig
 let refreshKitsBtn
 
-//handles misc messages from main.js
-ipc.on('message', function (event, message) {
-  console.log(`Message from main: ${message}`)
-})
+function ready(){
+  //handles misc messages from main.js
+  ipc.on('message', function (event, message) {
+    console.log(`Message from main: ${message}`)
+  })
 
-//takes commands issued by main.js and feeds them into doCommand
-ipc.on('command', function (event, message) {
-  //console.log(message)
-  doCommand(message)
-})
+  //takes commands issued by main.js and feeds them into doCommand
+  ipc.on('command', function (event, message) {
+    //console.log(message)
+    doCommand(message)
+  })
+}
 
 //executes when the selected directory dialog is completed
 ipc.on('selected-directory', function(event, path){
@@ -43,6 +46,7 @@ ipc.on('selected-directory', function(event, path){
     scanForKits()
     readSettings()
     startServer()
+    ready()
   }
   else if(audioDir == null){
     let msg = 'You must select a directory to store everything in. '
@@ -58,6 +62,7 @@ function init(){
 
   kitSelect = document.getElementById('kit')
   volumeSlider = document.getElementById('volSlider')
+  mvpToggle = document.getElementById('mvpToggle')
   portNum = document.getElementById('portNum')
   dirChange = document.getElementById('dirChange')
   saveBtn = document.getElementById('saveBtn')
@@ -111,6 +116,7 @@ function init(){
       scanForKits()
       readSettings()
       startServer()
+      ready()
     }
 }
 
@@ -194,6 +200,12 @@ function readSettings(){
       if(conf.hasOwnProperty('volume')){
         volumeSlider.value = conf.volume
       }
+      if(conf.hasOwnProperty('mvp')){
+        mvpToggle.checked = conf.mvp
+      }
+      else{
+        mvpToggle.checked = true
+      }
     })
   }
 }
@@ -205,6 +217,7 @@ function writeSettings(){
   conf.port = portNum.value
   conf.kit = kitSelect.value
   conf.volume = volumeSlider.value
+  conf.mvp = mvpToggle.checked
   fs.writeFile(confFile,JSON.stringify(conf,null,'\t'),function(err) {
     if(err) return console.error(err)
     console.log('saved settings.')
@@ -367,11 +380,13 @@ function doCommand(message){
   if(message != state){
     if(message == 'mvp'){
       fadeOut(getCurPlayer(),500)
-      let player = getPlayer(getKitPath()+'roundmvpanthem_01'+audioExt)
-      player.oncanplay = function(){
-        player.play()
+      if(mvpToggle.checked){
+        let player = getPlayer(getKitPath()+'roundmvpanthem_01'+audioExt)
+        player.oncanplay = function(){
+          player.play()
+        }
+        player.load()
       }
-      player.load()
       message = 'win'
     }
     else if (message == 'freezetime') {
@@ -392,6 +407,7 @@ function doCommand(message){
     else if (message == 'live') {
       if(state == 'menu'){
         fadeOut(getCurPlayer(),1000)
+        getPlayer('')
       }
       else if(state == 'mvp'|| state == 'win' || state == 'lose' ||
       state == 'planted' || state == '10sec'){
@@ -411,8 +427,10 @@ function doCommand(message){
     }
     else if (message == 'win' || message == 'lose') {
       fadeOut(getCurPlayer(),500)
-      let roundendtrack = (message == 'win')?'wonround':'lostround'
-      loopAudio(roundendtrack,message,false)
+      if(mvpToggle.checked){
+        let roundendtrack = (message == 'win')?'wonround':'lostround'
+        loopAudio(roundendtrack,message,false)
+      }
     }
     else if (message == 'planted' && state != '10sec'){
       loopAudio('bombplanted',message,false,function(){

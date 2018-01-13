@@ -27,7 +27,7 @@ let teamCT = false
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 295, height: 475, icon:
+  mainWindow = new BrowserWindow({width: 380, height: 570, icon:
   (os.platform() == 'win32')?'static\\icon\\icon.ico':'static/icon/icon_512.png'})
 
   // and load the index.html of the app.
