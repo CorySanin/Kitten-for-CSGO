@@ -33,7 +33,7 @@
     },
     "dmg": {
       "title": "Music Kitten",
-      "icon": "static/icon/icon.icns",
+      "icon": "static/icon/dmgicon.icns",
       "contents": [
         {
           "x": 375,
