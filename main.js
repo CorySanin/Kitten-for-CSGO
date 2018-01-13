@@ -28,8 +28,8 @@ let teamCT = false
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({backgroundColor: '#212121',
-  width: 380, height: 555, resizable: false, maximizable: false, icon:
-  (os.platform() == 'win32')?'static\\icon\\icon.ico':'static/icon/icon_512.png'})
+  width: 380, height: 555, resizable: false, maximizable: false, fullscreenable:false,
+  icon:(os.platform() == 'win32')?'static\\icon\\icon.ico':'static/icon/icon_512.png'})
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
