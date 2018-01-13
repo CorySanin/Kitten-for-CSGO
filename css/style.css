@@ -47,6 +47,6 @@ button:hover{
 }
 #muteBtn{
   position:fixed;
-  bottom:0px;
-  right:12px;
+  bottom:4px;
+  right:16px;
 }
