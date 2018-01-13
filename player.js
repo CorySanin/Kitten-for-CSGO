@@ -24,6 +24,8 @@ let dirChange
 let saveBtn
 let genConfig
 let refreshKitsBtn
+let muteBtn
+let savedVolume = 0
 
 function ready(){
   //handles misc messages from main.js
@@ -68,6 +70,7 @@ function init(){
   saveBtn = document.getElementById('saveBtn')
   genConfig = document.getElementById('genConfig')
   refreshKitsBtn = document.getElementById('refreshKitsBtn')
+  muteBtn = document.getElementById('muteBtn')
 
   audioDir = localStorage.getItem('audioDir')
 
@@ -83,6 +86,16 @@ function init(){
   }
   dirChange.onclick = function(){
     ipc.send('open-kitten-dir','selected-directory')
+  }
+  muteBtn.onclick = function(){
+    if(volumeSlider.value == 0){
+      volumeSlider.value = savedVolume
+      savedVolume = 0
+    }
+    else{
+      savedVolume = volumeSlider.value
+      volumeSlider.value = 0
+    }
   }
   saveBtn.onclick = writeSettings
   genConfig.onclick = writeCSGOConfig
@@ -216,7 +229,7 @@ function writeSettings(){
   let conf = {}
   conf.port = portNum.value
   conf.kit = kitSelect.value
-  conf.volume = volumeSlider.value
+  conf.volume = Math.max(volumeSlider.value,savedVolume)
   conf.mvp = mvpToggle.checked
   fs.writeFile(confFile,JSON.stringify(conf,null,'\t'),function(err) {
     if(err) return console.error(err)

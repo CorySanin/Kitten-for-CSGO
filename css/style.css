@@ -21,7 +21,6 @@ img{
   border:1px solid #fff;
 }
 button{
-  width:100%;
   border: #fff solid 3px;
   background-color:rgba(255,255,255,0);
   color:#fff;
@@ -35,6 +34,9 @@ button:hover{
 .center{
   text-align:center;
 }
+.fill > *{
+  width:100%;
+}
 .grid{
   display:grid;
   grid-template-columns:auto 1fr;
@@ -42,4 +44,9 @@ button:hover{
 }
 .grid > *{
   margin:4px;
+}
+#muteBtn{
+  position:fixed;
+  bottom:0px;
+  right:12px;
 }
