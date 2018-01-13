@@ -96,6 +96,9 @@ function init(){
       savedVolume = volumeSlider.value
       volumeSlider.value = 0
     }
+    let curplay = getCurPlayer()
+    if(curplay != null)
+      curplay.volume = volumeSlider.value
   }
   saveBtn.onclick = writeSettings
   genConfig.onclick = writeCSGOConfig
