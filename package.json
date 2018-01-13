@@ -4,25 +4,25 @@
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
-    "postinstall": "install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
-    "pack": "electron-builder --dir",
+    "test": "electron-builder --dir",
     "dist": "electron-builder",
-    "distWin": "electron-builder --x64 --ia32"
+    "distWin": "electron-builder --win --x64 --ia32"
   },
   "repository": "https://github.com/CorySanin/Kitten-for-CSGO",
   "keywords": [
-    "Mew2king",
-    "does",
-    "HOT",
-    "boobie",
-    "drugs"
+    "CS:GO",
+    "music",
+    "kit",
+    "counter strike",
+    "source"
   ],
   "author": "Cory <coryaccounts@outlook.com>",
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron": "~1.7.9",
-    "electron-builder": "19.42.2"
+    "electron": "~1.7.10",
+    "electron-builder": "19.52.1"
   },
   "build": {
     "appId": "cf.kitten.app",
