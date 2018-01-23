@@ -21,7 +21,7 @@
   "author": "Cory <coryaccounts@outlook.com>",
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron": "~1.7.10",
+    "electron": "~>1.7.11",
     "electron-builder": "19.52.1"
   },
   "build": {
