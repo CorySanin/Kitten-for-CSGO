@@ -397,11 +397,7 @@ function doCommand(message){
     if(message == 'mvp'){
       fadeOut(getCurPlayer(),500)
       if(mvpToggle.checked){
-        let player = getPlayer(getKitPath()+'roundmvpanthem_01'+audioExt)
-        player.oncanplay = function(){
-          player.play()
-        }
-        player.load()
+        loopAudio('roundmvpanthem_01',message,false)
       }
       message = 'win'
     }
@@ -481,7 +477,7 @@ function loopAudio(audfile,loopstate,doFadeIn,func=function(){}){
   let player = getPlayer(getKitPath()+audfile+audioExt)
   player.oncanplay = function(){
     setTimeout(function(){
-      if(state == loopstate){
+      if(state == loopstate && getCurPlayer() == player.id){
         loopAudio(audfile,loopstate,false,func)
       }
       else{
