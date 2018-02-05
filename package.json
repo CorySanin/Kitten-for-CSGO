@@ -8,7 +8,9 @@
     "start": "electron .",
     "test": "electron-builder --dir",
     "dist": "electron-builder",
-    "distWin": "electron-builder --win --x64 --ia32"
+    "distWin": "electron-builder --win --x64 --ia32",
+    "disMac": "electron-builder --mac",
+    "disLin": "electron-builder --linux"
   },
   "repository": "https://github.com/CorySanin/Kitten-for-CSGO",
   "keywords": [
