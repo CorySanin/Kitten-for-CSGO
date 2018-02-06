@@ -1,2 +1,12 @@
 language: node_js
 node_js: "node"
+matrix:
+  include:
+  - os: linux
+    dist: xenial
+    sudo: required
+  - os: osx
+notifications:
+  email: false
+script:
+  - npm dist
