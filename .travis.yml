@@ -9,4 +9,4 @@ matrix:
 notifications:
   email: false
 script:
-  - npm dist
+  - npm run dist
