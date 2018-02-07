@@ -3,14 +3,6 @@ node_js: "node"
 matrix:
   include:
   - os: osx
-    env:
-      - ELECTRON_CACHE=$HOME/.cache/electron
-      - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-cache:
-  directories:
-  - node_modules
-  - $HOME/.cache/electron
-  - $HOME/.cache/electron-builder
 notifications:
   email: false
 script:
