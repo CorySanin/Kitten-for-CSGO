@@ -10,20 +10,3 @@ notifications:
   email: false
 script:
   - npm run dist
-before_deploy:
-    - git config --local user.name "Cory Sanin"
-    - git config --local user.email "corysanin@outlook.com"
-    - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
-deploy:
-  provider: releases
-  api_key: $GITHUB_TOKEN
-  file_glob: true
-  file:
-    - "*.exe"
-    - "*.deb"
-    - "*.dmg"
-  tag: next
-  skip_cleanup: true
-  prerelease: true
-  on:
-    tags: true

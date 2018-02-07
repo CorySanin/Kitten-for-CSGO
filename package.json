@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
@@ -23,15 +23,20 @@
   "author": "Cory <coryaccounts@outlook.com>",
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron": "~>1.7.11",
-    "electron-builder": "19.52.1"
+    "electron": "~>1.8.2",
+    "electron-builder": "~>20.0.1",
+    "electron-updater": "~>2.20.1"
   },
   "build": {
     "appId": "cf.kitten.app",
     "mac": {
       "category": "public.app-category.entertainment",
       "icon": "static/icon/icon.icns",
-      "type": "distribution"
+      "type": "distribution",
+      "publish": {
+        "provider": "github",
+        "releaseType": "draft"
+      }
     },
     "dmg": {
       "title": "Music Kitten",
@@ -53,7 +58,11 @@
     },
     "win": {
       "icon": "static/icon/icon.ico",
-      "target": "nsis"
+      "target": "nsis",
+      "publish": {
+        "provider": "github",
+        "releaseType": "draft"
+      }
     },
     "nsis": {
       "oneClick": "false",
@@ -67,7 +76,11 @@
     "linux": {
       "target": "deb",
       "synopsis": "Use custom CS:GO music kits",
-      "category": "Utility"
-    }
+      "category": "Utility",
+      "publish": {
+        "provider": "github",
+        "releaseType": "draft"
+      }
+    },
   }
 }

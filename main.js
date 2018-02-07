@@ -1,3 +1,4 @@
+import { autoUpdater } from "electron-updater"
 const electron = require('electron')
 const http = require('http')
 const fs = require('fs')
@@ -51,6 +52,8 @@ function createWindow () {
 
   mainWindow.setMenu(null)
 }
+
+autoUpdater.checkForUpdatesAndNotify()
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
