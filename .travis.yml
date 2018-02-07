@@ -9,5 +9,4 @@ matrix:
 notifications:
   email: false
 script:
-  - npm i electron-updater
   - npm run dist
