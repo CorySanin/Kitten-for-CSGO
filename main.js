@@ -1,3 +1,4 @@
+const packjson = require('./package.json')
 const electron = require('electron')
 const http = require('http')
 const fs = require('fs')
@@ -13,6 +14,8 @@ const host = '127.0.0.1'
 
 
 const menu = new electron.Menu()
+menu.append(new electron.MenuItem({ label: 'Kitten ' + packjson.version,
+    enabled: false}))
 menu.append(new electron.MenuItem({ label: 'Launch CS:GO',
     click: function(){electron.shell.openExternal('steam://rungameid/730')}}))
 menu.append(new electron.MenuItem({ label: 'Developer Tools',
