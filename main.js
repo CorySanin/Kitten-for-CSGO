@@ -1,7 +1,7 @@
-import { autoUpdater } from "electron-updater"
 const electron = require('electron')
 const http = require('http')
 const fs = require('fs')
+const autoUpdater = require("electron-updater").autoUpdater
 const ipc = electron.ipcMain
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow // Module to create native browser window.
