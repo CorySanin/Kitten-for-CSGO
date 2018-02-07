@@ -1,4 +1,8 @@
 # Music Kitten for CS:GO
+[![Travis CI Build Status](https://api.travis-ci.org/CorySanin/Kitten-for-CSGO.png?branch=master)](https://travis-ci.org/CorySanin/Kitten-for-CSGO)
+[![node.js dependencies](https://david-dm.org/CorySanin/Kitten-for-CSGO.png)](https://david-dm.org/CorySanin/Kitten-for-CSGO)
+[![Codacy Score](https://api.codacy.com/project/badge/Grade/7b187bf2c3344d56868021e0609eded2)](https://www.codacy.com/app/CorySanin/Kitten-for-CSGO?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CorySanin/Kitten-for-CSGO&amp;utm_campaign=Badge_Grade)
+
 Music Kitten, or simply Kitten, is an Electron application that plays audio
 tracks when CS:GO gives it certain cues. Essentially, this allows you to
 create and use your own music kits.

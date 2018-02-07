@@ -81,6 +81,6 @@
         "provider": "github",
         "releaseType": "draft"
       }
-    },
+    }
   }
 }
