@@ -1,8 +1,9 @@
 # Music Kitten for CS:GO
-[![Travis CI Build Status](https://api.travis-ci.org/CorySanin/Kitten-for-CSGO.png?branch=master)](https://travis-ci.org/CorySanin/Kitten-for-CSGO)
-[![node.js dependencies](https://david-dm.org/CorySanin/Kitten-for-CSGO/dev-status.png)](https://david-dm.org/CorySanin/Kitten-for-CSGO?type=dev)
+[![Travis CI Build Status](https://api.travis-ci.org/CorySanin/Kitten-for-CSGO.svg?branch=master)](https://travis-ci.org/CorySanin/Kitten-for-CSGO)
+[![node.js dependencies](https://david-dm.org/CorySanin/Kitten-for-CSGO.svg)](https://david-dm.org/CorySanin/Kitten-for-CSGO)
+[![node.js devDependencies](https://david-dm.org/CorySanin/Kitten-for-CSGO/dev-status.svg)](https://david-dm.org/CorySanin/Kitten-for-CSGO?type=dev)
 [![Codacy Score](https://api.codacy.com/project/badge/Grade/7b187bf2c3344d56868021e0609eded2)](https://www.codacy.com/app/CorySanin/Kitten-for-CSGO?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CorySanin/Kitten-for-CSGO&amp;utm_campaign=Badge_Grade)
-[![License](https://img.shields.io/github/license/CorySanin/Kitten-for-CSGO.png)](LICENSE)
+[![License](https://img.shields.io/github/license/CorySanin/Kitten-for-CSGO.svg)](LICENSE)
 
 Music Kitten, or simply Kitten, is an Electron application that plays audio
 tracks when CS:GO gives it certain cues. Essentially, this allows you to
