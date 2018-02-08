@@ -477,7 +477,7 @@ function loopAudio(audfile,loopstate,doFadeIn,func=function(){}){
   let player = getPlayer(getKitPath()+audfile+audioExt)
   player.oncanplay = function(){
     setTimeout(function(){
-      if(state == loopstate && getCurPlayer() == player.id){
+      if(state == loopstate && getCurPlayer().id == player.id){
         loopAudio(audfile,loopstate,false,func)
       }
       else{
