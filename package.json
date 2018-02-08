@@ -22,10 +22,12 @@
   ],
   "author": "Cory <coryaccounts@outlook.com>",
   "license": "GPL-3.0",
+  "dependencies": {
+    "electron-updater": "2.20.2"
+  },
   "devDependencies": {
     "electron": "~>1.8.2",
-    "electron-builder": "~>20.0.1",
-    "electron-updater": "~>2.20.2"
+    "electron-builder": "~>20.0.1"
   },
   "build": {
     "appId": "cf.kitten.app",
