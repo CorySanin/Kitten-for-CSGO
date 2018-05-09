@@ -83,6 +83,9 @@
     }
   },
   "build": {
-    "appId": "cf.kitten.app"
-  }
+    "appId": "cf.kitten.app",
+    "productName ": "Music Kitten"
+  },
+  "appId": "cf.kitten.app",
+  "productName ": "Music Kitten"
 }
