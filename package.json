@@ -30,7 +30,7 @@
     "electron-builder": "~>20.13.2"
   },
   "win": {
-    "icon": "static/icon/icon.ico",
+    "icon": "build/icon.ico",
     "target": "nsis",
     "publish": {
       "provider": "github",
@@ -44,11 +44,12 @@
     "allowToChangeInstallationDirectory": "true",
     "createDesktopShortcut": "false",
     "menuCategory": "WORM\\Kitten",
-    "shortcutName": "Music Kitten"
+    "shortcutName": "Music Kitten",
+    "installerIcon": "icon.ico"
   },
   "mac": {
     "category": "public.app-category.entertainment",
-    "icon": "static/icon/icon.icns",
+    "icon": "build/icon.icns",
     "type": "distribution",
     "publish": {
       "provider": "github",
@@ -57,7 +58,7 @@
   },
   "dmg": {
     "title": "Music Kitten",
-    "icon": "static/icon/dmgicon.icns",
+    "icon": "dmgicon.icns",
     "contents": [
       {
         "x": 375,
@@ -83,8 +84,7 @@
     }
   },
   "build": {
-    "appId": "cf.kitten.app",
-    "productName ": "Music Kitten"
+    "appId": "cf.kitten.app"
   },
   "appId": "cf.kitten.app",
   "productName ": "Music Kitten"
