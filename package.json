@@ -27,65 +27,62 @@
   },
   "devDependencies": {
     "electron": "~>2.0.0",
-    "electron-builder": "~>20.13.2"
-  },
-  "win": {
-    "icon": "build/icon.ico",
-    "target": "nsis",
-    "publish": {
-      "provider": "github",
-      "releaseType": "draft"
-    }
-  },
-  "nsis": {
-    "oneClick": "false",
-    "perMachine": "true",
-    "allowElevation": "true",
-    "allowToChangeInstallationDirectory": "true",
-    "createDesktopShortcut": "false",
-    "menuCategory": "WORM\\Kitten",
-    "shortcutName": "Music Kitten",
-    "installerIcon": "icon.ico"
-  },
-  "mac": {
-    "category": "public.app-category.entertainment",
-    "icon": "build/icon.icns",
-    "type": "distribution",
-    "publish": {
-      "provider": "github",
-      "releaseType": "draft"
-    }
-  },
-  "dmg": {
-    "title": "Music Kitten",
-    "icon": "dmgicon.icns",
-    "contents": [
-      {
-        "x": 375,
-        "y": 225,
-        "type": "link",
-        "path": "/Applications"
-      },
-      {
-        "x": 150,
-        "y": 225,
-        "type": "file",
-        "path": ""
-      }
-    ]
-  },
-  "linux": {
-    "target": "deb",
-    "synopsis": "Use custom CS:GO music kits",
-    "category": "Utility",
-    "publish": {
-      "provider": "github",
-      "releaseType": "draft"
-    }
+    "electron-builder": "~>20.0.1"
   },
   "build": {
-    "appId": "cf.kitten.app"
-  },
-  "appId": "cf.kitten.app",
-  "productName ": "Music Kitten"
+    "appId": "cf.kitten.app",
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "icon": "icon/icon.icns",
+      "type": "distribution",
+      "publish": {
+        "provider": "github",
+        "releaseType": "draft"
+      }
+    },
+    "dmg": {
+      "title": "Music Kitten",
+      "icon": "icon/dmgicon.icns",
+      "contents": [
+        {
+          "x": 375,
+          "y": 225,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 150,
+          "y": 225,
+          "type": "file",
+          "path": ""
+        }
+      ]
+    },
+    "win": {
+      "icon": "icon/icon.ico",
+      "target": "nsis",
+      "publish": {
+        "provider": "github",
+        "releaseType": "draft"
+      }
+    },
+    "nsis": {
+      "oneClick": "false",
+      "perMachine": "true",
+      "allowElevation": "true",
+      "allowToChangeInstallationDirectory": "true",
+      "createDesktopShortcut": "false",
+      "menuCategory": "WORM\\Kitten",
+      "shortcutName": "Music Kitten"
+    },
+    "linux": {
+      "target": "deb",
+      "synopsis": "Use custom CS:GO music kits",
+      "category": "Utility",
+      "publish": {
+        "provider": "github",
+        "releaseType": "draft"
+      }
+    }
+  }
 }
