@@ -20,16 +20,24 @@ img{
   margin-top:4px;
   border:1px solid #fff;
 }
-button{
-  border: #fff solid 3px;
+button, .button{
+  display:inline-block;
+  border:#fff solid 3px;
   background-color:rgba(255,255,255,0);
   color:#fff;
   font-size:1.25em;
   margin-bottom:.5em;
+  font-family:sans-serif;
+  line-height: inherit;
+  padding: 0 .25em;
 }
-button:hover{
+button:hover, .button:hover{
   background-color:rgba(255,255,255,1);
   color:#212121;
+}
+button[disabled], .button.disabled, button[disabled]:hover, .button.disabled:hover{
+  background-color:#757575;
+  color:#fff;
 }
 .center{
   text-align:center;
