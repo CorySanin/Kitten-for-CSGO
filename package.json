@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "electron-updater": "2.21.10"
   },
   "devDependencies": {
-    "electron": "~>2.0.0",
+    "electron": "~>2.0.3",
     "electron-builder": "~>20.0.1"
   },
   "build": {
