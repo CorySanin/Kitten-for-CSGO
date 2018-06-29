@@ -403,7 +403,6 @@ function doCommand(message){
       message = 'win'
     }
     else if (message == 'freezetime') {
-      clearTimeout(currentTimeout)
       fadeOut(getCurPlayer(),500)
       let roundnum = Math.floor((Math.random() * 3) + 1)
       roundActionFlag = true
@@ -419,7 +418,7 @@ function doCommand(message){
       })
     }
     else if (message == 'live') {
-      clearTimeout(currentTimeout)
+
       if(state == 'menu'){
         fadeOut(getCurPlayer(),1000)
         getPlayer('')
@@ -437,7 +436,6 @@ function doCommand(message){
       }
     }
     else if (message == 'menu'){
-      clearTimeout(currentTimeout)
       fadeOut(getCurPlayer(),500)
       loopAudio('mainmenu',message,true)
     }
@@ -479,6 +477,7 @@ function doCommand(message){
 
 function loopAudio(audfile,loopstate,doFadeIn,func=function(){}){
   let player = getPlayer(getKitPath()+audfile+audioExt)
+  clearTimeout(currentTimeout)
   player.oncanplay = function(){
     currentTimeout = setTimeout(function(){
       if(state == loopstate && getCurPlayer().id == player.id){
