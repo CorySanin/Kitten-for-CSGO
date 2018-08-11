@@ -3,6 +3,7 @@ const shell = require('electron').shell
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
+const registry = require('winreg')
 
 let isDirectory = null
 let getDirectories = null
@@ -224,6 +225,46 @@ function readSettings(){
         mvpToggle.checked = true
       }
     })
+  }
+}
+
+function findGameLocation(){
+  let libraryFileLocation = false
+  if(os.platform() == 'win32'){
+    regKey = new Registry({             // new operator is optional
+      hive: Registry.HKCU,              // open registry hive HKEY_CURRENT_USER
+      key:  '\\Software\\Valve\\Steam'  // key containing autostart programs
+    })
+    let steamdir = false
+    regKey.values(function (err, items /* array of RegistryItem */) {
+      if (err){
+        console.log('ERROR: '+err)
+      }
+      else{
+        for (var i=0; i<items.length && !steamdir; i++){
+          if(items[i].name == 'SteamPath'){
+            steamdir = items[i].value
+          }
+        }
+      }
+    })
+    let possibleLocation = location+dirSep+'steamapps'+dirSep+'libraryfolders.vdf'
+    if(location && fs.existsSync(possibleLocation)){
+      libraryFileLocation = possibleLocation
+    }
+    else if (os.platform() == 'darwin') {
+      let possibleLocation = '~/Library/Application Support/Steam/steamapps/libraryfolders.vdf'
+      if(fs.existsSync(possibleLocation)){
+        libraryFileLocation = possibleLocation
+      }
+    }
+    else{
+      let possibleLocation = '~/.local/share/Steam/SteamApps/libraryfolders.vdf'
+      if(fs.existsSync(possibleLocation)){
+        libraryFileLocation = possibleLocation
+      }
+    }
+    return libraryFileLocation
   }
 }
 
