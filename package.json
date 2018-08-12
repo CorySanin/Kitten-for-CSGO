@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
@@ -24,7 +24,8 @@
   "license": "GPL-3.0",
   "dependencies": {
     "electron-updater": "2.21.10",
-    "@node-steam/vdf": "2.0.1"
+    "@node-steam/vdf": "2.0.1",
+    "winreg": "1.2.4"
   },
   "devDependencies": {
     "electron": "~>2.0.3",

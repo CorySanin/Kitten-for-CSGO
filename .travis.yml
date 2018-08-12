@@ -5,6 +5,9 @@ matrix:
   - os: osx
 notifications:
   email: false
-script:
+before_install:
   - rm package-lock.json
+install:
+  - npm install
+script:
   - npm run dist
