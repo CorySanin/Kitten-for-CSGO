@@ -3,6 +3,7 @@ const shell = require('electron').shell
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
+const VDF = require('@node-steam/vdf')
 
 let isDirectory = null
 let getDirectories = null
@@ -27,6 +28,8 @@ let refreshKitsBtn
 let muteBtn
 let savedVolume = 0
 let currentTimeout;
+
+window.onload = init
 
 function ready(){
   //handles misc messages from main.js
@@ -246,31 +249,23 @@ function writeSettings(){
 //      a few other modifications might work, but for now, it's just a hard
 //      coded string to print to a file as-is.
 function writeCSGOConfig(){
-  let conf = '"Kitten State API Config"\n'
-  conf += '{\n'
-  conf += ' "uri" "http://127.0.0.1:'+portNum.value+'"\n'
-  conf += ' "timeout" "5.0"\n'
-  conf += ' "buffer"  "0.1"\n'
-  conf += ' "throttle" "0.1"\n'
-  conf += ' "heartbeat" "30.0"\n'
-  conf += ' "auth"\n'
-  conf += ' {\n'
-  conf += '   "token" "WooMeowWoo"\n'
-  conf += ' }\n'
-  conf += ' "data"\n'
-  conf += ' {\n'
-  conf += '   "provider"            "1"\n'
-  conf += '   "map"                 "1"\n'
-  conf += '   "round"               "1"\n'
-  conf += '   "player_id"           "1"\n'
-  conf += '   "allplayers_id"       "1"\n'
-  conf += '   "player_state"        "1"\n'
-  conf += '   "allplayers_state"    "1"\n'
-  conf += '   "allplayers_match_stats"  "1"\n'
-  conf += '   "allplayers_weapons"  "1"\n'
-  conf += '   "player_match_stats" "1" \n'
-  conf += ' }\n'
-  conf += '}'
+  let conf = VDF.stringify({
+    'Kitten State API Config':{
+      'uri': 'http://127.0.0.1:'+portNum.value,
+      'timeout': 5.0,
+      'buffer': 0.1,
+      'throttle': 0.1,
+      'heartbeat': 30.0,
+      'auth': {
+        'token': 'WooMeowWoo'
+      },
+      'data': {
+        'provider': 1, 'map': 1, 'round': 1, 'player_id': 1, 'allplayers_id': 1,
+        'player_state': 1, 'allplayers_state': 1, 'allplayers_match_stats': 1,
+        'allplayers_weapons': 1, 'player_match_stats': 1,
+      }
+    }
+  })
 
   fs.writeFile(audioDir + dirSep + 'gamestate_integration_kitten.cfg',
       conf,function(err) {
