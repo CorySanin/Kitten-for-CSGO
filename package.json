@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "1.1.6",
+  "version": "2.0.0",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
