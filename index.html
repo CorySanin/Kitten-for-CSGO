@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <title>Kitten</title>
-    <script src="server.js"></script>
-    <script src="player.js"></script>
+    <script src="app.js"></script>
+    <script src="node_modules/howler/dist/howler.js"></script>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
   </head>
-  <body onload="init()">
+  <body>
     <div>
       <h1 id="h1" class="center">Music Kitten</h1>
       <div class="grid">

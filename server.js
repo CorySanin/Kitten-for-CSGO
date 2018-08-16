@@ -165,3 +165,5 @@ class KittenServer {
     }
   }
 }
+
+exports.server = KittenServer

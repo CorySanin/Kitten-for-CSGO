@@ -23,7 +23,10 @@
   "author": "Cory <coryaccounts@outlook.com>",
   "license": "GPL-3.0",
   "dependencies": {
-    "electron-updater": "2.21.10"
+    "electron-updater": "2.21.10",
+    "@node-steam/vdf": "2.0.1",
+    "winreg": "1.2.4",
+    "howler": "2.0.14"
   },
   "devDependencies": {
     "electron": "~>2.0.3",
