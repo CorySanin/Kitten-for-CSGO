@@ -1,5 +1,5 @@
-const server = require('./server.js').server
-const player = require('./player.js').something
+const Server = require('./server.js').server
+const Player = require('./player.js').player
 const ipc = require('electron').ipcRenderer
 const shell = require('electron').shell
 const fs = require('fs')
@@ -15,3 +15,5 @@ let state = {
   audioDir: '',
   audioExt: '.meow'
 }
+
+let player = new Player({})
