@@ -157,8 +157,9 @@ class KittenServer {
   }
 
   getSteamID(data) {
-    if (data.hasOwnProperty('provider') && data.provider.hasOwnProperty('steamid'))
+    if (data.hasOwnProperty('provider') && data.provider.hasOwnProperty('steamid')){
       this.steamid = data.provider.steamid
+    }
   }
 
   updateRoundNum(data) {
