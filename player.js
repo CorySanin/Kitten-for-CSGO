@@ -32,15 +32,15 @@ class KittenPlayer{
     }
 
     if(this.folder && this.extension){
-      for(var track in tracks) {
+      let track
+      for(track in tracks) {
         tracks[track].unload()
       }
 
       tracks[COMMANDS.MENU] = new Howl({
         src: [this.getFileName('mainmenu')],
         loop: true,
-        volume: this.volume,
-        onfade: onfade
+        volume: this.volume
       })
 
       tracks[COMMANDS.MVP] = new Howl({
@@ -114,7 +114,7 @@ class KittenPlayer{
         }
       })
 
-      for(var track in tracks) {
+      for(track in tracks) {
         tracks[track].on('fade',onfade(tracks[track]))
       }
     }
