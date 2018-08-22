@@ -3,6 +3,16 @@ const DEFAULT_PORT = '8793'
 const AUTH = 'WooMeowWoo'
 const http = require('http')
 
+const COMMANDS = {
+  'MENU':'menu',
+  'MVP':'mvp',
+  'FREEZETIME':'freezetime',
+  'LIVE':'live',
+  'WIN':'win',
+  'LOSE':'lose',
+  'PLANTED':'planted'
+}
+
 class KittenServer {
 
   /*
@@ -54,10 +64,10 @@ class KittenServer {
             console.log("\nPOST payload:")
             console.log(parsed)
             if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')) {
-              if (parsed.round.hasOwnProperty('bomb') && parsed.round.bomb == 'planted') {
-                console.log('sending a planted')
-                mainWindow.send('command', 'planted')
-              } else if (parsed.round.phase == 'freezetime' || parsed.round.phase == 'live') {
+              if (parsed.round.hasOwnProperty('bomb') && parsed.round.bomb == COMMANDS.PLANTED) {
+                console.log('sending a '+COMMANDS.PLANTED)
+                that.callback({type:'command', content:COMMANDS.PLANTED})
+              } else if (parsed.round.phase == COMMANDS.FREEZETIME || parsed.round.phase == COMMANDS.LIVE) {
                 console.log('sending a ' + parsed.round.phase)
                 that.callback({type:'command', content:parsed.round.phase})
                 if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid) {
@@ -68,13 +78,13 @@ class KittenServer {
               } else if (parsed.round.phase == 'over') {
                 if (parsed.round.hasOwnProperty('win_team')) {
                   let teamname = (that.teamCT) ? 'CT' : 'T'
-                  let comSend = 'lose'
+                  let comSend = COMMANDS.LOSE
                   if (parsed.round.win_team == teamname) {
-                    comSend = 'win'
+                    comSend = COMMANDS.WIN
                     if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == that.steamid) {
                       if (parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats.mvps != NaN) {
                         if (parsed.player.match_stats.mvps > that.mvps) {
-                          comSend = 'mvp'
+                          comSend = COMMANDS.MVP
                         }
                         that.mvps = parsed.player.match_stats.mvps
                       }
@@ -90,7 +100,7 @@ class KittenServer {
               }
             } else if (parsed.player.hasOwnProperty('activity') && parsed.player.activity == 'menu') {
               console.log('sending a menu')
-              mainWindow.send('command', 'menu')
+              that.callback({type:'command', content:COMMANDS.MENU})
             }
           }
           res.end('')
@@ -167,3 +177,4 @@ class KittenServer {
 }
 
 exports.server = KittenServer
+exports.commands = COMMANDS
