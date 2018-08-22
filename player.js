@@ -1,6 +1,7 @@
+/*global Howl, Howler */
 const os = require('os')
 const COMMANDS = require('./server.js').commands
-const dirSep = (os.platform() == 'win32')?'\\':'/'
+const dirSep = (os.platform() === 'win32')?'\\':'/'
 
 class KittenPlayer{
 
@@ -40,26 +41,26 @@ class KittenPlayer{
 
   play(command){
     if(command != this.command){
-      if(command == COMMANDS.MENU){
+      if(command === COMMANDS.MENU){
         this.playMenu()
       }
-      else if(command == COMMANDS.MVP){
+      else if(command === COMMANDS.MVP){
         this.playMvp()
       }
-      else if(command == COMMANDS.FREEZETIME){
+      else if(command === COMMANDS.FREEZETIME){
         this.playFreezetime()
       }
-      else if(command == COMMANDS.LIVE){
-        if(this.command != 'freezetime'){
+      else if(command === COMMANDS.LIVE){
+        if(this.command !== 'freezetime'){
           this.fadeout()
         }
         this.command = COMMANDS.LIVE
       }
-      else if(command == COMMANDS.WIN || command == COMMANDS.LOSE){
+      else if(command === COMMANDS.WIN || command === COMMANDS.LOSE){
         this.command = command
         this.playWinLose()
       }
-      else if(command == COMMANDS.PLANTED){
+      else if(command === COMMANDS.PLANTED){
         this.playPlanted()
       }
       else{
@@ -84,14 +85,14 @@ class KittenPlayer{
   }
 
   playMvp(){
-    this.fadeout(800)
     this.command = COMMANDS.MVP
+    this.fadeout({time:800})
     this.current = new Howl({
       src: [this.getFileName('roundmvpanthem_01')],
-      loop: true,
+      loop: true, //not sure if it shoule loop or not ?
       volume: this.volume
     })
-    this.current.play()
+    this.fadein({time:800})
   }
 
   playFreezetime(){
@@ -108,14 +109,16 @@ class KittenPlayer{
       src: [this.getFileName('startround_0'+randnum)],
       loop: true,
       volume: this.volume,
-      onend: function(id){
+      onend(id){
         if(that.command === COMMANDS.LIVE){
           that.current.stop()
           setTimeout(function(){
-            that.fadeout({
-              time: 3500,
-              player: startaction
-            })
+            if(that.command === COMMANDS.LIVE){
+              that.fadeout({
+                time: 3500,
+                player: startaction
+              })
+            }
           }, 5000)
           startaction.play()
           that.current = startaction
@@ -126,22 +129,11 @@ class KittenPlayer{
   }
 
   playWinLose(){
-    let filename = (this.command == COMMANDS.WIN)?'wonround':'lostround'
+    let filename = (this.command === COMMANDS.WIN)?'wonround':'lostround'
     this.fadeout()
     this.current = new Howl({
       src: [this.getFileName(filename)],
       loop: true,
-      volume: this.volume
-    })
-    this.fadein()
-  }
-
-  playMvp(){
-    this.command = COMMANDS.MVP
-    this.fadeout()
-    this.current = new Howl({
-      src: [this.getFileName('roundmvpanthem_01')],
-      loop: true, //not sure if it shoule loop or not ?
       volume: this.volume
     })
     this.fadein()
@@ -160,9 +152,9 @@ class KittenPlayer{
       src: [this.getFileName('bombplanted')],
       loop: true,
       volume: this.volume,
-      onplay: function(){
+      onplay(){
         setTimeout(function(){
-          if(that.command == 'planted'){
+          if(that.command === 'planted'){
             that.fadeout()
             tensecond.play()
             that.current = tensecond
