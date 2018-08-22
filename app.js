@@ -7,7 +7,7 @@ const path = require('path')
 const os = require('os')
 const VDF = require('@node-steam/vdf')
 const registry = require('winreg')
-const dirSep = (os.platform() == 'win32')?'\\':'/'
+const dirSep = (os.platform() === 'win32')?'\\':'/'
 
 let state = {
   curPlayer: 1,

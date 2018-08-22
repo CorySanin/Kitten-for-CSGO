@@ -40,7 +40,7 @@ class KittenPlayer{
   }
 
   play(command){
-    if(command != this.command){
+    if(command !== this.command){
       if(command === COMMANDS.MENU){
         this.playMenu()
       }

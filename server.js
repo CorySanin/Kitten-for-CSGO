@@ -43,8 +43,8 @@ class KittenServer {
     let that = this
 
     this.server = http.createServer(function(req, res) {
-      if (req.method == 'POST') {
-        console.log("Handling POST request...")
+      if (req.method === 'POST') {
+        console.log('Handling POST request...')
         res.writeHead(200, {
           'Content-Type': 'text/html'
         })
@@ -56,33 +56,33 @@ class KittenServer {
         req.on('end', function() {
           let parsed = JSON.parse(body)
           if (parsed.hasOwnProperty('auth') && parsed.auth.hasOwnProperty('token') &&
-            parsed.auth.token == AUTH) {
+            parsed.auth.token === AUTH) {
             delete parsed.auth
-            getSteamID(parsed)
-            updateRoundNum(parsed)
-            updateTeam(parsed)
-            console.log("\nPOST payload:")
+            this.getSteamID(parsed)
+            this.updateRoundNum(parsed)
+            this.updateTeam(parsed)
+            console.log('\nPOST payload:')
             console.log(parsed)
             if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')) {
-              if (parsed.round.hasOwnProperty('bomb') && parsed.round.bomb == COMMANDS.PLANTED) {
+              if (parsed.round.hasOwnProperty('bomb') && parsed.round.bomb === COMMANDS.PLANTED) {
                 console.log('sending a '+COMMANDS.PLANTED)
                 that.callback({type:'command', content:COMMANDS.PLANTED})
-              } else if (parsed.round.phase == COMMANDS.FREEZETIME || parsed.round.phase == COMMANDS.LIVE) {
+              } else if (parsed.round.phase === COMMANDS.FREEZETIME || parsed.round.phase === COMMANDS.LIVE) {
                 console.log('sending a ' + parsed.round.phase)
                 that.callback({type:'command', content:parsed.round.phase})
-                if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == steamid) {
-                  if (parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats.mvps != NaN) {
+                if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid === this.steamid) {
+                  if (parsed.player.hasOwnProperty('match_stats') && ~isNaN(parsed.player.match_stats.mvps)) {
                     that.mvps = parsed.player.match_stats.mvps
                   }
                 }
-              } else if (parsed.round.phase == 'over') {
+              } else if (parsed.round.phase === 'over') {
                 if (parsed.round.hasOwnProperty('win_team')) {
                   let teamname = (that.teamCT) ? 'CT' : 'T'
                   let comSend = COMMANDS.LOSE
-                  if (parsed.round.win_team == teamname) {
+                  if (parsed.round.win_team === teamname) {
                     comSend = COMMANDS.WIN
-                    if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == that.steamid) {
-                      if (parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats.mvps != NaN) {
+                    if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid === that.steamid) {
+                      if (parsed.player.hasOwnProperty('match_stats') && !isNaN(parsed.player.match_stats.mvps)) {
                         if (parsed.player.match_stats.mvps > that.mvps) {
                           comSend = COMMANDS.MVP
                         }
@@ -93,12 +93,12 @@ class KittenServer {
                   console.log('sending a ' + comSend)
                   that.callback({type:'command', content:comSend})
                 }
-              } else if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid == that.steamid) {
-                if (parsed.player.hasOwnProperty('match_stats') && parsed.player.match_stats != NaN) {
+              } else if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid === that.steamid) {
+                if (parsed.player.hasOwnProperty('match_stats') && !isNaN(parsed.player.match_stats)) {
                   that.mvps = parsed.player.match_stats.mvps
                 }
               }
-            } else if (parsed.player.hasOwnProperty('activity') && parsed.player.activity == 'menu') {
+            } else if (parsed.player.hasOwnProperty('activity') && parsed.player.activity === 'menu') {
               console.log('sending a menu')
               that.callback({type:'command', content:COMMANDS.MENU})
             }
@@ -106,7 +106,7 @@ class KittenServer {
           res.end('')
         })
       } else {
-        console.log("Not expecting other request types...")
+        console.log('Not expecting other request types...')
         res.writeHead(200, {
           'Content-Type': 'text/html'
         })
@@ -168,9 +168,9 @@ class KittenServer {
   }
 
   updateTeam(data) {
-    if (data.player.hasOwnProperty('steamid') && data.player.steamid == steamid) {
+    if (data.player.hasOwnProperty('steamid') && data.player.steamid === this.steamid) {
       if (data.hasOwnProperty('player') && data.player.hasOwnProperty('team')) {
-        this.teamCT = data.player.team == 'CT'
+        this.teamCT = data.player.team === 'CT'
       }
     }
   }
