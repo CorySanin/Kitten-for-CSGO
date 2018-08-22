@@ -11,19 +11,120 @@ class KittenPlayer{
     this.folder = ('folder' in ops)?ops.folder:''
     this.extension = ('extension' in ops)?ops.extension:''
     this.volume = ('volume' in ops)?ops.volume:1
+    this.tracks = {}
+  }
+
+  loadTracks(){
+    let tracks = this.tracks
+    let that = this
+
+    let onfade = function(p){
+      return function(id){
+        if(p.stopping){
+          p.stop()
+          p.stopping = false
+          if(p === this.current){
+            that.current = null
+            that.command = null
+          }
+        }
+      }
+    }
+
+    if(this.folder && this.extension){
+      for(var track in tracks) {
+        tracks[track].unload()
+      }
+
+      tracks[COMMANDS.MENU] = new Howl({
+        src: [this.getFileName('mainmenu')],
+        loop: true,
+        volume: this.volume,
+        onfade: onfade
+      })
+
+      tracks[COMMANDS.MVP] = new Howl({
+        src: [this.getFileName('roundmvpanthem_01')],
+        loop: true, //not sure if it shoule loop or not ?
+        volume: this.volume
+      })
+
+      for(let i=1; i<=3; i++){
+        tracks[COMMANDS.LIVE+i] = new Howl({
+          src: [this.getFileName('startaction_0'+i)],
+          loop: false,
+          volume: this.volume
+        })
+
+        tracks[COMMANDS.FREEZETIME+i] = new Howl({
+          src: [this.getFileName('startround_0'+i)],
+          loop: true,
+          volume: this.volume,
+          onend(id){
+            let startaction = tracks[COMMANDS.LIVE+i]
+            if(that.command === COMMANDS.LIVE){
+              that.current.stop()
+              setTimeout(function(){
+                if(that.command === COMMANDS.LIVE){
+                  that.fadeout({
+                    time: 3500,
+                    player: startaction
+                  })
+                }
+              }, 5000)
+              startaction.volume(that.volume)
+              startaction.play()
+              that.current = startaction
+            }
+          }
+        })
+      }
+
+      tracks[COMMANDS.WIN] = new Howl({
+        src: [this.getFileName('wonround')],
+        loop: true,
+        volume: this.volume
+      })
+
+      tracks[COMMANDS.LOSE] = new Howl({
+        src: [this.getFileName('lostround')],
+        loop: true,
+        volume: this.volume
+      })
+
+      tracks[COMMANDS.PLANTED+'10sec'] = new Howl({
+        src: [this.getFileName('bombtenseccount')],
+        loop: true,
+        volume: this.volume
+      })
+
+      tracks[COMMANDS.PLANTED] = new Howl({
+        src: [this.getFileName('bombplanted')],
+        loop: true,
+        volume: this.volume,
+        onplay(){
+          setTimeout(function(){
+            if(that.command === 'planted'){
+              that.current.stop()
+              that.current = tracks[COMMANDS.PLANTED+'10sec']
+              that.current.volume(that.volume)
+              that.current.play()
+            }
+          }, 30000)
+        }
+      })
+
+      for(var track in tracks) {
+        tracks[track].on('fade',onfade(tracks[track]))
+      }
+    }
   }
 
   fadeout(ops={}){
     let time = ('time' in ops)?ops.time:2500
     let p = ('player' in ops)?ops.player:this.current
-    if(p != null){
-      p.onfade = function(id){
-        p.stop()
-        if(p === this.current){
-          this.current = null
-          this.command = null
-        }
-      }
+    if(p != null && (!('stopping' in p) || !p.stopping)){
+      p.stopping = true
       p.fade(this.volume, 0, time)
     }
   }
@@ -76,92 +177,37 @@ class KittenPlayer{
   playMenu(){
     this.fadeout()
     this.command = COMMANDS.MENU
-    this.current = new Howl({
-      src: [this.getFileName('mainmenu')],
-      loop: true,
-      volume: this.volume
-    })
+    this.current = this.tracks[COMMANDS.MENU]
     this.fadein()
   }
 
   playMvp(){
     this.command = COMMANDS.MVP
     this.fadeout({time:800})
-    this.current = new Howl({
-      src: [this.getFileName('roundmvpanthem_01')],
-      loop: true, //not sure if it shoule loop or not ?
-      volume: this.volume
-    })
+    this.current = this.tracks[COMMANDS.MVP]
     this.fadein({time:800})
   }
 
   playFreezetime(){
-    let that = this
     let randnum = Math.floor((Math.random() * 3) + 1)
-    let startaction = new Howl({
-      src: [this.getFileName('startaction_0'+randnum)],
-      loop: false,
-      volume: this.volume
-    })
     this.fadeout()
     this.command = COMMANDS.FREEZETIME
-    this.current = new Howl({
-      src: [this.getFileName('startround_0'+randnum)],
-      loop: true,
-      volume: this.volume,
-      onend(id){
-        if(that.command === COMMANDS.LIVE){
-          that.current.stop()
-          setTimeout(function(){
-            if(that.command === COMMANDS.LIVE){
-              that.fadeout({
-                time: 3500,
-                player: startaction
-              })
-            }
-          }, 5000)
-          startaction.play()
-          that.current = startaction
-        }
-      }
-    })
+    this.current = this.tracks[COMMANDS.FREEZETIME+randnum]
     this.fadein()
   }
 
   playWinLose(){
-    let filename = (this.command === COMMANDS.WIN)?'wonround':'lostround'
+    let command = (this.command === COMMANDS.WIN)?COMMANDS.WIN:COMMANDS.LOSE
     this.fadeout()
-    this.current = new Howl({
-      src: [this.getFileName(filename)],
-      loop: true,
-      volume: this.volume
-    })
+    this.current = this.tracks[command]
     this.fadein()
   }
 
   playPlanted(){
     this.command = COMMANDS.PLANTED
-    let that = this
-    let tensecond = new Howl({
-      src: [this.getFileName('bombtenseccount')],
-      loop: true,
-      volume: this.volume
-    })
     this.fadeout()
-    this.current = new Howl({
-      src: [this.getFileName('bombplanted')],
-      loop: true,
-      volume: this.volume,
-      onplay(){
-        setTimeout(function(){
-          if(that.command === 'planted'){
-            that.fadeout()
-            tensecond.play()
-            that.current = tensecond
-          }
-        }, 30000)
-      }
-    })
+    this.current = this.tracks[COMMANDS.PLANTED]
+    this.current.volume(this.volume)
     this.current.play()
   }
 }
