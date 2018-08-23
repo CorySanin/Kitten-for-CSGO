@@ -101,14 +101,14 @@ ipc.on('open-kitten-dir', function (event, callback){
 
 
 
-ipc.on('dialog', function (event, message) {
+ipc.on('dialog', function (event, message, title, response) {
   const options = {
     type: 'info',
-    title: 'Yo.',
+    title,
     message: message,
     buttons: ['OK']
   }
-  electron.dialog.showMessageBox(options, function (index) {
-    event.sender.send('information-dialog-selection', index)
+  electron.dialog.showMessageBox(mainWindow, options, function (index) {
+    event.sender.send(response, index)
   })
 })
