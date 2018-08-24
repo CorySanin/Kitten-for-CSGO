@@ -9,11 +9,47 @@ const VDF = require('@node-steam/vdf')
 const registry = require('winreg')
 const dirSep = (os.platform() === 'win32')?'\\':'/'
 
-let settings = {}
+let settings = {
+  port: '8793',
+  volume: .5,
+  mvp: true
+}
 let htEntities = {}
 let state = {}
 let player// = new Player({})
 let server// = new Server({})
+
+function doNothing(){
+}
+
+function getNicePath(filename=null){
+  if(filename == null){
+    filename = state.audioDir
+  }
+  return filename + ((filename.endsWith(dirSep))?'':dirSep)
+}
+
+function getConfigFilename(){
+  return getNicePath() + 'config.json'
+}
+
+function saveSettings(){
+  try{
+    if(state.audioDir){
+      localStorage.setItem('audioDir',state.audioDir)
+      if(settings){
+        fs.writeFile(getConfigFilename(), settings, 'utf8', doNothing)
+      }
+    }
+  }
+  catch(err){
+    console.log(err)
+  }
+}
+
+function newAudioDir(){
+  ipc.send('open-kitten-dir','selected-directory')
+}
 
 function tryLoadSettings(){
   if(state.audioDir == null){
@@ -23,16 +59,18 @@ function tryLoadSettings(){
   }
   else{
     try{
-      fs.readFile(state.audioDir, 'utf8', function(err, data){
+      fs.readFile(getConfigFilename(), 'utf8', function(err, data){
         if(err){
-          throw err
+          saveSettings()
         }
-        state.audioDir = JSON.parse(data)
+        else{
+          console.log(data)
+          settings = JSON.parse(data)
+        }
       })
     }
-    catch{
-      state.audioDir = null
-      tryLoadSettings()
+    catch(e){
+      saveSettings()
     }
   }
 }
@@ -59,3 +97,17 @@ function init(){
 }
 
 window.onload = init
+
+ipc.on('welcome-message-done', newAudioDir)
+
+//executes when the selected directory dialog is completed
+ipc.on('selected-directory', function(event, path){
+  if(path.length > 0){
+    state.audioDir = path[0]
+    tryLoadSettings()
+  }
+  else if(state.audioDir == null){
+    let msg = 'A configuration directory must be chosen.'
+    ipc.send('dialog', msg, 'Hey!', 'welcome-message-done')
+  }
+})
