@@ -15,15 +15,6 @@ let state = {}
 let player// = new Player({})
 let server// = new Server({})
 
-function init(){
-  console.log('Music Kitten for CS:GO\nVersion [$VERSION$]\nBy Cory Sanin')
-  getHtEntities()
-
-  state.audioDir = localStorage.getItem('audioDir')
-
-  tryLoadSettings()
-}
-
 function tryLoadSettings(){
   if(state.audioDir == null){
     let msg = 'You must select a directory to store everything in. '
@@ -33,7 +24,9 @@ function tryLoadSettings(){
   else{
     try{
       fs.readFile(state.audioDir, 'utf8', function(err, data){
-        if (err) throw err
+        if(err){
+          throw err
+        }
         state.audioDir = JSON.parse(data)
       })
     }
@@ -54,6 +47,15 @@ function getHtEntities(){
   htEntities.genConfig = document.getElementById('genConfig')
   htEntities.refreshKitsBtn = document.getElementById('refreshKitsBtn')
   htEntities.muteBtn = document.getElementById('muteBtn')
+}
+
+function init(){
+  console.log('Music Kitten for CS:GO\nVersion [$VERSION$]\nBy Cory Sanin')
+  getHtEntities()
+
+  state.audioDir = localStorage.getItem('audioDir')
+
+  tryLoadSettings()
 }
 
 window.onload = init
