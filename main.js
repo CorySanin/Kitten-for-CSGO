@@ -1,4 +1,3 @@
-const packjson = require('./package.json')
 const electron = require('electron')
 const autoUpdater = require("electron-updater").autoUpdater
 const ipc = electron.ipcMain
@@ -10,7 +9,7 @@ const os = require('os')
 
 
 const menu = new electron.Menu()
-menu.append(new electron.MenuItem({ label: 'Kitten ' + packjson.version,
+menu.append(new electron.MenuItem({ label: 'Kitten [$VERSION$]',
     enabled: false}))
 menu.append(new electron.MenuItem({ label: 'Launch CS:GO',
     click: function(){electron.shell.openExternal('steam://rungameid/730')}}))

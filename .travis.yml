@@ -7,4 +7,6 @@ notifications:
   email: false
 script:
   - rm package-lock.json
+  - node insertVersion.js
+  - rm insertVersion.js
   - npm run dist
