@@ -26,7 +26,7 @@ function doNothing(){
 
 function doCommand(obj){
   if('type' in obj){
-    if(obj['type'] == 'command'){
+    if(obj['type'] === 'command'){
       player.play(obj['content'])
     }
   }
