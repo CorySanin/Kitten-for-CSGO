@@ -10,29 +10,23 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
   </head>
   <body>
-    <div>
-      <h1 id="h1" class="center">Music Kitten</h1>
-      <div class="grid">
-        <label for="volSlider">Volume: </label>
-        <input type="range" id="volSlider" min="0" max="1" step=".01" value=".5"/>
-        <label for="portNum">Port: </label><input id="portNum" type="number" value="8793"/>
-        <label for="kit">Music Pack: </label><select id="kit">
-        </select>
-        <label for="mvpToggle">Play MVP tracks:</label>
-        <label for="mvpToggle"><input id="mvpToggle" type="checkbox" /></label>
-      </div>
-      <div class="fill">
-        <button id="refreshKitsBtn">Refresh Kits</button>
-        <button id="dirChange">Change Main Directory</button>
-        <button id="genConfig">Generate Config</button>
-        <button id="saveBtn">Save</button>
-      </div>
-      <img id="coverPic" width="150px" height="150px" />
-      <button id="muteBtn">Mute</button>
+    <h1 id="h1" class="center">Music Kitten</h1>
+    <div class="grid">
+      <label for="volSlider">Volume: </label>
+      <input type="range" id="volSlider" min="0" max="1" step=".01" value=".5" />
+      <label for="portNum">Port: </label><input id="portNum" type="number" value="8793" />
+      <label for="kit">Music Pack: </label><select id="kit">
+          </select>
+      <label for="mvpToggle">Play MVP tracks:</label>
+      <label for="mvpToggle"><input id="mvpToggle" type="checkbox" /></label>
     </div>
-    <div id="player0Holder">
+    <div class="fill">
+      <button id="refreshKitsBtn">Refresh Kits</button>
+      <button id="dirChange">Change Main Directory</button>
+      <button id="genConfig">Generate Config</button>
+      <button id="saveBtn">Save</button>
     </div>
-    <div id="player1Holder">
-    </div>
+    <img id="coverPic" width="150px" height="150px" />
+    <button id="muteBtn">Mute</button>
   </body>
 </html>

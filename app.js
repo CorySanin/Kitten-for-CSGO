@@ -16,7 +16,7 @@ let settings = {
 }
 let htEntities = {}
 let state = {}
-let player// = new Player({})
+let player = new Player({})
 let server// = new Server({})
 
 function doNothing(){
@@ -37,6 +37,19 @@ function getConfigFilename(){
   return path.join(state.audioDir,'config.json')
 }
 
+function selectKit(){
+  let kit = path.join(state.audioDir,htEntities.kitSelect.value)
+  let picture = path.join(kit, 'cover.jpg')
+  fs.access(picture, fs.constants.F_OK, function(err){
+    if(!err){
+      coverPic.src = picture
+    }
+    else{
+      coverPic.src = ''
+    }
+  })
+}
+
 function scanForKits(){
   if(htEntities.kitSelect){
     htEntities.kitSelect.onchange = doNothing
@@ -53,9 +66,13 @@ function scanForKits(){
         let op = document.createElement('OPTION')
         op.text = dir
         op.value = dir
+        if(dir === settings.kit){
+          op.selected = true
+        }
         htEntities.kitSelect.options.add(op)
       })
-      htEntities.kitSelect.onchange = doNothing //TODO: update current kit
+      htEntities.kitSelect.onchange = selectKit
+      selectKit()
     })
   }
 }
@@ -110,6 +127,7 @@ function getHtEntities(){
   htEntities.genConfig = document.getElementById('genConfig')
   htEntities.refreshKitsBtn = document.getElementById('refreshKitsBtn')
   htEntities.muteBtn = document.getElementById('muteBtn')
+  htEntities.coverPic = document.getElementById('coverPic')
 }
 
 function init(){
