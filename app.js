@@ -16,10 +16,20 @@ let settings = {
 }
 let htEntities = {}
 let state = {}
-let player = new Player({})
-let server// = new Server({})
+let player = new Player()
+let server = new Server({
+  callback:doCommand
+})
 
 function doNothing(){
+}
+
+function doCommand(obj){
+  if('type' in obj){
+    if(obj['type'] == 'command'){
+      player.play(obj['content'])
+    }
+  }
 }
 
 function isDirectory(str){
@@ -42,12 +52,14 @@ function selectKit(){
   let picture = path.join(kit, 'cover.jpg')
   fs.access(picture, fs.constants.F_OK, function(err){
     if(!err){
-      coverPic.src = picture
+      htEntities.coverPic.src = picture
     }
     else{
-      coverPic.src = ''
+      htEntities.coverPic.src = ''
     }
   })
+
+  server.startServer()
 }
 
 function scanForKits(){
@@ -106,6 +118,7 @@ function tryLoadSettings(){
       fs.readFile(getConfigFilename(), 'utf8', function(err, data){
         if(!err){
           settings = JSON.parse(data)
+          server.port = settings.port
           scanForKits()
         }
         saveSettings()

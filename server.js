@@ -22,10 +22,10 @@ class KittenServer {
     start - whether or not the server should start right away
   }
   */
-  constructor(ops) {
-    this.port = ('port' in ops) ? ops['port'] : 8793
+  constructor(ops={}) {
+    this.port = ('port' in ops) ? ops['port'] : DEFAULT_PORT
     this.server = null
-    this.callback = ('callback' in ops) ? ops['callback'] : function({}){}
+    this.callback = ('callback' in ops) ? ops['callback'] : function(ops){}
     this.steamid = null
     this.teamCT = false
     this.running = false
