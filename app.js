@@ -22,6 +22,10 @@ let server// = new Server({})
 function doNothing(){
 }
 
+function isDirectory(str){
+  return fs.lstatSync(str).isDirectory()
+}
+
 function getNicePath(filename=null){
   if(filename == null){
     filename = state.audioDir
@@ -30,7 +34,30 @@ function getNicePath(filename=null){
 }
 
 function getConfigFilename(){
-  return getNicePath() + 'config.json'
+  return path.join(state.audioDir,'config.json')
+}
+
+function scanForKits(){
+  if(htEntities.kitSelect){
+    htEntities.kitSelect.onchange = doNothing
+    while(htEntities.kitSelect.options.length > 0){
+      htEntities.kitSelect.options.remove(0)
+    }
+    fs.readdir(state.audioDir, function(err, files){
+      files = files.map(function(name){
+        return path.join(state.audioDir, name)
+      }).filter(isDirectory)
+      files.forEach(function(kitDir) {
+        let dir = kitDir.split(dirSep)
+        dir = dir[dir.length -1]
+        let op = document.createElement('OPTION')
+        op.text = dir
+        op.value = dir
+        htEntities.kitSelect.options.add(op)
+      })
+      htEntities.kitSelect.onchange = doNothing //TODO: update current kit
+    })
+  }
 }
 
 function saveSettings(){
@@ -38,7 +65,7 @@ function saveSettings(){
     if(state.audioDir){
       localStorage.setItem('audioDir',state.audioDir)
       if(settings){
-        fs.writeFile(getConfigFilename(), settings, 'utf8', doNothing)
+        fs.writeFile(getConfigFilename(), JSON.stringify(settings), 'utf8', doNothing)
       }
     }
   }
@@ -60,13 +87,11 @@ function tryLoadSettings(){
   else{
     try{
       fs.readFile(getConfigFilename(), 'utf8', function(err, data){
-        if(err){
-          saveSettings()
-        }
-        else{
-          console.log(data)
+        if(!err){
           settings = JSON.parse(data)
+          scanForKits()
         }
+        saveSettings()
       })
     }
     catch(e){
