@@ -1,5 +1,6 @@
 /*global Howl, Howler */
 const os = require('os')
+const fs = require('fs')
 const path = require('path')
 const COMMANDS = require('./server.js').commands
 const dirSep = (os.platform() === 'win32')?'\\':'/'
@@ -56,7 +57,7 @@ class KittenPlayer{
       let files = fs.readdirSync(this.folder)
       files.forEach(function(file){
         let split = file.split('.')
-        if(audiofiles.includes(split[0]) && split.length == 2){
+        if(audiofiles.includes(split[0]) && split.length === 2){
           fileExt[split[0]] = '.'+split[split.length-1]
         }
       })
