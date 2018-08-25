@@ -58,9 +58,9 @@ class KittenServer {
           if (parsed.hasOwnProperty('auth') && parsed.auth.hasOwnProperty('token') &&
             parsed.auth.token === AUTH) {
             delete parsed.auth
-            this.getSteamID(parsed)
-            this.updateRoundNum(parsed)
-            this.updateTeam(parsed)
+            that.getSteamID(parsed)
+            that.updateRoundNum(parsed)
+            that.updateTeam(parsed)
             console.log('\nPOST payload:')
             console.log(parsed)
             if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')) {

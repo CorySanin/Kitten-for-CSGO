@@ -1,7 +1,22 @@
 /*global Howl, Howler */
 const os = require('os')
+const path = require('path')
 const COMMANDS = require('./server.js').commands
 const dirSep = (os.platform() === 'win32')?'\\':'/'
+const audiofiles = [
+  'bombplanted',
+  'bombtenseccount',
+  'lostround',
+  'mainmenu',
+  'roundmvpanthem_01',
+  'startaction_01',
+  'startaction_02',
+  'startaction_03',
+  'startround_01',
+  'startround_02',
+  'startround_03',
+  'wonround'
+]
 
 class KittenPlayer{
 
@@ -9,14 +24,14 @@ class KittenPlayer{
     this.current = null
     this.command = null
     this.folder = ('folder' in ops)?ops.folder:''
-    this.extension = ('extension' in ops)?ops.extension:''
-    this.volume = ('volume' in ops)?ops.volume:1
+    this.volume = ('volume' in ops)?ops.volume:.5
     this.tracks = {}
   }
 
   loadTracks(){
     let tracks = this.tracks
     let that = this
+    let playWhenDone = (this.current && this.current.playing())?this.command:false
 
     let onfade = function(p){
       return function(id){
@@ -31,33 +46,42 @@ class KittenPlayer{
       }
     }
 
-    if(this.folder && this.extension){
+    if(this.folder){
       let track
       for(track in tracks) {
         tracks[track].unload()
       }
 
+      let fileExt = []
+      let files = fs.readdirSync(this.folder)
+      files.forEach(function(file){
+        let split = file.split('.')
+        if(audiofiles.includes(split[0]) && split.length == 2){
+          fileExt[split[0]] = '.'+split[split.length-1]
+        }
+      })
+
       tracks[COMMANDS.MENU] = new Howl({
-        src: [this.getFileName('mainmenu')],
+        src: [this.getFileName('mainmenu'+fileExt['mainmenu'])],
         loop: true,
         volume: this.volume
       })
 
       tracks[COMMANDS.MVP] = new Howl({
-        src: [this.getFileName('roundmvpanthem_01')],
+        src: [this.getFileName('roundmvpanthem_01'+fileExt['roundmvpanthem_01'])],
         loop: true, //not sure if it shoule loop or not ?
         volume: this.volume
       })
 
       for(let i=1; i<=3; i++){
         tracks[COMMANDS.LIVE+i] = new Howl({
-          src: [this.getFileName('startaction_0'+i)],
+          src: [this.getFileName('startaction_0'+i+fileExt['startaction_0'+i])],
           loop: false,
           volume: this.volume
         })
 
         tracks[COMMANDS.FREEZETIME+i] = new Howl({
-          src: [this.getFileName('startround_0'+i)],
+          src: [this.getFileName('startround_0'+i+fileExt['startround_0'+i])],
           loop: true,
           volume: this.volume,
           onend(id){
@@ -81,25 +105,25 @@ class KittenPlayer{
       }
 
       tracks[COMMANDS.WIN] = new Howl({
-        src: [this.getFileName('wonround')],
+        src: [this.getFileName('wonround'+fileExt['wonround'])],
         loop: true,
         volume: this.volume
       })
 
       tracks[COMMANDS.LOSE] = new Howl({
-        src: [this.getFileName('lostround')],
+        src: [this.getFileName('lostround'+fileExt['lostround'])],
         loop: true,
         volume: this.volume
       })
 
       tracks[COMMANDS.PLANTED+'10sec'] = new Howl({
-        src: [this.getFileName('bombtenseccount')],
+        src: [this.getFileName('bombtenseccount'+fileExt['bombtenseccount'])],
         loop: true,
         volume: this.volume
       })
 
       tracks[COMMANDS.PLANTED] = new Howl({
-        src: [this.getFileName('bombplanted')],
+        src: [this.getFileName('bombplanted'+fileExt['bombplanted'])],
         loop: true,
         volume: this.volume,
         onplay(){
@@ -117,6 +141,18 @@ class KittenPlayer{
       for(track in tracks) {
         tracks[track].on('fade',onfade(tracks[track]))
       }
+
+      if(playWhenDone){
+        this.command = null
+        this.play(playWhenDone)
+      }
+    }
+  }
+
+  setVolume(vol){
+    this.volume = vol
+    if(this.current){
+      this.current.volume(this.volume)
     }
   }
 
@@ -171,7 +207,7 @@ class KittenPlayer{
   }
 
   getFileName(name){
-    return this.folder+dirSep+name+'.'+this.extension
+    return path.join(this.folder,name)
   }
 
   playMenu(){

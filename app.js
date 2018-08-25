@@ -15,13 +15,51 @@ let settings = {
   mvp: true
 }
 let htEntities = {}
-let state = {}
+let state = {
+  muteVol: 0
+}
 let player = new Player()
 let server = new Server({
   callback:doCommand
 })
 
 function doNothing(){
+}
+
+function updateVolume(){
+  settings.volume = Math.max(state.muteVol,htEntities.volumeSlider.value)
+  player.setVolume(htEntities.volumeSlider.value)
+}
+
+function toggleMvp(){
+  settings.mvp = htEntities.mvpToggle.checked
+}
+
+function toggleMute(){
+  if(state.muteVol === 0){
+    state.muteVol = htEntities.volumeSlider.value
+    htEntities.volumeSlider.value = 0
+  }
+  else{
+    htEntities.volumeSlider.value = state.muteVol
+    state.muteVol = 0
+  }
+  updateVolume()
+}
+
+function genConfig(){
+
+}
+
+function setEventHandlers(){
+  htEntities.kitSelect.onchange = selectKit
+  htEntities.volumeSlider.oninput = updateVolume
+  htEntities.mvpToggle.onchange = toggleMvp
+  htEntities.dirChange.onclick = newAudioDir
+  htEntities.saveBtn.onclick = saveSettings
+  htEntities.genConfig.onclick = genConfig
+  htEntities.refreshKitsBtn.onclick = scanForKits
+  htEntities.muteBtn.onclick = toggleMute
 }
 
 function doCommand(obj){
@@ -48,6 +86,7 @@ function getConfigFilename(){
 }
 
 function selectKit(){
+  settings.kit = htEntities.kitSelect.value
   let kit = path.join(state.audioDir,htEntities.kitSelect.value)
   let picture = path.join(kit, 'cover.jpg')
   fs.access(picture, fs.constants.F_OK, function(err){
@@ -58,7 +97,8 @@ function selectKit(){
       htEntities.coverPic.src = ''
     }
   })
-
+  player.folder = path.join(state.audioDir,htEntities.kitSelect.value)
+  player.loadTracks()
   server.startServer()
 }
 
@@ -83,7 +123,7 @@ function scanForKits(){
         }
         htEntities.kitSelect.options.add(op)
       })
-      htEntities.kitSelect.onchange = selectKit
+      setEventHandlers()
       selectKit()
     })
   }
@@ -107,6 +147,13 @@ function newAudioDir(){
   ipc.send('open-kitten-dir','selected-directory')
 }
 
+function loadSettingsIntoDom(){
+  htEntities.mvpToggle.checked = settings.mvp
+  htEntities.portNum.value = settings.port
+  htEntities.volumeSlider.value = settings.volume
+  updateVolume()
+}
+
 function tryLoadSettings(){
   if(state.audioDir == null){
     let msg = 'You must select a directory to store everything in. '
@@ -119,6 +166,7 @@ function tryLoadSettings(){
         if(!err){
           settings = JSON.parse(data)
           server.port = settings.port
+          loadSettingsIntoDom()
           scanForKits()
         }
         saveSettings()
@@ -136,7 +184,7 @@ function getHtEntities(){
   htEntities.mvpToggle = document.getElementById('mvpToggle')
   htEntities.portNum = document.getElementById('portNum')
   htEntities.dirChange = document.getElementById('dirChange')
-  htEntities.aveBtn = document.getElementById('saveBtn')
+  htEntities.saveBtn = document.getElementById('saveBtn')
   htEntities.genConfig = document.getElementById('genConfig')
   htEntities.refreshKitsBtn = document.getElementById('refreshKitsBtn')
   htEntities.muteBtn = document.getElementById('muteBtn')
