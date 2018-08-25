@@ -25,7 +25,7 @@ class KittenPlayer{
     this.current = null
     this.command = null
     this.folder = ('folder' in ops)?ops.folder:''
-    this.volume = ('volume' in ops)?ops.volume:.5
+    this.volume = ('volume' in ops)?Number.parseFloat(ops.volume):.5
     this.tracks = {}
   }
 
@@ -151,7 +151,7 @@ class KittenPlayer{
   }
 
   setVolume(vol){
-    this.volume = vol
+    this.volume = Number.parseFloat(vol)
     if(this.current){
       this.current.volume(this.volume)
     }
@@ -195,8 +195,10 @@ class KittenPlayer{
         this.command = COMMANDS.LIVE
       }
       else if(command === COMMANDS.WIN || command === COMMANDS.LOSE){
-        this.command = command
-        this.playWinLose()
+        if(this.command !== COMMANDS.MVP){
+          this.command = command
+          this.playWinLose()
+        }
       }
       else if(command === COMMANDS.PLANTED){
         this.playPlanted()
