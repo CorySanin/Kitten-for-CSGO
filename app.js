@@ -1,4 +1,4 @@
-const Server = require('./server.js').server
+const server = require('./server.js')
 const Player = require('./player.js').player
 const ipc = require('electron').ipcRenderer
 const shell = require('electron').shell
@@ -19,9 +19,6 @@ let state = {
   muteVol: 0
 }
 let player = new Player()
-let server = new Server({
-  callback:doCommand
-})
 
 function doNothing(){
 }
@@ -99,7 +96,7 @@ function selectKit(){
   })
   player.folder = path.join(state.audioDir,htEntities.kitSelect.value)
   player.loadTracks()
-  server.startServer()
+  server.start()
 }
 
 function scanForKits(){
@@ -170,7 +167,7 @@ function tryLoadSettings(){
       fs.readFile(getConfigFilename(), 'utf8', function(err, data){
         if(!err){
           settings = JSON.parse(data)
-          server.port = settings.port
+          server.changePort(settings.port)
           loadSettingsIntoDom()
           scanForKits()
         }
@@ -201,6 +198,7 @@ function init(){
   getHtEntities()
 
   state.audioDir = localStorage.getItem('audioDir')
+  server.changeCallback(doCommand)
 
   tryLoadSettings()
 }
