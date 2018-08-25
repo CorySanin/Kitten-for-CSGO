@@ -26,6 +26,10 @@ let server = new Server({
 function doNothing(){
 }
 
+function genConfig(){
+
+}
+
 function updateVolume(){
   settings.volume = Math.max(state.muteVol,htEntities.volumeSlider.value)
   player.setVolume(htEntities.volumeSlider.value)
@@ -45,10 +49,6 @@ function toggleMute(){
     state.muteVol = 0
   }
   updateVolume()
-}
-
-function genConfig(){
-
 }
 
 function setEventHandlers(){
@@ -130,6 +130,10 @@ function scanForKits(){
 }
 
 function saveSettings(){
+  if(settings.port !== htEntities.portNum.value){
+    settings.port = htEntities.portNum.value
+    server.changePort(settings.port)
+  }
   try{
     if(state.audioDir){
       localStorage.setItem('audioDir',state.audioDir)
@@ -141,6 +145,7 @@ function saveSettings(){
   catch(err){
     console.log(err)
   }
+  genConfig()
 }
 
 function newAudioDir(){

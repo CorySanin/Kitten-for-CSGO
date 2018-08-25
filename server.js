@@ -115,9 +115,15 @@ class KittenServer {
       }
     })
 
+    this.server.on('close', function() {
+      that.running = false
+      console.log(' Stopping ...')
+    });
+
+    console.log(this.port)
     this.server.listen(this.port, HOST)
 
-    this.running = !this.running
+    this.running = true
   }
 
   stopServer() {
@@ -134,7 +140,7 @@ class KittenServer {
 
   restartServer(){
     if (!this.running) {
-      this.startServer()
+      return this.startServer()
     }
 
     let that = this
