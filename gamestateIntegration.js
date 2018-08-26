@@ -1,5 +1,5 @@
 const VDF = require('@node-steam/vdf')
-const registry = require('winreg')
+const Registry = require('winreg')
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
@@ -18,8 +18,8 @@ function getCSGOPath(){
 function getLibraryFoldersVDFPath(cb=function(){}){
   if(os.platform() === 'win32'){
     //look at HKEY_CURRENT_USER\Software\Valve\Steam
-    regKey = new registry({
-      hive: registry.HKCU,  // open registry hive HKEY_CURRENT_USER
+    let regKey = new Registry({
+      hive: Registry.HKCU,  // open registry hive HKEY_CURRENT_USER
       key:  '\\Software\\Valve\\Steam'
     })
     regKey.values(function (err, items) {
@@ -38,7 +38,15 @@ function getLibraryFoldersVDFPath(cb=function(){}){
     })
   }
   else{
-
+    let path
+    if(os.platform() === 'darwin'){
+      path = '~/Library/Application Support/Steam/steamapps/libraryfolders.vdf'
+    }
+    else{
+      path = '~/.local/share/Steam/steamapps/libraryfolders.vdf'
+    }
+    cb(path)
+    return path
   }
 }
 
