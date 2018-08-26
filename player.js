@@ -178,7 +178,7 @@ class KittenPlayer{
   }
 
   play(command){
-    if(command !== this.command){
+    if(command !== this.command || !this.current || !this.current.playing()){
       if(command === COMMANDS.MENU){
         this.playMenu()
       }
