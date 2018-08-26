@@ -111,3 +111,10 @@ ipc.on('dialog', function (event, message, title, response) {
     event.sender.send(response, index)
   })
 })
+
+ipc.on('resize', function (event, args) {
+  let dim = mainWindow.getSize()
+  let width = ('width' in args)?args.width:dim[0]
+  let height = ('height' in args)?args.height:dim[1]
+  mainWindow.setSize(width, height, true)
+})

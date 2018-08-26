@@ -20,6 +20,21 @@ let state = {
   muteVol: 0
 }
 let player = new Player()
+let expanded = false
+
+function togglePreview(){
+  if(expanded){
+    ipc.send('resize', {
+      width:380
+    })
+  }
+  else{
+    ipc.send('resize', {
+      width:760
+    })
+  }
+  expanded = !expanded
+}
 
 function genConfig(){
   saveConfig({
