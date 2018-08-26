@@ -62,7 +62,15 @@ function setEventHandlers(){
 function doCommand(obj){
   if('type' in obj){
     if(obj['type'] === 'command'){
-      player.play(obj['content'])
+      if(!htEntities.mvpToggle.checked &&
+        (obj['content'] === server.commands.MVP ||
+         obj['content'] === server.commands.WIN ||
+         obj['content'] === server.commands.LOSE)){
+        player.play('😺')
+      }
+      else{
+        player.play(obj['content'])
+      }
     }
   }
 }
