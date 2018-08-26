@@ -1,11 +1,14 @@
 const server = require('./server.js')
 const Player = require('./player.js').player
+const saveConfig = require('./gamestateIntegration.js').saveConfig
 const ipc = require('electron').ipcRenderer
 const shell = require('electron').shell
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const os = require('os')
 const dirSep = (os.platform() === 'win32')?'\\':'/'
+const doNothing = function(){
+}
 
 let settings = {
   port: '8793',
@@ -18,11 +21,12 @@ let state = {
 }
 let player = new Player()
 
-function doNothing(){
-}
-
 function genConfig(){
-
+  saveConfig({
+    'url': server.getUrl(),
+    'heartbeat': server.getHeartbeat(),
+    'token': server.getAuth()
+  })
 }
 
 function updateVolume(){
@@ -52,7 +56,6 @@ function setEventHandlers(){
   htEntities.mvpToggle.onchange = toggleMvp
   htEntities.dirChange.onclick = newAudioDir
   htEntities.saveBtn.onclick = saveSettings
-  htEntities.genConfig.onclick = genConfig
   htEntities.refreshKitsBtn.onclick = scanForKits
   htEntities.muteBtn.onclick = toggleMute
 }
@@ -193,7 +196,6 @@ function getHtEntities(){
   htEntities.portNum = document.getElementById('portNum')
   htEntities.dirChange = document.getElementById('dirChange')
   htEntities.saveBtn = document.getElementById('saveBtn')
-  htEntities.genConfig = document.getElementById('genConfig')
   htEntities.refreshKitsBtn = document.getElementById('refreshKitsBtn')
   htEntities.muteBtn = document.getElementById('muteBtn')
   htEntities.coverPic = document.getElementById('coverPic')

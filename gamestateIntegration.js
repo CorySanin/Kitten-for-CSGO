@@ -1,18 +1,50 @@
 const VDF = require('@node-steam/vdf')
 const Registry = require('winreg')
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const os = require('os')
 
 const REG = 'SteamPath'
 const WINSTEAMLIB = path.join('steamapps','libraryfolders.vdf')
+const GSIFILENAME = 'gamestate_integration_kitten.cfg'
 
 function saveConfig(config){
-
+  let cfg = VDF.stringify({
+    'Kitten State API Config':{
+      'uri': config.url,
+      'timeout': 5.0,
+      'buffer': 0.1,
+      'throttle': 0.1,
+      'heartbeat': config.heartbeat,
+      'auth': {
+        'token': config.token
+      },
+      'data': {
+        'provider': 1, 'map': 1, 'round': 1, 'player_id': 1, 'allplayers_id': 1,
+        'player_state': 1, 'allplayers_state': 1, 'allplayers_match_stats': 1,
+        'allplayers_weapons': 1, 'player_match_stats': 1,
+      }
+    }
+  })
+  getCSGOPath(function(pth){
+    fs.writeFile(path.join(pth, GSIFILENAME), cfg)
+  })
 }
 
-function getCSGOPath(){
-  let lf = getLibraryFolders(getLibraryFoldersVDFPath())
+function getCSGOPath(cb){
+  getLibraryFoldersVDFPath(function(vdfPath){
+    getLibraryFolders(vdfPath,function(libraries){
+      libraries.push(path.join(path.dirname(vdfPath),'common'))
+      libraries.forEach(function(pth,index){
+        let cfgPath = path.join(pth, 'Counter-Strike Global Offensive', 'csgo', 'cfg')
+        fs.pathExists(cfgPath , function(err, exists){
+          if(!err && exists){
+            cb(cfgPath)
+          }
+        })
+      })
+    })
+  })
 }
 
 function getLibraryFoldersVDFPath(cb=function(){}){
@@ -50,10 +82,28 @@ function getLibraryFoldersVDFPath(cb=function(){}){
   }
 }
 
-function getLibraryFolders(vdf){
-
+function getLibraryFolders(vdfPath,cb){
+  let folders = []
+  try{
+    fs.readFile(vdfPath,{encoding:'utf8'},function(err,data){
+      if(!err){
+        let vdfdata = VDF.parse(data)
+        if('LibraryFolders' in vdfdata){
+          vdfdata = vdfdata['LibraryFolders']
+          let key
+          for(key in vdfdata){
+            if(!isNaN(key)){
+              folders.push(path.join(vdfdata[key],'steamapps','common'))
+            }
+          }
+        }
+      }
+      cb(folders)
+    })
+  }
+  catch(err){
+    cb(folders)
+  }
 }
-
-
 
 exports.saveConfig = saveConfig

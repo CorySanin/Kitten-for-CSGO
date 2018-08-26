@@ -21,6 +21,7 @@ let callback = function(args){}
 let teamCT = false
 let mvps = -1
 let running = false
+let heartbeat = 30.0
 
 function getSteamID(data){
   if (data.hasOwnProperty('provider') && data.provider.hasOwnProperty('steamid')){
@@ -158,12 +159,27 @@ function restartServer(){
   throw 'server.close callback doesn\'t work. Can\'t perform a proper restart.'
 }
 
+function getHeartbeat(){
+  return heartbeat
+}
+
+function getUrl(){
+  return 'http://'+HOST+':'+port
+}
+
+function getAuth(){
+  return AUTH
+}
+
 exports.start = startServer
 exports.stop = stopServer
 exports.restart = restartServer
 exports.changeCallback = changeCallback
 exports.changePort = changePort
 exports.commands = COMMANDS
+exports.getHeartbeat = getHeartbeat
+exports.getUrl = getUrl
+exports.getAuth = getAuth
 exports.running = function(){
   return running
 }

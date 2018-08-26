@@ -24,6 +24,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "electron-updater": "2.21.10",
+    "fs-extra": "7.0.0",
     "http-shutdown": "1.2.0",
     "@node-steam/vdf": "2.0.1",
     "winreg": "1.2.4",
