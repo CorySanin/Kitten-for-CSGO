@@ -5,8 +5,6 @@ const shell = require('electron').shell
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
-const VDF = require('@node-steam/vdf')
-const registry = require('winreg')
 const dirSep = (os.platform() === 'win32')?'\\':'/'
 
 let settings = {
