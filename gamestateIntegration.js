@@ -71,15 +71,15 @@ function getLibraryFoldersVDFPath(cb=function(){}){
     })
   }
   else{
-    let path
+    let vdfpath
     if(os.platform() === 'darwin'){
-      path = path.join(HOMEDIR,'Library/Application Support/Steam/steamapps/libraryfolders.vdf')
+      vdfpath = path.join(HOMEDIR,'Library/Application Support/Steam/steamapps/libraryfolders.vdf')
     }
     else{
-      path = path.join(HOMEDIR,'.local/share/Steam/steamapps/libraryfolders.vdf')
+      vdfpath = path.join(HOMEDIR,'.local/share/Steam/steamapps/libraryfolders.vdf')
     }
-    cb(path)
-    return path
+    cb(vdfpath)
+    return vdfpath
   }
 }
 
