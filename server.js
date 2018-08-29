@@ -134,10 +134,15 @@ function startServer(){
 }
 
 function stopServer(cb=function(err){}){
-  server.shutdown(function(err){
-    running = false
-    cb(err)
-  })
+  if(server){
+    server.shutdown(function(err){
+      running = false
+      cb(err)
+    })
+  }
+  else{
+    cb(false)
+  }
 }
 
 function changeCallback(cb) {
