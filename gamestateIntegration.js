@@ -7,6 +7,7 @@ const os = require('os')
 const REG = 'SteamPath'
 const WINSTEAMLIB = path.join('steamapps','libraryfolders.vdf')
 const GSIFILENAME = 'gamestate_integration_kitten.cfg'
+const HOMEDIR = os.homedir()
 
 function saveConfig(config){
   let cfg = VDF.stringify({
@@ -72,10 +73,10 @@ function getLibraryFoldersVDFPath(cb=function(){}){
   else{
     let path
     if(os.platform() === 'darwin'){
-      path = '~/Library/Application Support/Steam/steamapps/libraryfolders.vdf'
+      path = path.join(HOMEDIR,'Library/Application Support/Steam/steamapps/libraryfolders.vdf')
     }
     else{
-      path = '~/.local/share/Steam/steamapps/libraryfolders.vdf'
+      path = path.join(HOMEDIR,'.local/share/Steam/steamapps/libraryfolders.vdf')
     }
     cb(path)
     return path
