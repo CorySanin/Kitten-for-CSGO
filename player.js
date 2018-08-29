@@ -227,8 +227,8 @@ class KittenPlayer{
     this.fadein({time:800})
   }
 
-  playFreezetime(){
-    let randnum = Math.floor((Math.random() * 3) + 1)
+  playFreezetime(num=0){
+    let randnum = (num<=0)?Math.floor((Math.random() * 3) + 1):Math.min(3,num)
     this.fadeout()
     this.command = COMMANDS.FREEZETIME
     this.current = this.tracks[COMMANDS.FREEZETIME+randnum]

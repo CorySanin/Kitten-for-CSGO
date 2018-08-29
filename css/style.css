@@ -5,7 +5,6 @@ html, body{
     color:#fff;
     height:100%;
     margin:0px;
-    padding:.5em;
 }
 *, *:before, *:after {
   box-sizing:inherit;
@@ -15,6 +14,7 @@ h1{
 }
 div{
   line-height: 1.8em;
+  padding:.5em;
 }
 img{
   margin-top:4px;
@@ -26,24 +26,34 @@ button, .button{
   background-color:rgba(255,255,255,0);
   color:#fff;
   font-size:1.25em;
-  margin-bottom:.5em;
   font-family:sans-serif;
-  line-height: inherit;
-  padding: 0 .25em;
+  line-height:inherit;
+  padding:0 .25em;
+  text-decoration:none;
+  cursor:pointer;
 }
 button:hover, .button:hover{
   background-color:rgba(255,255,255,1);
   color:#212121;
 }
-button[disabled], .button.disabled, button[disabled]:hover, .button.disabled:hover{
+button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled][disabled]:hover:hover,
+.button.disabled:hover, .button[disabled]{
   background-color:#757575;
   color:#fff;
+}
+.button.textinput{
+  color:#fff;
+  background-color:rgba(255,255,255,0);
+  cursor:text;
 }
 .center{
   text-align:center;
 }
 .fill > *{
   width:100%;
+}
+.fill > button, .fill > .button{
+  margin-bottom:4px;
 }
 .grid{
   display:grid;
@@ -53,8 +63,31 @@ button[disabled], .button.disabled, button[disabled]:hover, .button.disabled:hov
 .grid > *{
   margin:4px;
 }
+.grid > .textareaContainer{
+  width: auto;
+  overflow:hidden;
+}
+.grid > .textareaContainer > textarea{
+  max-width:100%;
+  width:100%;
+  min-width:100%;
+  min-height:4em;
+  height:4em;
+  max-height:20em;
+}
+.relative{
+  position:relative;;
+}
+.none{
+  display:none;
+}
+.expanded > div{
+  max-width:50%;
+  display:inline-block;
+  vertical-align:text-top;
+}
 #muteBtn{
-  position:fixed;
-  bottom:4px;
+  position:absolute;
+  top:4px;
   right:16px;
 }

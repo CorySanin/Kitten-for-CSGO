@@ -22,7 +22,7 @@ let state = {
 let player = new Player()
 let expanded = false
 
-function togglePreview(){
+function toggleExpanded(){
   if(expanded){
     ipc.send('resize', {
       width:380
@@ -36,11 +36,23 @@ function togglePreview(){
   expanded = !expanded
 }
 
+function togglePreview(){
+  toggleExpanded()
+  if(expanded){
+    htEntities.body.classList.add('expanded')
+    htEntities.preview.div.classList.remove('none')
+  }
+  else{
+    htEntities.body.classList.remove('expanded')
+    htEntities.preview.div.classList.add('none')
+  }
+}
+
 function genConfig(){
   saveConfig({
-    'url': server.getUrl(),
-    'heartbeat': server.getHeartbeat(),
-    'token': server.getAuth()
+    url: server.getUrl(),
+    heartbeat: server.getHeartbeat(),
+    token: server.getAuth()
   })
 }
 
@@ -65,6 +77,14 @@ function toggleMute(){
   updateVolume()
 }
 
+function previewBtnClick(){
+  player.play(this.value)
+}
+
+function previewFreezetime(){
+  player.playFreezetime(this.value)
+}
+
 function setEventHandlers(){
   htEntities.kitSelect.onchange = selectKit
   htEntities.volumeSlider.oninput = updateVolume
@@ -73,6 +93,18 @@ function setEventHandlers(){
   htEntities.saveBtn.onclick = saveSettings
   htEntities.refreshKitsBtn.onclick = scanForKits
   htEntities.muteBtn.onclick = toggleMute
+  htEntities.previewBtn.onclick = togglePreview
+
+  //preview elements
+  htEntities.preview.menu.onclick = htEntities.preview.freezetime.onclick =
+      htEntities.preview.live.onclick = htEntities.preview.planted.onclick =
+      htEntities.preview.mvp.onclick = htEntities.preview.win.onclick =
+      htEntities.preview.lose.onclick = htEntities.preview.stop.onclick =
+        previewBtnClick
+  htEntities.preview.freezetime1.onclick =
+      htEntities.preview.freezetime2.onclick =
+      htEntities.preview.freezetime3.onclick =
+        previewFreezetime
 }
 
 function doCommand(obj){
@@ -205,15 +237,33 @@ function tryLoadSettings(){
 }
 
 function getHtEntities(){
+  htEntities.body = document.getElementsByTagName('body')[0]
   htEntities.kitSelect = document.getElementById('kit')
   htEntities.volumeSlider = document.getElementById('volSlider')
   htEntities.mvpToggle = document.getElementById('mvpToggle')
   htEntities.portNum = document.getElementById('portNum')
+  htEntities.previewBtn = document.getElementById('previewKit')
   htEntities.dirChange = document.getElementById('dirChange')
   htEntities.saveBtn = document.getElementById('saveBtn')
   htEntities.refreshKitsBtn = document.getElementById('refreshKitsBtn')
   htEntities.muteBtn = document.getElementById('muteBtn')
   htEntities.coverPic = document.getElementById('coverPic')
+
+  //preview elements
+  htEntities.preview = {
+    div: document.getElementById('preview'),
+    menu: document.getElementById('menuPreview'),
+    freezetime: document.getElementById('freezetimePreview'),
+    freezetime1: document.getElementById('freezetime1Preview'),
+    freezetime2: document.getElementById('freezetime2Preview'),
+    freezetime3: document.getElementById('freezetime3Preview'),
+    live: document.getElementById('livePreview'),
+    planted: document.getElementById('plantedPreview'),
+    mvp: document.getElementById('mvpPreview'),
+    win: document.getElementById('winPreview'),
+    lose: document.getElementById('losePreview'),
+    stop: document.getElementById('stopPreview')
+  }
 }
 
 function init(){
