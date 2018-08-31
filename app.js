@@ -66,13 +66,18 @@ function toggleMvp(){
 }
 
 function toggleMute(){
-  if(state.muteVol === 0){
-    state.muteVol = htEntities.volumeSlider.value
-    htEntities.volumeSlider.value = 0
+  if(Number.parseFloat(htEntities.volumeSlider.value) === 0){
+    if(state.muteVol === 0){
+      htEntities.volumeSlider.value = .5
+    }
+    else{
+      htEntities.volumeSlider.value = state.muteVol
+    }
+    state.muteVol = 0
   }
   else{
-    htEntities.volumeSlider.value = state.muteVol
-    state.muteVol = 0
+    state.muteVol = htEntities.volumeSlider.value
+    htEntities.volumeSlider.value = 0
   }
   updateVolume()
 }
@@ -147,7 +152,7 @@ function selectKit(){
       htEntities.coverPic.src = picture
     }
     else{
-      htEntities.coverPic.src = ''
+      htEntities.coverPic.src = 'icon/icon_512.png'
     }
   })
   player.folder = path.join(state.audioDir,htEntities.kitSelect.value)
