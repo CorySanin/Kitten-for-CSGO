@@ -180,16 +180,16 @@ function scanForKits(){
       files = files.map(function(name){
         return path.join(state.audioDir, name)
       }).filter(isDirectory)
-      files.forEach(function(kitDir) {
+      files.forEach(function(kitDir, i) {
         let dir = kitDir.split(dirSep)
         dir = dir[dir.length -1]
         let op = document.createElement('OPTION')
         op.text = dir
         op.value = dir
-        if(dir === settings.kit){
-          op.selected = true
-        }
         htEntities.kitSelect.options.add(op)
+        if(dir === settings.kit){
+          htEntities.kitSelect.options.selectedIndex = i
+        }
       })
       setEventHandlers()
       selectKit()
@@ -244,14 +244,13 @@ function tryLoadSettings(){
           settings = JSON.parse(data)
           server.changePort(settings.port)
           loadSettingsIntoDom()
+          scanForKits()
         }
         saveSettings()
       })
     }
     catch(e){
       saveSettings()
-    }
-    finally{
       scanForKits()
     }
   }
