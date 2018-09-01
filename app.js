@@ -147,11 +147,8 @@ function getCover(folder){
   let placeholder = 'icon/icon_512.png'
   htEntities.coverPic.src = placeholder
   fs.readdir(folder, function(err, files){
-    let cover
-    if(err){
-      cover = placeholder
-    }
-    else{
+    let cover = placeholder
+    if(!err){
       files.forEach(function(file){
         let split = file.split('.')
         if(split.length === 2 && split[0].toLowerCase() === 'cover'){
@@ -199,6 +196,10 @@ function scanForKits(){
   }
 }
 
+function resetDirectory(){
+  localStorage.removeItem('audioDir')
+}
+
 function saveSettings(){
   if(settings.port !== htEntities.portNum.value){
     settings.port = htEntities.portNum.value
@@ -242,13 +243,15 @@ function tryLoadSettings(){
           settings = JSON.parse(data)
           server.changePort(settings.port)
           loadSettingsIntoDom()
-          scanForKits()
         }
         saveSettings()
       })
     }
     catch(e){
       saveSettings()
+    }
+    finally{
+      scanForKits()
     }
   }
 }
