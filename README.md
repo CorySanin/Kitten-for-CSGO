@@ -79,15 +79,16 @@ Inside, you'll need to have these audio files:
 
 6. wonround
 
-  * Plays (and loops) when you win
+  * Plays (and loops) when you win. Anything over 20 seconds is excessive.
 
 7. lostround
 
-  * Plays (and loops) when you lose
+  * Plays (and loops) when you lose Anything over 20 seconds is excessive.
 
 8. roundmvpanthem_01
 
-  * roundmvpanthem_01 plays (and loops) when you're the MVP\*. Despite the naming convention,
+  * roundmvpanthem_01 plays (and loops) when you're the MVP\*.
+   Anything over 20 seconds is excessive. Despite the naming convention,
   there's only one MVP anthem. The name was chosen to align with the naming
   scheme already in place for real music kits.
 
@@ -102,9 +103,6 @@ SENSATIVE
 
 Optionally, you can add a cover.jpeg to the music kit's folder. This is
 displayed in Kitten when the kit is selected.
-
-Aside from these files, try to refrain from adding too many other files, namely
-files of a type different from the one you chose for the kit's tracks.
 
 Here's a sample music kit:
 [Big Croint Music Kit](https://drive.google.com/open?id=0Bwif2jHEOIAdaEFqS0k2RWtzbzg)
