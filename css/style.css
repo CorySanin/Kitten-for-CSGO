@@ -5,6 +5,7 @@ html, body{
     color:#fff;
     height:100%;
     margin:0px;
+    overflow:hidden;
 }
 *, *:before, *:after {
   box-sizing:inherit;
