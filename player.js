@@ -57,7 +57,7 @@ class KittenPlayer{
       let files = fs.readdirSync(this.folder)
       files.forEach(function(file){
         let split = file.split('.')
-        if(audiofiles.includes(split[0]) && split.length === 2){
+        if(split.length === 2 && audiofiles.includes(split[0])){
           fileExt[split[0]] = '.'+split[split.length-1]
         }
       })

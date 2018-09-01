@@ -143,19 +143,31 @@ function getConfigFilename(){
   return path.join(state.audioDir,'config.json')
 }
 
+function getCover(folder){
+  let placeholder = 'icon/icon_512.png'
+  htEntities.coverPic.src = placeholder
+  fs.readdir(folder, function(err, files){
+    let cover
+    if(err){
+      cover = placeholder
+    }
+    else{
+      files.forEach(function(file){
+        let split = file.split('.')
+        if(split.length === 2 && split[0].toLowerCase() === 'cover'){
+          cover = path.join(folder, file)
+        }
+      })
+    }
+    htEntities.coverPic.src = cover
+  })
+}
+
 function selectKit(){
   settings.kit = htEntities.kitSelect.value
   let kit = path.join(state.audioDir,htEntities.kitSelect.value)
-  let picture = path.join(kit, 'cover.jpg')
-  fs.access(picture, fs.constants.F_OK, function(err){
-    if(!err){
-      htEntities.coverPic.src = picture
-    }
-    else{
-      htEntities.coverPic.src = 'icon/icon_512.png'
-    }
-  })
-  player.folder = path.join(state.audioDir,htEntities.kitSelect.value)
+  getCover(kit)
+  player.folder = kit
   player.loadTracks()
   server.start()
 }
