@@ -58,7 +58,6 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
 .grid{
   display:grid;
   grid-template-columns:auto 1fr;
-  margin-bottom:.5em;
 }
 .grid > *{
   margin:4px;
@@ -76,7 +75,7 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   max-height:20em;
 }
 .relative{
-  position:relative;;
+  position:relative;
 }
 .none{
   display:none;

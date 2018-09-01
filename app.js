@@ -162,6 +162,7 @@ function getCover(folder){
 
 function selectKit(){
   settings.kit = htEntities.kitSelect.value
+  htEntities.header.innerHTML = (settings.kit === '')?'Music Kitten':settings.kit
   let kit = path.join(state.audioDir,htEntities.kitSelect.value)
   getCover(kit)
   player.folder = kit
@@ -268,6 +269,7 @@ function getHtEntities(){
   htEntities.refreshKitsBtn = document.getElementById('refreshKitsBtn')
   htEntities.muteBtn = document.getElementById('muteBtn')
   htEntities.coverPic = document.getElementById('coverPic')
+  htEntities.header = document.getElementById('h1')
 
   //preview elements
   htEntities.preview = {
