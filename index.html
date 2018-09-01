@@ -3,13 +3,19 @@
   <head>
     <meta charset="UTF-8">
     <title>Kitten</title>
-    <script src="player.js"></script>
+    <script src="node_modules/howler/dist/howler.js"></script>
+    <script src="app.js"></script>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
   </head>
-  <body onload="init()">
-    <div>
-      <h1 id="h1" class="center">Music Kitten</h1>
+  <body>
+    <div id="main">
+      <h1 id="h1" class="center top-margin">Music Kitten</h1>
+      <div class="relative">
+        <img id="coverPic" width="150px" height="150px" />
+        <button id="muteBtn">Mute</button>
+      </div>
       <div class="grid">
         <label for="volSlider">Volume: </label>
         <input type="range" id="volSlider" min="0" max="1" step=".01" value=".5"/>
@@ -20,17 +26,25 @@
         <label for="mvpToggle"><input id="mvpToggle" type="checkbox" /></label>
       </div>
       <div class="fill">
+        <button id="previewKit">Preview Kit</button>
         <button id="refreshKitsBtn">Refresh Kits</button>
         <button id="dirChange">Change Main Directory</button>
-        <button id="genConfig">Generate Config</button>
         <button id="saveBtn">Save</button>
       </div>
-      <img id="coverPic" width="150px" height="150px" />
-      <button id="muteBtn">Mute</button>
-    </div>
-    <div id="player0Holder">
-    </div>
-    <div id="player1Holder">
+    </div><div id="preview" class="none">
+      <div class="fill">
+        <button id="menuPreview" value="menu" title="mainmenu">Menu</button>
+        <button id="freezetimePreview" value="freezetime" title="startround (random)">Freezetime</button>
+        <button id="freezetime1Preview" value="1" title="startround_01">Freezetime 1</button>
+        <button id="freezetime2Preview" value="2" title="startround_02">Freezetime 2</button>
+        <button id="freezetime3Preview" value="3" title="startround_03">Freezetime 3</button>
+        <button id="livePreview" value="live" title="startaction">Live</button>
+        <button id="plantedPreview" value="planted" title="bombplanted -> bombtenseccount">Planted</button>
+        <button id="mvpPreview" value="mvp" title="roundmvpanthem_01">MVP</button>
+        <button id="winPreview" value="win" title="wonround">Win</button>
+        <button id="losePreview" value="lose" title="lostround">Lose</button>
+        <button id="stopPreview" value="😺">Stop</button>
+      </div>
     </div>
   </body>
 </html>

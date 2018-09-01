@@ -1,496 +1,254 @@
-const ipc = require('electron').ipcRenderer
-const shell = require('electron').shell
+/*global Howl, Howler */
+const os = require('os')
 const fs = require('fs')
 const path = require('path')
-const os = require('os')
+const COMMANDS = require('./server.js').commands
+const dirSep = (os.platform() === 'win32')?'\\':'/'
+const audiofiles = [
+  'bombplanted',
+  'bombtenseccount',
+  'lostround',
+  'mainmenu',
+  'roundmvpanthem_01',
+  'startaction_01',
+  'startaction_02',
+  'startaction_03',
+  'startround_01',
+  'startround_02',
+  'startround_03',
+  'wonround'
+]
 
-let isDirectory = null
-let getDirectories = null
-let getFiles = null
+class KittenPlayer{
 
-let curPlayer = 1
-let state = ''
-let dirSep = '/'
-let audioDir = ''
-let audioExt = '.meow'
-let roundActionFlag = false
-let bombPlantFlag = false
-let roundActionPlayer
-let kitSelect
-let volumeSlider
-let mvpToggle
-let portNum
-let dirChange
-let saveBtn
-let genConfig
-let refreshKitsBtn
-let muteBtn
-let savedVolume = 0
-let currentTimeout;
-
-function ready(){
-  //handles misc messages from main.js
-  ipc.on('message', function (event, message) {
-    console.log(`Message from main: ${message}`)
-  })
-
-  //takes commands issued by main.js and feeds them into doCommand
-  ipc.on('command', function (event, message) {
-    //console.log(message)
-    doCommand(message)
-  })
-}
-
-//executes when the selected directory dialog is completed
-ipc.on('selected-directory', function(event, path){
-  if(path.length > 0){
-    audioDir = path[0]
-    localStorage.setItem('audioDir', audioDir)
-    scanForKits()
-    readSettings()
-    startServer()
-    ready()
-  }
-  else if(audioDir == null){
-    let msg = 'You must select a directory to store everything in. '
-    msg += 'This is also where Kitten looks for music kits.'
-    alert(msg)
-    ipc.send('open-kitten-dir','selected-directory')
-  }
-})
-
-//function that is called once the page is loaded
-function init(){
-  console.log('Music Kitten for CS:GO\nVersion 1.0.0\nBy Cory Sanin')
-
-  kitSelect = document.getElementById('kit')
-  volumeSlider = document.getElementById('volSlider')
-  mvpToggle = document.getElementById('mvpToggle')
-  portNum = document.getElementById('portNum')
-  dirChange = document.getElementById('dirChange')
-  saveBtn = document.getElementById('saveBtn')
-  genConfig = document.getElementById('genConfig')
-  refreshKitsBtn = document.getElementById('refreshKitsBtn')
-  muteBtn = document.getElementById('muteBtn')
-
-  audioDir = localStorage.getItem('audioDir')
-
-  if(os.platform() == 'win32'){
-    dirSep = '\\'
+  constructor(ops={}){
+    this.current = null
+    this.command = null
+    this.folder = ('folder' in ops)?ops.folder:''
+    this.volume = ('volume' in ops)?Number.parseFloat(ops.volume):.5
+    this.tracks = {}
   }
 
-  //event listeners
-  volumeSlider.oninput = function(){
-    let curplay = getCurPlayer()
-    if(curplay != null)
-      curplay.volume = volumeSlider.value
-  }
-  dirChange.onclick = function(){
-    ipc.send('open-kitten-dir','selected-directory')
-  }
-  muteBtn.onclick = function(){
-    if(volumeSlider.value == 0){
-      volumeSlider.value = savedVolume
-      savedVolume = 0
-    }
-    else{
-      savedVolume = volumeSlider.value
-      volumeSlider.value = 0
-    }
-    let curplay = getCurPlayer()
-    if(curplay != null)
-      curplay.volume = volumeSlider.value
-  }
-  saveBtn.onclick = writeSettings
-  genConfig.onclick = writeCSGOConfig
-  kitSelect.onchange = updateKitCover
-  refreshKitsBtn.onclick = function (){
-    let kitToSelect = kitSelect.value
-    scanForKits()
-    selectKit(kitToSelect)
-  }
+  loadTracks(){
+    let tracks = this.tracks
+    let that = this
+    let playWhenDone = (this.current && this.current.playing())?this.command:false
 
-  //end event listeners
-
-  //from https://stackoverflow.com/a/24594123/1317558
-  isDirectory = source => fs.lstatSync(source).isDirectory()
-  getDirectories = source =>
-    fs.readdirSync(source).map(name => path.join(source, name)).filter(isDirectory)
-
-  getFiles = source =>
-    fs.readdirSync(source).map(name => path.join(source, name)).filter
-    (source => !fs.lstatSync(source).isDirectory())
-
-    //check if an audioDir has been selected
-    if(audioDir == null)
-    {
-      let msg = 'Welcome to Music Kitten! Since this is your first time, you need'
-      msg += ' to pick a folder to store everything. Put it wherever you like.'
-      alert(msg)
-      ipc.send('open-kitten-dir','selected-directory')
-    }
-    else {
-      scanForKits()
-      readSettings()
-      startServer()
-      ready()
-    }
-}
-
-//looks in audioDir for kits and populates kitSelect
-function scanForKits(){
-  while(kitSelect.options.length > 0){
-    kitSelect.options.remove(0)
-  }
-  getDirectories(audioDir).forEach(function(element) {
-    let dir = element.split(dirSep)
-    dir = dir[dir.length -1]
-    let op = document.createElement('OPTION')
-    op.text = dir
-    op.value = element
-    kitSelect.options.add(op)
-    updateKitCover()
-  })
-}
-
-//Looks for a matching option in kitSelect and selects it
-function selectKit(path){
-  for(let i = 0; i< kitSelect.options.length; i++){
-    if(kitSelect.options[i].value == path){
-      kitSelect.options[i].selected = true
-      updateKitCover()
-      return undefined
-    }
-  }
-}
-
-//find a cover and display it
-function updateKitCover(){
-  let path = getKitPath() + 'cover'
-  let coverPic = document.getElementById('coverPic')
-  if(fs.existsSync(path + '.jpeg')){
-    path = path + '.jpeg'
-  }
-  else if(fs.existsSync(path + '.jpg')){
-    path = path + '.jpg'
-  }
-  else{
-    coverPic.src = ''
-    return
-  }
-  coverPic.src = path
-}
-
-//Updates the current filetype and returns the selected kit location
-function getKitPath(){
-  let files = getFiles(kitSelect.value)
-  let exts = []
-  //I'm assuming that if there are two files with the same ext,
-  //that's probably the filetype that we'll be using.
-  //TODO: think of a smarter solution because this is poop.
-  for(let i=0; i<files.length; i++){
-    let ext = files[i].split('.')
-    ext = ext[ext.length - 1]
-    if(typeof exts[ext] !== 'undefined'){
-      audioExt = '.'+ext
-      break
-    }
-    else{
-      exts[ext] = 1
-    }
-  }
-  return kitSelect.value + dirSep
-}
-
-//loads config.json
-function readSettings(){
-  let confFile = audioDir + dirSep + 'config.json'
-  if (fs.existsSync(confFile)) {
-    fs.readFile(confFile,{encoding: 'utf8'},function(err,data) {
-      let conf = JSON.parse(data)
-      if(conf.hasOwnProperty('port')){
-        portNum.value = conf.port
-      }
-      if(conf.hasOwnProperty('kit')){
-        selectKit(conf.kit)
-      }
-      if(conf.hasOwnProperty('volume')){
-        volumeSlider.value = conf.volume
-      }
-      if(conf.hasOwnProperty('mvp')){
-        mvpToggle.checked = conf.mvp
-      }
-      else{
-        mvpToggle.checked = true
-      }
-    })
-  }
-}
-
-//creates a config.json from the current configuration
-function writeSettings(){
-  let confFile = audioDir + dirSep + 'config.json'
-  let conf = {}
-  conf.port = portNum.value
-  conf.kit = kitSelect.value
-  conf.volume = Math.max(volumeSlider.value,savedVolume)
-  conf.mvp = mvpToggle.checked
-  fs.writeFile(confFile,JSON.stringify(conf,null,'\t'),function(err) {
-    if(err) return console.error(err)
-    console.log('saved settings.')
-  })
-}
-
-//Save a proper config and instructs the user to put in the correct directory
-//Note: This is not JSON. It's very close to JSON, so a string replace and
-//      a few other modifications might work, but for now, it's just a hard
-//      coded string to print to a file as-is.
-function writeCSGOConfig(){
-  let conf = '"Kitten State API Config"\n'
-  conf += '{\n'
-  conf += ' "uri" "http://127.0.0.1:'+portNum.value+'"\n'
-  conf += ' "timeout" "5.0"\n'
-  conf += ' "buffer"  "0.1"\n'
-  conf += ' "throttle" "0.1"\n'
-  conf += ' "heartbeat" "30.0"\n'
-  conf += ' "auth"\n'
-  conf += ' {\n'
-  conf += '   "token" "WooMeowWoo"\n'
-  conf += ' }\n'
-  conf += ' "data"\n'
-  conf += ' {\n'
-  conf += '   "provider"            "1"\n'
-  conf += '   "map"                 "1"\n'
-  conf += '   "round"               "1"\n'
-  conf += '   "player_id"           "1"\n'
-  conf += '   "allplayers_id"       "1"\n'
-  conf += '   "player_state"        "1"\n'
-  conf += '   "allplayers_state"    "1"\n'
-  conf += '   "allplayers_match_stats"  "1"\n'
-  conf += '   "allplayers_weapons"  "1"\n'
-  conf += '   "player_match_stats" "1" \n'
-  conf += ' }\n'
-  conf += '}'
-
-  fs.writeFile(audioDir + dirSep + 'gamestate_integration_kitten.cfg',
-      conf,function(err) {
-    if(err){
-      return console.error(err)
-    }
-    shell.showItemInFolder(audioDir + dirSep + 'gamestate_integration_kitten.cfg')
-    console.log('Exported CS:GO config.')
-    let msg = 'Configuration successfully generated. Move it to \n'
-    msg += '[CS:GO install directory]/csgo/cfg/'
-    alert(msg)
-  })
-}
-
-//tells main.js to start the http server
-function startServer(){
-  console.log('We are open for business')
-  ipc.send('start-server',parseInt(portNum.value))
-}
-
-//returns the volume to be used by all audio elements
-function getVolume(){
-  return volumeSlider.value
-}
-
-//returns the current audio player
-function getCurPlayer(){
-  let elId = null
-  if(curPlayer){
-    elId = 'player1'
-  }
-  else {
-    elId = 'player0'
-  }
-  return document.getElementById(elId)
-}
-
-//sets up and returns the next audio player.
-//src: the audio to play
-function getPlayer(src){
-  let elId = null
-  if(curPlayer){
-    curPlayer = 0
-    elId = 'player0'
-  }
-  else {
-    curPlayer++
-    elId = 'player1'
-  }
-  let containerEl = document.getElementById(elId+'Holder')
-
-  containerEl.innerHTML = '<audio id="'+elId+'">'
-  containerEl.innerHTML += '</audio>'
-
-  let srcel = document.createElement('SOURCE')
-  srcel.src = src.replace(/\\/g,'/')
-
-  let plyr = document.getElementById(elId)
-  plyr.volume = getVolume()
-
-  plyr.appendChild(srcel)
-
-  return document.getElementById(elId)
-}
-
-//heavily inspired by fade.js by miohtama
-//ramp() is is almost identical to original implementation
-//https://github.com/miohtama/Krusovice/blob/master/src/tools/fade.js
-//decreases player volume (in time given)
-function fadeOut(player,timeToFade){
-  if(player != null){
-    let oVol = player.volume
-    if(oVol != 0){
-      let tick = 50
-
-      let volumeStep = oVol / (timeToFade / tick)
-
-      function ramp() {
-        let vol = Math.max(0, player.volume - volumeStep)
-
-        player.volume = vol
-
-        if(player.volume > 0) {
-          setTimeout(ramp, tick)
-        } else {
-          player.pause()
+    let onfade = function(p){
+      return function(id){
+        if(p.stopping){
+          p.stop()
+          p.stopping = false
+          if(p === this.current){
+            that.current = null
+            that.command = null
+          }
         }
       }
-      ramp()
     }
-  }
-}
 
-//starts volume at 0 and goes up to full volume
-//modified from fadeOut()
-//Thanks again to miohtama for fade.js
-//increases player volume
-function fadeIn(player){
-  if(player != null){
-    player.volume = 0
-    let destination = getVolume()
-    let timeToFade = 1000
-    let tick = 50
-
-    let volumeStep = destination / (timeToFade / tick)
-
-    function ramp() {
-      let vol = Math.min(destination, player.volume + volumeStep)
-
-      player.volume = vol
-
-      // Have we reached target volume level yet?
-      if(player.volume < destination) {
-        setTimeout(ramp, tick)
+    if(this.folder){
+      let track
+      for(track in tracks) {
+        tracks[track].unload()
       }
-    }
-    ramp()
-  }
-}
 
-//handles commands
-//this is the main function for player.js
-function doCommand(message){
-  if(message != state){
-    if(message == 'mvp'){
-      fadeOut(getCurPlayer(),500)
-      if(mvpToggle.checked){
-        loopAudio('roundmvpanthem_01',message,false)
-      }
-      message = 'win'
-    }
-    else if (message == 'freezetime') {
-      fadeOut(getCurPlayer(),500)
-      let roundnum = Math.floor((Math.random() * 3) + 1)
-      roundActionFlag = true
-      loopAudio('startround_0'+roundnum,message,true,function(){
-        if(state == 'live'){
-          let liveplayer = getPlayer(getKitPath()+'startaction_0'+roundnum+audioExt)
-          liveplayer.oncanplay = function(){
-            if(roundActionFlag)
-              liveplayer.play()
-          }
-          liveplayer.load
+      let fileExt = []
+      let files = fs.readdirSync(this.folder)
+      files.forEach(function(file){
+        let split = file.split('.')
+        if(split.length === 2 && audiofiles.includes(split[0])){
+          fileExt[split[0]] = '.'+split[split.length-1]
         }
       })
-    }
-    else if (message == 'live') {
 
-      if(state == 'menu'){
-        fadeOut(getCurPlayer(),1000)
-        getPlayer('')
-      }
-      else if(state == 'mvp'|| state == 'win' || state == 'lose' ||
-      state == 'planted' || state == '10sec'){
-        message = state
-      }
-      if(roundActionFlag){
+      tracks[COMMANDS.MENU] = new Howl({
+        src: [this.getFileName('mainmenu'+fileExt['mainmenu'])],
+        loop: true,
+        volume: this.volume
+      })
 
-        setTimeout(function(){
-          roundActionFlag = false
-          fadeOut(getCurPlayer(),3500)
-        },8500)
+      tracks[COMMANDS.MVP] = new Howl({
+        src: [this.getFileName('roundmvpanthem_01'+fileExt['roundmvpanthem_01'])],
+        loop: true, //not sure if it shoule loop or not ?
+        volume: this.volume
+      })
+
+      for(let i=1; i<=3; i++){
+        tracks[COMMANDS.LIVE+i] = new Howl({
+          src: [this.getFileName('startaction_0'+i+fileExt['startaction_0'+i])],
+          loop: false,
+          volume: this.volume
+        })
+
+        tracks[COMMANDS.FREEZETIME+i] = new Howl({
+          src: [this.getFileName('startround_0'+i+fileExt['startround_0'+i])],
+          loop: true,
+          volume: this.volume,
+          onend(id){
+            let startaction = tracks[COMMANDS.LIVE+i]
+            if(that.command === COMMANDS.LIVE){
+              that.current.stop()
+              setTimeout(function(){
+                if(that.command === COMMANDS.LIVE){
+                  that.fadeout({
+                    time: 3500,
+                    player: startaction
+                  })
+                }
+              }, 5000)
+              startaction.volume(that.volume)
+              startaction.play()
+              that.current = startaction
+            }
+          }
+        })
       }
-    }
-    else if (message == 'menu'){
-      fadeOut(getCurPlayer(),500)
-      loopAudio('mainmenu',message,true)
-    }
-    else if (message == 'win' || message == 'lose') {
-      fadeOut(getCurPlayer(),500)
-      if(mvpToggle.checked){
-        let roundendtrack = (message == 'win')?'wonround':'lostround'
-        loopAudio(roundendtrack,message,false)
-      }
-    }
-    else if (message == 'planted' && state != '10sec'){
-      loopAudio('bombplanted',message,false,function(){
-        if(state == '10sec'){
-          bombPlantFlag = false
+
+      tracks[COMMANDS.WIN] = new Howl({
+        src: [this.getFileName('wonround'+fileExt['wonround'])],
+        loop: true,
+        volume: this.volume
+      })
+
+      tracks[COMMANDS.LOSE] = new Howl({
+        src: [this.getFileName('lostround'+fileExt['lostround'])],
+        loop: true,
+        volume: this.volume
+      })
+
+      tracks[COMMANDS.PLANTED+'10sec'] = new Howl({
+        src: [this.getFileName('bombtenseccount'+fileExt['bombtenseccount'])],
+        loop: true,
+        volume: this.volume
+      })
+
+      tracks[COMMANDS.PLANTED] = new Howl({
+        src: [this.getFileName('bombplanted'+fileExt['bombplanted'])],
+        loop: true,
+        volume: this.volume,
+        onplay(){
+          setTimeout(function(){
+            if(that.command === 'planted'){
+              that.current.stop()
+              that.current = tracks[COMMANDS.PLANTED+'10sec']
+              that.current.volume(that.volume)
+              that.current.play()
+            }
+          }, 30000)
         }
       })
-      let offset = 30000
-      setTimeout(function(){
-        if(state == message){
-          state = '10sec'
-          getCurPlayer().volume = 0
-          getCurPlayer().pause()
-          bombPlantFlag = true
-          let player = getPlayer(getKitPath()+'bombtenseccount'+audioExt)
-          player.oncanplay = function(){
-            player.play()
-          }
-          player.load()
+
+      for(track in tracks) {
+        tracks[track].on('fade',onfade(tracks[track]))
+      }
+
+      if(playWhenDone){
+        this.command = null
+        this.play(playWhenDone)
+      }
+    }
+  }
+
+  setVolume(vol){
+    this.volume = Number.parseFloat(vol)
+    if(this.current){
+      this.current.volume(this.volume)
+    }
+  }
+
+  fadeout(ops={}){
+    let time = ('time' in ops)?ops.time:2500
+    let p = ('player' in ops)?ops.player:this.current
+    if(p != null && (!('stopping' in p) || !p.stopping)){
+      p.stopping = true
+      p.fade(this.volume, 0, time)
+    }
+  }
+
+  fadein(ops={}){
+    let time = ('time' in ops)?ops.time:2500
+    let p = ('player' in ops)?ops.player:this.current
+    if(p != null){
+      p.fade(0, this.volume, time)
+      if(!p.playing()){
+        p.play()
+      }
+    }
+  }
+
+  play(command){
+    if(command !== this.command || !this.current || !this.current.playing()){
+      if(command === COMMANDS.MENU){
+        this.playMenu()
+      }
+      else if(command === COMMANDS.MVP){
+        this.playMvp()
+      }
+      else if(command === COMMANDS.FREEZETIME){
+        this.playFreezetime()
+      }
+      else if(command === COMMANDS.LIVE){
+        if(this.command !== 'freezetime'){
+          this.fadeout()
         }
-      },offset)//start 10 second countdown in 30 seconds
+        this.command = COMMANDS.LIVE
+      }
+      else if(command === COMMANDS.WIN || command === COMMANDS.LOSE){
+        if(this.command !== COMMANDS.MVP){
+          this.command = command
+          this.playWinLose()
+        }
+      }
+      else if(command === COMMANDS.PLANTED){
+        this.playPlanted()
+      }
+      else{
+        this.fadeout()
+      }
     }
-    else if(state == '10sec'){
-      if(bombPlantFlag)
-        message = state
-    }
-    state = message
+  }
+
+  getFileName(name){
+    return path.join(this.folder,name)
+  }
+
+  playMenu(){
+    this.fadeout()
+    this.command = COMMANDS.MENU
+    this.current = this.tracks[COMMANDS.MENU]
+    this.fadein()
+  }
+
+  playMvp(){
+    this.command = COMMANDS.MVP
+    this.fadeout({time:800})
+    this.current = this.tracks[COMMANDS.MVP]
+    this.fadein({time:800})
+  }
+
+  playFreezetime(num=0){
+    let randnum = (num<=0)?Math.floor((Math.random() * 3) + 1):Math.min(3,num)
+    this.fadeout()
+    this.command = COMMANDS.FREEZETIME
+    this.current = this.tracks[COMMANDS.FREEZETIME+randnum]
+    this.fadein()
+  }
+
+  playWinLose(){
+    let command = (this.command === COMMANDS.WIN)?COMMANDS.WIN:COMMANDS.LOSE
+    this.fadeout()
+    this.current = this.tracks[command]
+    this.fadein()
+  }
+
+  playPlanted(){
+    this.command = COMMANDS.PLANTED
+    this.fadeout()
+    this.current = this.tracks[COMMANDS.PLANTED]
+    this.current.volume(this.volume)
+    this.current.play()
   }
 }
 
-function loopAudio(audfile,loopstate,doFadeIn,func=function(){}){
-  let player = getPlayer(getKitPath()+audfile+audioExt)
-  clearTimeout(currentTimeout)
-  player.oncanplay = function(){
-    currentTimeout = setTimeout(function(){
-      if(state == loopstate && getCurPlayer().id == player.id){
-        loopAudio(audfile,loopstate,false,func)
-      }
-      else{
-        func()
-      }
-    },player.duration * 1000 - 25)
-    if(doFadeIn){
-      fadeIn(player)
-    }
-    player.play()
-  }
-  player.load()
-}
+exports.player = KittenPlayer

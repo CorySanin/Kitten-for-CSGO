@@ -50,19 +50,21 @@ Inside, you'll need to have these audio files:
 
 1. mainmenu
 
-  * mainmenu plays and loops at the mainmenu. Sometimes it plays elsewhere,
-  but that's a minor bug that's not all that bad.
+  * mainmenu plays and loops at the mainmenu. Should be long enough to not drive
+  people crazy since it loops.
 
 2. startround_01 - startround_03
 
-  * startround_0X starts playing in the frozen phase of a new round and loopstate
-  until the round starts. There are three variants from which Kitten selects
-  randomly.
+  * startround_0X starts playing in the frozen phase of a new round and loops
+  until the round starts. These should be short, around 8 seconds (or shorter).
+  There are three variants from which Kitten selects randomly.
 
 3. startaction_01 - startaction_03
 
   * startaction_0X plays as soon as the startround track ends and the round has
-  already started. It plays for about 9 seconds and fades out.
+  already started. In other words, startround_0X should seamlessly transition
+  into startaction_0X. This track fades out automatically. Make it at least 10
+  seconds.
 
 4. bombplanted
 
@@ -72,20 +74,21 @@ Inside, you'll need to have these audio files:
 
 5. bombtenseccount
 
-  * bombtenseccount plays 30 seconds after bombplanted started playing. If
-  bombplanted was late, this will be too.
+  * bombtenseccount plays and loops (if necessary) 30 seconds after bombplanted
+  started playing. If bombplanted was late, this will be too.
 
 6. wonround
 
-  * Plays when you win
+  * Plays (and loops) when you win. Anything over 20 seconds is excessive.
 
 7. lostround
 
-  * Plays when you lose
+  * Plays (and loops) when you lose Anything over 20 seconds is excessive.
 
 8. roundmvpanthem_01
 
-  * roundmvpanthem_01 plays when you're the MVP\*. Despite the naming convention,
+  * roundmvpanthem_01 plays (and loops) when you're the MVP\*.
+   Anything over 20 seconds is excessive. Despite the naming convention,
   there's only one MVP anthem. The name was chosen to align with the naming
   scheme already in place for real music kits.
 
@@ -95,14 +98,11 @@ Inside, you'll need to have these audio files:
 ---
 
 You can use any file type that Chrome's audio player can play. I'd recommend
-anything that supports gapless playback (like FLAC). Also, make sure you use the
-same filetype for every track.
+anything that supports gapless playback (like FLAC). Filenames are CASE
+SENSATIVE
 
 Optionally, you can add a cover.jpeg to the music kit's folder. This is
 displayed in Kitten when the kit is selected.
-
-Aside from these files, try to refrain from adding too many other files, namely
-files of a type different from the one you chose for the kit's tracks.
 
 Here's a sample music kit:
 [Big Croint Music Kit](https://drive.google.com/open?id=0Bwif2jHEOIAdaEFqS0k2RWtzbzg)
