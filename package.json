@@ -28,7 +28,9 @@
     "http-shutdown": "1.2.0",
     "@node-steam/vdf": "2.0.1",
     "winreg": "1.2.4",
-    "howler": "2.0.14"
+    "download": "7.1.0",
+    "decompress": "4.2.0",
+    "howler": "2.0.15"
   },
   "devDependencies": {
     "electron": "~>2.0.3",

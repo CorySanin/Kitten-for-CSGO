@@ -17,10 +17,6 @@ div{
   line-height: 1.8em;
   padding:.5em;
 }
-img{
-  margin-top:4px;
-  border:1px solid #fff;
-}
 button, .button{
   display:inline-block;
   border:#fff solid 3px;
@@ -86,8 +82,32 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   display:inline-block;
   vertical-align:text-top;
 }
+#coverPic{
+  margin-top:4px;
+  border:1px solid #fff;
+}
 #muteBtn{
   position:absolute;
   top:4px;
   right:16px;
+}
+.loading #loading{
+  display:block;
+}
+#loading{
+  z-index:100;
+  background-color:rgba(25,25,25,.75);
+  display:none;
+}
+#loading img{
+  width:5em;
+  height:5em;
+  margin: auto;
+}
+#loading,#loading img{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
 }
