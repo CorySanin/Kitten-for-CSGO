@@ -112,6 +112,18 @@ ipc.on('dialog', function (event, message, title, response) {
   })
 })
 
+ipc.on('yes-no', function (event, message, title, response) {
+  const options = {
+    type: 'question',
+    title,
+    message: message,
+    buttons: ['Yes', 'No!']
+  }
+  electron.dialog.showMessageBox(mainWindow, options, function (index) {
+    event.sender.send(response, index === 0)
+  })
+})
+
 ipc.on('resize', function (event, args) {
   let dim = mainWindow.getSize()
   let width = ('width' in args)?args.width:dim[0]

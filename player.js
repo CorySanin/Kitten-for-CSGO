@@ -205,6 +205,8 @@ class KittenPlayer{
       }
       else{
         this.fadeout()
+        this.command = null
+        this.current = null
       }
     }
   }

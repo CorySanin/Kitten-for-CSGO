@@ -4,6 +4,8 @@ const saveConfig = require('./gamestateIntegration.js').saveConfig
 const ipc = require('electron').ipcRenderer
 const shell = require('electron').shell
 const fs = require('fs-extra')
+const download = require('download')
+const decompress = require('decompress')
 const path = require('path')
 const os = require('os')
 const dirSep = (os.platform() === 'win32')?'\\':'/'
@@ -170,6 +172,14 @@ function selectKit(){
   server.start()
 }
 
+function noKits(){
+  ipc.send('yes-no',
+           'No kits were found in that directory. Would you like to download the sample kit?',
+           'No kits found',
+           'no-kits-response'
+          )
+}
+
 function scanForKits(){
   if(htEntities.kitSelect){
     htEntities.kitSelect.onchange = doNothing
@@ -180,17 +190,22 @@ function scanForKits(){
       files = files.map(function(name){
         return path.join(state.audioDir, name)
       }).filter(isDirectory)
-      files.forEach(function(kitDir, i) {
-        let dir = kitDir.split(dirSep)
-        dir = dir[dir.length -1]
-        let op = document.createElement('OPTION')
-        op.text = dir
-        op.value = dir
-        htEntities.kitSelect.options.add(op)
-        if(dir === settings.kit){
-          htEntities.kitSelect.options.selectedIndex = i
-        }
-      })
+      if(files.length === 0){
+        noKits()
+      }
+      else{
+        files.forEach(function(kitDir, i) {
+          let dir = kitDir.split(dirSep)
+          dir = dir[dir.length -1]
+          let op = document.createElement('OPTION')
+          op.text = dir
+          op.value = dir
+          htEntities.kitSelect.options.add(op)
+          if(dir === settings.kit){
+            htEntities.kitSelect.options.selectedIndex = i
+          }
+        })
+      }
       setEventHandlers()
       selectKit()
     })
@@ -310,5 +325,18 @@ ipc.on('selected-directory', function(event, path){
   else if(state.audioDir == null){
     let msg = 'A configuration directory must be chosen.'
     ipc.send('dialog', msg, 'Hey!', 'welcome-message-done')
+  }
+})
+
+ipc.on('no-kits-response', function(event, yesplease){
+  if(yesplease){
+    htEntities.body.classList.add('loading')
+    download('https://www.musickitten.net/kits/1/Deep_in_Thot.zip',
+             path.join(state.audioDir, 'Deep in Thot'),
+             {extract:true}
+            ).then(() => {
+      htEntities.body.classList.remove('loading')
+      scanForKits()
+    })
   }
 })
