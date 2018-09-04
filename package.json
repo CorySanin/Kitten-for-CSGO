@@ -61,8 +61,7 @@
       }
     },
     "nsis": {
-      "oneClick": false,
-      "thoughts": "This config is a complete mess now. Thanks electron-builder"
+      "oneClick": false
     },
     "linux": {
       "target": "deb",
