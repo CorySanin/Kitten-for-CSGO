@@ -10,10 +10,10 @@ tracks when CS:GO gives it certain cues. Essentially, this allows you to
 create and use your own music kits.
 
 ## Getting Started
-Grab the latest release on the
-[releases page](https://github.com/CoryZ40/Kitten-for-CSGO/releases/latest).
+Grab the latest "stable" release
+[here](https://www.musickitten.net/download/).
 
-To run the latest developer version, you'll need node. If you've never
+To run Music Kitten from source, you'll need node. If you've never
 configured node before, I recommend using
 [nvm](https://github.com/creationix/nvm#install-script) on Linux and Mac OS,
 or [nvm for Windows](https://github.com/coreybutler/nvm-windows).
@@ -32,15 +32,18 @@ dedicated folder for Kitten to use.
 If you'd like to use a different port than the default, change the value in the
 textbox, click save, and restart Kitten.
 
-Next, a configuration file for CS:GO needs to be generated. This file tells
-CS:GO to notify Kitten when something happens. Click the "Generate Config"
-button and follow the instructions Kitten gives you. You'll probably need to
-restart CS:GO after placing the file in its destination.
+If CS:GO was already open before you started the setup process, you may need to
+restart it.
+
+Remember to mute in-game music if you haven't done so.
 
 Lastly, you need music kits. A music kit is a collection of audio files grouped
 in a directory in the Kitten save folder. Basically, inside the folder you
 picked at the beginning, you're going to have a folder for each music kit you
-have. Which brings us to...
+have. If you don't have any music kits, Kitten will offer to download the
+[sample music kit](https://www.musickitten.net/kit/1). Otherwise, you can
+download one from [musickitten.net](https://www.musickitten.net/browse/) or make
+your own. Which brings us to...
 
 ## Creating kits
 First thing is making a folder fot the kit. Create a directory in the Kitten
@@ -83,7 +86,7 @@ Inside, you'll need to have these audio files:
 
 7. lostround
 
-  * Plays (and loops) when you lose Anything over 20 seconds is excessive.
+  * Plays (and loops) when you lose. Anything over 20 seconds is excessive.
 
 8. roundmvpanthem_01
 
@@ -104,7 +107,6 @@ SENSATIVE
 Optionally, you can add a cover.jpeg to the music kit's folder. This is
 displayed in Kitten when the kit is selected.
 
-Here's a sample music kit:
-[Big Croint Music Kit](https://drive.google.com/open?id=0Bwif2jHEOIAdaEFqS0k2RWtzbzg)
-
-Remember to mute in-game music if you haven't done so.
+Take a look at the sample music kit for an example of what a music kit could
+look like:
+[Big Croint Music Kit](https://www.musickitten.net/kit/1)
