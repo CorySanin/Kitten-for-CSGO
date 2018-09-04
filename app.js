@@ -181,6 +181,9 @@ function noKits(){
 }
 
 function scanForKits(){
+  if(!htEntities.kitSelect){
+    getHtEntities()
+  }
   if(htEntities.kitSelect){
     htEntities.kitSelect.onchange = doNothing
     while(htEntities.kitSelect.options.length > 0){

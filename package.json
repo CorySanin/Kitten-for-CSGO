@@ -95,7 +95,6 @@
     "oneClick": false,
     "perMachine": true,
     "allowElevation": true,
-    "allowToChangeInstallationry": true,
     "createDesktopShortcut": false,
     "menuCategory": "WORM\\Kitten",
     "shortcutName": "Music Kitten"
