@@ -262,9 +262,9 @@ function tryLoadSettings(){
           settings = JSON.parse(data)
           server.changePort(settings.port)
           loadSettingsIntoDom()
-          scanForKits()
         }
         saveSettings()
+        scanForKits()
       })
     }
     catch(e){
