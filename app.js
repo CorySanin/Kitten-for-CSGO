@@ -206,7 +206,6 @@ function scanForKits(){
           }
         })
       }
-      getHtEntities()
       setEventHandlers()
       selectKit()
     })
@@ -301,6 +300,7 @@ function getHtEntities(){
     lose: document.getElementById('losePreview'),
     stop: document.getElementById('stopPreview')
   }
+  setEventHandlers()
 }
 
 function init(){
