@@ -181,6 +181,9 @@ function noKits(){
 }
 
 function scanForKits(){
+  if(!htEntities.kitSelect){
+    getHtEntities()
+  }
   if(htEntities.kitSelect){
     htEntities.kitSelect.onchange = doNothing
     while(htEntities.kitSelect.options.length > 0){
@@ -259,9 +262,9 @@ function tryLoadSettings(){
           settings = JSON.parse(data)
           server.changePort(settings.port)
           loadSettingsIntoDom()
-          scanForKits()
         }
         saveSettings()
+        scanForKits()
       })
     }
     catch(e){
@@ -300,6 +303,7 @@ function getHtEntities(){
     lose: document.getElementById('losePreview'),
     stop: document.getElementById('stopPreview')
   }
+  setEventHandlers()
 }
 
 function init(){

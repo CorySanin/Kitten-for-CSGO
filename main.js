@@ -117,10 +117,10 @@ ipc.on('yes-no', function (event, message, title, response) {
     type: 'question',
     title,
     message: message,
-    buttons: ['Yes', 'No!']
+    buttons: ['No!', 'Yes']
   }
   electron.dialog.showMessageBox(mainWindow, options, function (index) {
-    event.sender.send(response, index === 0)
+    event.sender.send(response, index === 1)
   })
 })
 

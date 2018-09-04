@@ -24,6 +24,7 @@ class KittenPlayer{
   constructor(ops={}){
     this.current = null
     this.command = null
+    this.timeout = null
     this.folder = ('folder' in ops)?ops.folder:''
     this.volume = ('volume' in ops)?Number.parseFloat(ops.volume):.5
     this.tracks = {}
@@ -89,7 +90,7 @@ class KittenPlayer{
             let startaction = tracks[COMMANDS.LIVE+i]
             if(that.command === COMMANDS.LIVE){
               that.current.stop()
-              setTimeout(function(){
+              that.timeout = setTimeout(function(){
                 if(that.command === COMMANDS.LIVE){
                   that.fadeout({
                     time: 3500,
@@ -128,7 +129,7 @@ class KittenPlayer{
         loop: true,
         volume: this.volume,
         onplay(){
-          setTimeout(function(){
+          that.timeout = setTimeout(function(){
             if(that.command === 'planted'){
               that.current.stop()
               that.current = tracks[COMMANDS.PLANTED+'10sec']
@@ -230,6 +231,7 @@ class KittenPlayer{
   }
 
   playFreezetime(num=0){
+    clearTimeout(this.timeout)
     let randnum = (num<=0)?Math.floor((Math.random() * 3) + 1):Math.min(3,num)
     this.fadeout()
     this.command = COMMANDS.FREEZETIME
@@ -245,6 +247,7 @@ class KittenPlayer{
   }
 
   playPlanted(){
+    clearTimeout(this.timeout)
     this.command = COMMANDS.PLANTED
     this.fadeout()
     this.current = this.tracks[COMMANDS.PLANTED]
