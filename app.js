@@ -206,6 +206,7 @@ function scanForKits(){
           }
         })
       }
+      getHtEntities()
       setEventHandlers()
       selectKit()
     })
