@@ -37,7 +37,7 @@
     "howler": "2.0.15"
   },
   "devDependencies": {
-    "electron": "~>2.0.3",
+    "electron": "~>3.0.0",
     "electron-builder": "~>20.28.3"
   },
   "build": {

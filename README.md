@@ -46,7 +46,7 @@ download one from [musickitten.net](https://www.musickitten.net/browse/) or make
 your own. Which brings us to...
 
 ## Creating kits
-First thing is making a folder fot the kit. Create a directory in the Kitten
+First thing is making a folder for the kit. Create a directory in the Kitten
 folder you chose to use and call it whatever you want the kit to be called.
 Inside, you'll need to have these audio files:
 
@@ -102,7 +102,7 @@ Inside, you'll need to have these audio files:
 
 You can use any file type that Chrome's audio player can play. I'd recommend
 anything that supports gapless playback (like FLAC). Filenames are CASE
-SENSATIVE
+SENSITIVE
 
 Optionally, you can add a cover.jpeg to the music kit's folder. This is
 displayed in Kitten when the kit is selected.
