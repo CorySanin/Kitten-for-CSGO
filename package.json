@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
@@ -23,7 +23,7 @@
   ],
   "author": {
     "name": "Cory Sanin",
-    "email":   "coryaccounts@outlook.com"
+    "email": "coryaccounts@outlook.com"
   },
   "license": "GPL-3.0",
   "dependencies": {
@@ -37,7 +37,7 @@
     "howler": "2.0.15"
   },
   "devDependencies": {
-    "electron": "~>2.0.3",
+    "electron": "~>3.0.0",
     "electron-builder": "~>20.28.3"
   },
   "build": {
