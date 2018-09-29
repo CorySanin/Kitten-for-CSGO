@@ -3,7 +3,6 @@ const os = require('os')
 const fs = require('fs')
 const path = require('path')
 const COMMANDS = require('./server.js').commands
-const dirSep = (os.platform() === 'win32')?'\\':'/'
 const audiofiles = [
   'bombplanted',
   'bombtenseccount',

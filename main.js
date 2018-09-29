@@ -28,7 +28,7 @@ function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({backgroundColor: '#212121',
   width: 380, height: 560, resizable: false, maximizable: false, fullscreenable:false,
-  icon:(os.platform() == 'win32')?'static\\icon\\icon.ico':'static/icon/icon_512.png'})
+  icon:path.join('icon',(os.platform() == 'win32')?'icon.ico':'icon_512.png')})
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

@@ -8,7 +8,6 @@ const download = require('download')
 const decompress = require('decompress')
 const path = require('path')
 const os = require('os')
-const dirSep = (os.platform() === 'win32')?'\\':'/'
 const doNothing = function(){
 }
 
@@ -134,13 +133,6 @@ function isDirectory(str){
   return fs.lstatSync(str).isDirectory()
 }
 
-function getNicePath(filename=null){
-  if(filename == null){
-    filename = state.audioDir
-  }
-  return filename + ((filename.endsWith(dirSep))?'':dirSep)
-}
-
 function getConfigFilename(){
   return path.join(state.audioDir,'config.json')
 }
@@ -198,8 +190,7 @@ function scanForKits(){
       }
       else{
         files.forEach(function(kitDir, i) {
-          let dir = kitDir.split(dirSep)
-          dir = dir[dir.length -1]
+          let dir = path.basename(kitDir)
           let op = document.createElement('OPTION')
           op.text = dir
           op.value = dir
