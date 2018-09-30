@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
@@ -9,8 +9,9 @@
     "test": "electron-builder --dir",
     "dist": "electron-builder -mwl --x64 --publish=always",
     "distWin": "electron-builder --win --x64 --ia32",
-    "disMac": "electron-builder --mac",
-    "disLin": "electron-builder --linux"
+    "distMac": "electron-builder --mac",
+    "distLin": "electron-builder --linux",
+    "debugPackage": "asar extract app.asar app-asar"
   },
   "repository": "https://github.com/CorySanin/Kitten-for-CSGO",
   "homepage": "https://www.musickitten.net",
