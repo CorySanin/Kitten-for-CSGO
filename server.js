@@ -3,6 +3,7 @@ const DEFAULT_PORT = '8793'
 const AUTH = 'WooMeowWoo'
 const http = require('http')
 const httpshutdown = require('http-shutdown')
+const richpresence = require('./richpresence.js').update
 
 const COMMANDS = {
   'MENU':'menu',
@@ -82,6 +83,33 @@ function handleResponse(body){
     console.log('\nPOST payload:')
     console.log(parsed)
     if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')) {
+      if(parsed.hasOwnProperty('map')){
+        try{
+          let teamname = (teamCT)?'CT':'T'
+          let scores = []
+          if(teamCT){
+            scores.push(parsed.map.team_ct.score)
+          }
+          scores.push(parsed.map.team_t.score)
+          if(!teamCT){
+            scores.push(parsed.map.team_ct.score)
+          }
+
+          richpresence({
+            details: parsed.map.mode + ' ' + parsed.map.name,
+            state: teamname + ' ' + scores.join('-'),
+            largeImageKey: parsed.map.name,
+            largeImageText: parsed.map.name,
+            smallImageKey: 'kitten',
+            smallImageText: 'musickitten.net'
+          }, true)
+        }
+        catch(err) {
+          console.log(err)
+        }
+      }
+
+
       if (parsed.round.hasOwnProperty('bomb') && parsed.round.bomb === COMMANDS.PLANTED) {
         console.log('sending a '+COMMANDS.PLANTED)
         callback({type:'command', content:COMMANDS.PLANTED})
@@ -119,6 +147,11 @@ function handleResponse(body){
     } else if (parsed.player.hasOwnProperty('activity') && parsed.player.activity === 'menu') {
       console.log('sending a menu')
       callback({type:'command', content:COMMANDS.MENU})
+      richpresence({
+        state: 'Menu',
+        largeImageKey: 'csgo',
+        largeImageText: 'Counter-Strike: Global Offensive'
+      }, false)
     }
   }
 }
