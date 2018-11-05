@@ -28,7 +28,7 @@
   },
   "license": "GPL-3.0",
   "dependencies": {
-    "electron-updater": "3.1.2",
+    "electron-updater": "3.1.6",
     "fs-extra": "7.0.0",
     "http-shutdown": "1.2.0",
     "@node-steam/vdf": "2.0.1",
@@ -38,8 +38,8 @@
     "howler": "2.0.15"
   },
   "devDependencies": {
-    "electron": "~>3.0.0",
-    "electron-builder": "~>20.28.3"
+    "electron": "3.0.3",
+    "electron-builder": "~>20.31.2"
   },
   "build": {
     "appId": "net.musickitten.app",
