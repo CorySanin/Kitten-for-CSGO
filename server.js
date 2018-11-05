@@ -100,8 +100,8 @@ function handleResponse(body){
             state: teamname + ' ' + scores.join('-'),
             largeImageKey: parsed.map.name,
             largeImageText: parsed.map.name,
-            smallImageKey: 'kitten',
-            smallImageText: 'musickitten.net'
+            smallImageKey: 'csgo',
+            smallImageText: 'CS:GO'
           }, true)
         }
         catch(err) {
@@ -150,7 +150,9 @@ function handleResponse(body){
       richpresence({
         state: 'Menu',
         largeImageKey: 'csgo',
-        largeImageText: 'Counter-Strike: Global Offensive'
+        largeImageText: 'Counter-Strike: Global Offensive',
+        smallImageKey: 'kitten',
+        smallImageText: 'musickitten.net'
       }, false)
     }
   }
