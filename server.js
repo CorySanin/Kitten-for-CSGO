@@ -3,6 +3,8 @@ const DEFAULT_PORT = '8793'
 const AUTH = 'WooMeowWoo'
 const http = require('http')
 const httpshutdown = require('http-shutdown')
+const drp = require('./richpresence.js')
+const richpresence = drp.update
 
 const COMMANDS = {
   'MENU':'menu',
@@ -14,6 +16,46 @@ const COMMANDS = {
   'PLANTED':'planted'
 }
 
+const GAMEMODES = {
+  'competitive': 'Competitive',
+  'casual': 'Casual',
+  'scrimcomp2v2': 'Wingman',
+  'gungametrbomb': 'Demolition',
+  'gungameprogressive': 'Arms Race',
+  'deathmatch': 'Deathmatch'
+}
+
+const MAPS = {
+  'ar_baggage': 'Baggage',
+  'ar_dizzy': 'Dizzy',
+  'ar_monastery': 'Monastery',
+  'ar_shoots': 'Shoots',
+  'cs_agency': 'Agency',
+  'cs_assault': 'Assault',
+  'cs_italy': 'Italy',
+  'cs_office': 'Office',
+  'de_austria': 'Austria',
+  'de_bank': 'Bank',
+  'de_biome': 'Biome',
+  'de_cache': 'Cache',
+  'de_canals': 'Canals',
+  'de_cbble': 'Cobblestone',
+  'de_dust2': 'Dust II',
+  'de_inferno': 'Inferno',
+  'de_lake': 'Lake',
+  'de_mirage': 'Mirage',
+  'de_nuke': 'Nuke',
+  'de_overpass': 'Overpass',
+  'de_safehouse': 'Safehouse',
+  'de_shortdust': 'Shortdust',
+  'de_shortnuke': 'Shortnuke',
+  'de_stmarc': 'St. Marc',
+  'de_subzero': 'Subzero',
+  'de_sugarcane': 'Sugarcane',
+  'de_train': 'Train',
+  'gd_rialto': 'Rialto'
+}
+
 let server = false
 let steamid = null
 let port = DEFAULT_PORT
@@ -22,6 +64,13 @@ let teamCT = false
 let mvps = -1
 let running = false
 let heartbeat = 30.0
+
+function resolveName(name, nameobj){
+  if(name in nameobj){
+    return nameobj[name]
+  }
+  return name
+}
 
 function getSteamID(data){
   if (data.hasOwnProperty('provider') && data.provider.hasOwnProperty('steamid')){
@@ -82,6 +131,39 @@ function handleResponse(body){
     console.log('\nPOST payload:')
     console.log(parsed)
     if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')) {
+      if(parsed.hasOwnProperty('map')){
+        try{
+          let teamname = (teamCT)?'ct':'t'
+          let scores = []
+          if(teamCT){
+            scores.push(parsed.map.team_ct.score)
+          }
+          scores.push(parsed.map.team_t.score)
+          if(!teamCT){
+            scores.push(parsed.map.team_ct.score)
+          }
+
+          richpresence({
+            details: resolveName(parsed.map.mode, GAMEMODES) + ' ' + resolveName(parsed.map.name, MAPS),
+            state: teamname.toUpperCase() + ' ' + scores.join('-'),
+            largeImageKey: parsed.map.name,
+            largeImageText: parsed.map.name,
+            smallImageKey: teamname,
+            smallImageText: teamname.toUpperCase() + ' Team'
+          }, true)
+
+          if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch'){
+            richpresence({
+              state: teamname.toUpperCase() + ' ' + parsed.player.match_stats.kills + ' kills',
+            }, true)
+          }
+        }
+        catch(err) {
+          console.log(err)
+        }
+      }
+
+
       if (parsed.round.hasOwnProperty('bomb') && parsed.round.bomb === COMMANDS.PLANTED) {
         console.log('sending a '+COMMANDS.PLANTED)
         callback({type:'command', content:COMMANDS.PLANTED})
@@ -119,6 +201,13 @@ function handleResponse(body){
     } else if (parsed.player.hasOwnProperty('activity') && parsed.player.activity === 'menu') {
       console.log('sending a menu')
       callback({type:'command', content:COMMANDS.MENU})
+      richpresence({
+        state: 'Menu',
+        largeImageKey: 'csgo',
+        largeImageText: 'Counter-Strike: Global Offensive',
+        smallImageKey: 'kitten',
+        smallImageText: 'musickitten.net'
+      }, false)
     }
   }
 }
@@ -188,3 +277,4 @@ exports.getAuth = getAuth
 exports.running = function(){
   return running
 }
+exports.richpresence = drp

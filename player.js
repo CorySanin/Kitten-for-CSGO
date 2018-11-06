@@ -164,13 +164,16 @@ class KittenPlayer{
       p.stopping = true
       p.fade(this.volume, 0, time)
     }
+    if(p === this.current){
+      this.current = null
+    }
   }
 
   fadein(ops={}){
     let time = ('time' in ops)?ops.time:2500
     let p = ('player' in ops)?ops.player:this.current
     if(p != null){
-      p.fade(0, this.volume, time)
+      p.fade(0.0, this.volume, time)
       if(!p.playing()){
         p.play()
       }

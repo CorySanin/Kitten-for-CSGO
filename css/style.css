@@ -74,11 +74,11 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
 .relative{
   position:relative;
 }
-.none{
+.none.none.none.none.none{
   display:none;
 }
 .expanded > div{
-  max-width:50%;
+  max-width:calc(50% - 3px);
   display:inline-block;
   vertical-align:text-top;
 }

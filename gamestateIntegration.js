@@ -23,7 +23,8 @@ function saveConfig(config){
       'data': {
         'provider': 1, 'map': 1, 'round': 1, 'player_id': 1, 'allplayers_id': 1,
         'player_state': 1, 'allplayers_state': 1, 'allplayers_match_stats': 1,
-        'allplayers_weapons': 1, 'player_match_stats': 1,
+        'allplayers_weapons': 1, 'player_match_stats': 1, 'map_round_wins': 1,
+        'phase_countdowns': 1
       }
     }
   })

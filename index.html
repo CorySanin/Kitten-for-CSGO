@@ -23,18 +23,17 @@
         <label for="volSlider">Volume: </label>
         <input type="range" id="volSlider" min="0" max="1" step=".01" value=".5"/>
         <label for="portNum">Port: </label><input id="portNum" type="number" value="8793"/>
-        <label for="kit">Music Kit: </label><select id="kit">
-        </select>
-        <label for="mvpToggle">Play MVP tracks:</label>
-        <label for="mvpToggle"><input id="mvpToggle" type="checkbox" /></label>
+        <label for="kit">Music Kit: </label><select id="kit"></select>
       </div>
       <div class="fill">
         <button id="previewKit">Preview Kit</button>
         <button id="refreshKitsBtn">Refresh Kits</button>
         <button id="dirChange">Change Main Directory</button>
+        <button id="settingsBtn">Settings</button>
         <button id="saveBtn">Save</button>
       </div>
-    </div><div id="preview" class="none">
+    </div>
+    <div id="preview" class="none">
       <div class="fill">
         <button id="menuPreview" value="menu" title="mainmenu">Menu</button>
         <button id="freezetimePreview" value="freezetime" title="startround (random)">Freezetime</button>
@@ -48,6 +47,13 @@
         <button id="losePreview" value="lose" title="lostround">Lose</button>
         <button id="stopPreview" value="😺">Stop</button>
       </div>
+    </div>
+    <div id="extrasettings" class="none">
+      <label><input class="settingstoggle" type="checkbox" value="mainmenu"/> Main Menu Audio</label><br/>
+      <label><input class="settingstoggle" type="checkbox" value="startround"/> Start Round Audio</label><br/>
+      <label><input class="settingstoggle" type="checkbox" value="bombplanted"/> Bomb Planted Audio</label><br/>
+      <label><input class="settingstoggle" type="checkbox" value="mvp"/> Round Over Audio</label><br/>
+      <label><input class="settingstoggle" type="checkbox" value="discordrichpresence" id="discordrichpresence"/> Discord Rich Presence</label>
     </div>
   </body>
 </html>

@@ -14,7 +14,11 @@ const doNothing = function(){
 let settings = {
   port: '8793',
   volume: .5,
-  mvp: true
+  mainmenu: true,
+  startround: true,
+  bombplanted: true,
+  mvp: true,
+  discordrichpresence: false
 }
 let htEntities = {}
 let state = {
@@ -28,24 +32,53 @@ function toggleExpanded(){
     ipc.send('resize', {
       width:380
     })
+    htEntities.body.classList.remove('expanded')
   }
   else{
     ipc.send('resize', {
       width:760
     })
+    htEntities.body.classList.add('expanded')
   }
   expanded = !expanded
 }
 
+function collapseAll(){
+  if(!htEntities.preview.div.classList.value.includes('none')){
+    htEntities.preview.div.classList.add('none')
+  }
+  if(!htEntities.settingsPane.classList.value.includes('none')){
+    htEntities.settingsPane.classList.add('none')
+  }
+}
+
 function togglePreview(){
-  toggleExpanded()
-  if(expanded){
-    htEntities.body.classList.add('expanded')
-    htEntities.preview.div.classList.remove('none')
+  let showing = !htEntities.preview.div.classList.value.includes('none')
+  if(showing){
+    toggleExpanded()
+    htEntities.preview.div.classList.add('none')
   }
   else{
-    htEntities.body.classList.remove('expanded')
-    htEntities.preview.div.classList.add('none')
+    collapseAll()
+    if(!expanded){
+      toggleExpanded()
+    }
+    htEntities.preview.div.classList.remove('none')
+  }
+}
+
+function toggleSettingsPane(){
+  let showing = !htEntities.settingsPane.classList.value.includes('none')
+  if(showing){
+    toggleExpanded()
+    htEntities.settingsPane.classList.add('none')
+  }
+  else{
+    collapseAll()
+    if(!expanded){
+      toggleExpanded()
+    }
+    htEntities.settingsPane.classList.remove('none')
   }
 }
 
@@ -62,8 +95,8 @@ function updateVolume(){
   player.setVolume(htEntities.volumeSlider.value)
 }
 
-function toggleMvp(){
-  settings.mvp = htEntities.mvpToggle.checked
+function toggleSetting(){
+  settings[this.value] = this.checked
 }
 
 function toggleMute(){
@@ -92,14 +125,18 @@ function previewFreezetime(){
 }
 
 function setEventHandlers(){
+  let toggles = document.getElementsByClassName('settingstoggle')
+  for(let i = 0; i < toggles.length; i++){
+    toggles[i].onclick = toggleSetting
+  }
   htEntities.kitSelect.onchange = selectKit
   htEntities.volumeSlider.oninput = updateVolume
-  htEntities.mvpToggle.onchange = toggleMvp
   htEntities.dirChange.onclick = newAudioDir
   htEntities.saveBtn.onclick = saveSettings
   htEntities.refreshKitsBtn.onclick = scanForKits
   htEntities.muteBtn.onclick = toggleMute
   htEntities.previewBtn.onclick = togglePreview
+  htEntities.settingsBtn.onclick = toggleSettingsPane
 
   //preview elements
   htEntities.preview.menu.onclick = htEntities.preview.freezetime.onclick =
@@ -116,10 +153,17 @@ function setEventHandlers(){
 function doCommand(obj){
   if('type' in obj){
     if(obj['type'] === 'command'){
-      if(!htEntities.mvpToggle.checked &&
+      if((!settings.mvp &&
         (obj['content'] === server.commands.MVP ||
          obj['content'] === server.commands.WIN ||
-         obj['content'] === server.commands.LOSE)){
+         obj['content'] === server.commands.LOSE)) ||
+        (!settings.mainmenu &&
+         obj['content'] === server.commands.MENU) ||
+        (!settings.startround &&
+         (obj['content'] === server.commands.FREEZETIME ||
+          obj['content'] === server.commands.LIVE)) ||
+        (!settings.bombplanted &&
+         obj['content'] === server.commands.PLANTED)){
         player.play('😺')
       }
       else{
@@ -234,7 +278,11 @@ function newAudioDir(){
 }
 
 function loadSettingsIntoDom(){
-  htEntities.mvpToggle.checked = settings.mvp
+  let toggles = document.getElementsByClassName('settingstoggle')
+  for (let i = 0; i < toggles.length; i++) {
+    toggles[i].checked = toggles[i].value in settings && settings[toggles[i].value]
+  }
+
   htEntities.portNum.value = settings.port
   htEntities.volumeSlider.value = settings.volume
   updateVolume()
@@ -250,7 +298,10 @@ function tryLoadSettings(){
     try{
       fs.readFile(getConfigFilename(), 'utf8', function(err, data){
         if(!err){
-          settings = JSON.parse(data)
+          data = JSON.parse(data)
+          for(let key in data){
+            settings[key] = data[key]
+          }
           server.changePort(settings.port)
           loadSettingsIntoDom()
         }
@@ -269,15 +320,17 @@ function getHtEntities(){
   htEntities.body = document.getElementsByTagName('body')[0]
   htEntities.kitSelect = document.getElementById('kit')
   htEntities.volumeSlider = document.getElementById('volSlider')
-  htEntities.mvpToggle = document.getElementById('mvpToggle')
   htEntities.portNum = document.getElementById('portNum')
   htEntities.previewBtn = document.getElementById('previewKit')
+  htEntities.settingsBtn = document.getElementById('settingsBtn')
   htEntities.dirChange = document.getElementById('dirChange')
   htEntities.saveBtn = document.getElementById('saveBtn')
   htEntities.refreshKitsBtn = document.getElementById('refreshKitsBtn')
   htEntities.muteBtn = document.getElementById('muteBtn')
   htEntities.coverPic = document.getElementById('coverPic')
   htEntities.header = document.getElementById('h1')
+  htEntities.settingsPane = document.getElementById('extrasettings')
+  htEntities.discordrp = document.getElementById('discordrichpresence')
 
   //preview elements
   htEntities.preview = {
@@ -295,6 +348,7 @@ function getHtEntities(){
     stop: document.getElementById('stopPreview')
   }
   setEventHandlers()
+  server.richpresence.setDiscordToggle(htEntities.discordrp)
 }
 
 function init(){

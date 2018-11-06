@@ -5,8 +5,10 @@ matrix:
   - os: osx
 notifications:
   email: false
-script:
+install:
   - rm package-lock.json
+  - npm install
+script:
   - node insertVersion.js
   - rm insertVersion.js
   - npm run dist
