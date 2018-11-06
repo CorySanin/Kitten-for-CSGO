@@ -3,7 +3,8 @@ const DEFAULT_PORT = '8793'
 const AUTH = 'WooMeowWoo'
 const http = require('http')
 const httpshutdown = require('http-shutdown')
-const richpresence = require('./richpresence.js').update
+const drp = require('./richpresence.js')
+const richpresence = drp.update
 
 const COMMANDS = {
   'MENU':'menu',
@@ -24,9 +25,9 @@ const GAMEMODES = {
   'deathmatch': 'Deathmatch'
 }
 
-const MAPS = {	
-  'ar_baggage': 'Baggage', 
-  'ar_dizzy': 'Dizzy', 
+const MAPS = {
+  'ar_baggage': 'Baggage',
+  'ar_dizzy': 'Dizzy',
   'ar_monastery': 'Monastery',
   'ar_shoots': 'Shoots',
   'cs_agency': 'Agency',
@@ -276,3 +277,4 @@ exports.getAuth = getAuth
 exports.running = function(){
   return running
 }
+exports.richpresence = drp

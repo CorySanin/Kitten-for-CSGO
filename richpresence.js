@@ -9,6 +9,11 @@ const clientId = '508480505583370272';
 const rpc = new DiscordRPC.Client({ transport: 'ipc' })
 
 let state = {};
+let discordrptoggle = null
+
+function setDiscordToggle(toggle){
+  discordrptoggle = toggle
+}
 
 function updateInfo(data, appyToExisting){
   if(appyToExisting){
@@ -22,7 +27,11 @@ function updateInfo(data, appyToExisting){
 }
 
 function setActivity(){
-  if(Object.keys(state).length !== 0){
+  if(
+      discordrptoggle !== null &&
+      discordrptoggle.checked &&
+      Object.keys(state).length !== 0
+  ){
     rpc.setActivity(state)
   }
 }
@@ -39,3 +48,4 @@ rpc.on('ready', () => {
 rpc.login({ clientId }).catch(console.error);
 
 exports.update = updateInfo
+exports.setDiscordToggle = setDiscordToggle
