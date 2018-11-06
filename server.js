@@ -15,6 +15,19 @@ const COMMANDS = {
   'PLANTED':'planted'
 }
 
+const GAMEMODES = {
+  'competitive': 'Competitive',
+  'casual': 'Casual',
+  'scrimcomp2v2': 'Wingman',
+  'gungametrbomb': 'Demolition',
+  'gungameprogressive': 'Arms Race',
+  'deathmatch': 'Deathmatch'
+}
+
+const MAPS = {
+  'de_dust2': 'Dust 2'
+}
+
 let server = false
 let steamid = null
 let port = DEFAULT_PORT
@@ -23,6 +36,13 @@ let teamCT = false
 let mvps = -1
 let running = false
 let heartbeat = 30.0
+
+function resolveName(name, nameobj){
+  if(name in nameobj){
+    return nameobj[name]
+  }
+  return name
+}
 
 function getSteamID(data){
   if (data.hasOwnProperty('provider') && data.provider.hasOwnProperty('steamid')){
@@ -85,7 +105,7 @@ function handleResponse(body){
     if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')) {
       if(parsed.hasOwnProperty('map')){
         try{
-          let teamname = (teamCT)?'CT':'T'
+          let teamname = (teamCT)?'ct':'t'
           let scores = []
           if(teamCT){
             scores.push(parsed.map.team_ct.score)
@@ -96,12 +116,12 @@ function handleResponse(body){
           }
 
           richpresence({
-            details: parsed.map.mode + ' ' + parsed.map.name,
-            state: teamname + ' ' + scores.join('-'),
+            details: resolveName(parsed.map.mode, GAMEMODES) + ' ' + resolveName(parsed.map.name, MAPS),
+            state: teamname.toUpperCase() + ' ' + scores.join('-'),
             largeImageKey: parsed.map.name,
             largeImageText: parsed.map.name,
-            smallImageKey: 'csgo',
-            smallImageText: 'CS:GO'
+            smallImageKey: teamname,
+            smallImageText: teamname.toUpperCase() + ' Team'
           }, true)
         }
         catch(err) {
