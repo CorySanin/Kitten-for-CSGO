@@ -6,9 +6,9 @@ matrix:
 notifications:
   email: false
 install:
+  - rm package-lock.json
   - npm install
 script:
-  - rm package-lock.json
   - node insertVersion.js
   - rm insertVersion.js
   - npm run dist
