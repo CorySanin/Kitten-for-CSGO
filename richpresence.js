@@ -4,11 +4,11 @@ https://github.com/discordjs/RPC/blob/master/example/main.js
 */
 
 const DiscordRPC = require('discord-rpc')
-const clientId = '508480505583370272';
+const clientId = '508480505583370272'
 
 const rpc = new DiscordRPC.Client({ transport: 'ipc' })
 
-let state = {};
+let state = {}
 let discordrptoggle = null
 
 function setDiscordToggle(toggle){
@@ -45,7 +45,7 @@ rpc.on('ready', () => {
   }, 15e3)
 })
 
-rpc.login({ clientId }).catch(console.error);
+rpc.login({ clientId }).catch(console.error)
 
 exports.update = updateInfo
 exports.setDiscordToggle = setDiscordToggle

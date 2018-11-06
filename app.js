@@ -299,7 +299,7 @@ function tryLoadSettings(){
       fs.readFile(getConfigFilename(), 'utf8', function(err, data){
         if(!err){
           data = JSON.parse(data)
-          for(key in data){
+          for(let key in data){
             settings[key] = data[key]
           }
           server.changePort(settings.port)
