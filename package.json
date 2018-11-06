@@ -40,7 +40,8 @@
   },
   "devDependencies": {
     "electron": "3.0.3",
-    "electron-builder": "~>20.31.2"
+    "electron-builder": "~>20.31.2",
+    "register-scheme": "github:devsnek/node-register-scheme"
   },
   "build": {
     "appId": "net.musickitten.app",

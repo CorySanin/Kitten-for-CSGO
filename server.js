@@ -123,6 +123,12 @@ function handleResponse(body){
             smallImageKey: teamname,
             smallImageText: teamname.toUpperCase() + ' Team'
           }, true)
+
+          if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch'){
+            richpresence({
+              state: teamname.toUpperCase() + ' ' + parsed.player.match_stats.kills + ' kills',
+            }, true)
+          }
         }
         catch(err) {
           console.log(err)
