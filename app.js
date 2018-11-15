@@ -164,6 +164,8 @@ function setEventHandlers(){
   htEntities.kitSelect.onchange = selectKit
   htEntities.volumeSlider.oninput = updateVolume
   htEntities.dirChange.onclick = newAudioDir
+  htEntities.saveBtn.onclick = saveSettings
+  htEntities.refresKitsBtn.onclick = scanForKits
   htEntities.muteBtn.onclick = toggleMute
   htEntities.previewBtn.onclick = togglePreview
   htEntities.settingsBtn.onclick = toggleSettingsPane
@@ -407,7 +409,6 @@ function init(){
 window.onload = init
 
 ipc.on('welcome-message-done', newAudioDir)
-//executes when the selected directory dialog is completed
 //executes when the selected directory dialog is completed
 ipc.on('selected-directory', function(event, path){
   if(path.length > 0){
