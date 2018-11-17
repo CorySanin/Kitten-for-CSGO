@@ -98,7 +98,7 @@ function toggleAddKitsPane(){
 }
 
 function unzip(src, dest) {
-  decompress(src, dest).then(files => {
+  decompress(src, dest).then((files) => {
     console.log('extraction complete!')
   })
 }
@@ -165,7 +165,7 @@ function setEventHandlers(){
   htEntities.volumeSlider.oninput = updateVolume
   htEntities.dirChange.onclick = newAudioDir
   htEntities.saveBtn.onclick = saveSettings
-  htEntities.refresKitsBtn.onclick = scanForKits
+  htEntities.refreshKitsBtn.onclick = scanForKits
   htEntities.muteBtn.onclick = toggleMute
   htEntities.previewBtn.onclick = togglePreview
   htEntities.settingsBtn.onclick = toggleSettingsPane
