@@ -132,7 +132,7 @@ function unzip(src, dest){
 }
 
 function isZip(fileName){
-  if(fileName.split('.').pop() == 'zip'){
+  if(fileName.split('.').pop() === 'zip'){
     return true
   }else{
     return false
@@ -152,11 +152,11 @@ function dropHandler(e) {
 }
   
 function overlayUp(e){
-  htEntities.addKitsOverlay.style.display = "block"
+  htEntities.addKitsOverlay.style.display = 'block'
 }
 
 function overlayDown(e){
-  htEntities.addKitsOverlay.style.display = "none"
+  htEntities.addKitsOverlay.style.display = 'none'
 }
 
 function setEventHandlers(){
