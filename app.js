@@ -185,7 +185,7 @@ function setEventHandlers(){
         previewFreezetime
   
   //unzip-feature
-  htEntities.mainDiv.ondragover = (ev) => {
+  htEntities.body.ondragover = (ev) => {
     overlayUp(ev)
   }
 
@@ -403,7 +403,6 @@ function getHtEntities(){
   }
 
   //unzip-feature
-  htEntities.mainDiv = document.getElementById('main')
   htEntities.addKitsOverlay = document.getElementById('dragDropOverlay')
 
 
