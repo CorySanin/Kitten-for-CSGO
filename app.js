@@ -82,38 +82,6 @@ function toggleSettingsPane(){
   }
 }
 
-function toggleAddKitsPane(){
-  let showing = !htEntities.addKitsPane.classList.value.includes('none')
-  if(showing){
-    toggleExpanded()
-    htEntities.addKitsPane.classList.add('none')
-  }
-  else{
-    collapseAll()
-    if(!expanded){
-      toggleExpanded()
-    }
-    htEntities.addKitsPane.classList.remove('none')
-  }
-}
-
-function unzip(src, dest) {
-  decompress(src, dest).then((files) => {
-    console.log('extraction complete!')
-  })
-}
-
-function dropHandler(e) {
-  console.log(e.dataTransfer.files[0].name)
-  let zipPath = e.dataTransfer.files[0].path
-  if(isDirectory(state.audioDir)){
-    let destDirectory = path.join(state.audioDir,path.basename(e.dataTransfer.files[0].name, '.zip'))
-    fs.mkdir(destDirectory)
-    unzip(zipPath, destDirectory)
-  }
-  e.preventDefault()
-}
-
 function genConfig(){
   saveConfig({
     url: server.getUrl(),
@@ -156,6 +124,41 @@ function previewFreezetime(){
   player.playFreezetime(this.value)
 }
 
+// unzip-feature
+function unzip(src, dest){
+  decompress(src, dest).then((files) => {
+    console.log('extraction complete!')
+  })
+}
+
+function isZip(fileName){
+  if(fileName.split('.').pop() == 'zip'){
+    return true
+  }else{
+    return false
+  }
+}
+
+function dropHandler(e) {
+  console.log(e.dataTransfer.files[0].name + ' dropped!')
+  let zipPath = e.dataTransfer.files[0].path
+  if(isDirectory(state.audioDir) && isZip(e.dataTransfer.files[0].name)){
+    let destDirectory = path.join(state.audioDir,path.basename(e.dataTransfer.files[0].name, '.zip'))
+    fs.mkdir(destDirectory)
+    unzip(zipPath, destDirectory)
+  }
+  else{console.log('dropHandler() failed. Your music kitten is stuck in the tree.')}
+  overlayDown()
+}
+  
+function overlayUp(e){
+  htEntities.addKitsOverlay.style.display = "block"
+}
+
+function overlayDown(e){
+  htEntities.addKitsOverlay.style.display = "none"
+}
+
 function setEventHandlers(){
   let toggles = document.getElementsByClassName('settingstoggle')
   for(let i = 0; i < toggles.length; i++){
@@ -169,16 +172,6 @@ function setEventHandlers(){
   htEntities.muteBtn.onclick = toggleMute
   htEntities.previewBtn.onclick = togglePreview
   htEntities.settingsBtn.onclick = toggleSettingsPane
-  htEntities.addKitsBtn.onclick = toggleAddKitsPane
-
-  htEntities.addKitsPane.ondragover = htEntities.addKitsPane.ondragleave =
-  htEntities.addKitsPane.ondragend = htEntities.addKitsPane.ondrop = (ev) => {
-    ev.preventDefault()
-  }
-  htEntities.addKitsPane.ondrop = (ev) => {
-    dropHandler(ev)
-  }
-  
 
   //preview elements
   htEntities.preview.menu.onclick = htEntities.preview.freezetime.onclick =
@@ -190,6 +183,25 @@ function setEventHandlers(){
       htEntities.preview.freezetime2.onclick =
       htEntities.preview.freezetime3.onclick =
         previewFreezetime
+  
+  //unzip-feature
+  htEntities.mainDiv.ondragover = (ev) => {
+    overlayUp(ev)
+  }
+
+  htEntities.addKitsOverlay.ondragover = (ev) => {
+    ev.preventDefault()
+  }
+
+  htEntities.addKitsOverlay.ondragend = 
+  htEntities.addKitsOverlay.ondragleave =
+  htEntities.addKitsOverlay.ondragexit = (ev) => {
+    overlayDown(ev)
+  }
+
+  htEntities.addKitsOverlay.ondrop = (ev) => {
+    dropHandler(ev)
+  }
 }
 
 function doCommand(obj){
@@ -374,9 +386,6 @@ function getHtEntities(){
   htEntities.settingsPane = document.getElementById('extrasettings')
   htEntities.discordrp = document.getElementById('discordrichpresence')
 
-  htEntities.addKitsBtn = document.getElementById('addKitsBtn')
-  htEntities.addKitsPane = document.getElementById('dragDropPane')
-
   //preview elements
   htEntities.preview = {
     div: document.getElementById('preview'),
@@ -392,6 +401,12 @@ function getHtEntities(){
     lose: document.getElementById('losePreview'),
     stop: document.getElementById('stopPreview')
   }
+
+  //unzip-feature
+  htEntities.mainDiv = document.getElementById('main')
+  htEntities.addKitsOverlay = document.getElementById('dragDropOverlay')
+
+
   setEventHandlers()
   server.richpresence.setDiscordToggle(htEntities.discordrp)
 }
@@ -409,6 +424,7 @@ function init(){
 window.onload = init
 
 ipc.on('welcome-message-done', newAudioDir)
+
 //executes when the selected directory dialog is completed
 ipc.on('selected-directory', function(event, path){
   if(path.length > 0){

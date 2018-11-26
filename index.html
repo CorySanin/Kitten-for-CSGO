@@ -27,7 +27,6 @@
       </div>
       <div class="fill">
         <button id="previewKit">Preview Kit</button>
-        <button id="addKitsBtn">Add Kits</button>
         <button id="refreshKitsBtn">Refresh Kits</button>
         <button id="dirChange">Change Main Directory</button>
         <button id="settingsBtn">Settings</button>
@@ -56,11 +55,11 @@
       <label><input class="settingstoggle" type="checkbox" value="mvp"/> Round Over Audio</label><br/>
       <label><input class="settingstoggle" type="checkbox" value="discordrichpresence" id="discordrichpresence"/> Discord Rich Presence</label>
     </div>
-    <div id="dragDropPane" class="none" ondrop="dropHandler(event);">
-       <div class="fill">
-         <p>Drag your music kit .zip file(s) here...</p>
-         <p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
-       </div>  
+    <div id="dragDropOverlay" class="none">
+      <div id="overlayText" class="center">
+        <br><br>
+        Drop Music Kits here to add to Music Kitten
+      </div>
     </div>
   </body>
 </html>
