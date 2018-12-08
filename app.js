@@ -124,6 +124,41 @@ function previewFreezetime(){
   player.playFreezetime(this.value)
 }
 
+// unzip-feature
+function unzip(src, dest){
+  decompress(src, dest).then((files) => {
+    console.log('extraction complete!')
+  })
+}
+
+function isZip(fileName){
+  if(fileName.split('.').pop() === 'zip'){
+    return true
+  }else{
+    return false
+  }
+}
+
+function dropHandler(e) {
+  console.log(e.dataTransfer.files[0].name + ' dropped!')
+  let zipPath = e.dataTransfer.files[0].path
+  if(isDirectory(state.audioDir) && isZip(e.dataTransfer.files[0].name)){
+    let destDirectory = path.join(state.audioDir,path.basename(e.dataTransfer.files[0].name, '.zip'))
+    fs.mkdir(destDirectory)
+    unzip(zipPath, destDirectory)
+  }
+  else{console.log('dropHandler() failed. Your music kitten is stuck in the tree.')}
+  overlayDown()
+}
+  
+function overlayUp(e){
+  htEntities.addKitsOverlay.style.display = 'block'
+}
+
+function overlayDown(e){
+  htEntities.addKitsOverlay.style.display = 'none'
+}
+
 function setEventHandlers(){
   let toggles = document.getElementsByClassName('settingstoggle')
   for(let i = 0; i < toggles.length; i++){
@@ -148,6 +183,25 @@ function setEventHandlers(){
       htEntities.preview.freezetime2.onclick =
       htEntities.preview.freezetime3.onclick =
         previewFreezetime
+  
+  //unzip-feature
+  htEntities.body.ondragover = (ev) => {
+    overlayUp(ev)
+  }
+
+  htEntities.addKitsOverlay.ondragover = (ev) => {
+    ev.preventDefault()
+  }
+
+  htEntities.addKitsOverlay.ondragend = 
+  htEntities.addKitsOverlay.ondragleave =
+  htEntities.addKitsOverlay.ondragexit = (ev) => {
+    overlayDown(ev)
+  }
+
+  htEntities.addKitsOverlay.ondrop = (ev) => {
+    dropHandler(ev)
+  }
 }
 
 function doCommand(obj){
@@ -347,6 +401,11 @@ function getHtEntities(){
     lose: document.getElementById('losePreview'),
     stop: document.getElementById('stopPreview')
   }
+
+  //unzip-feature
+  htEntities.addKitsOverlay = document.getElementById('dragDropOverlay')
+
+
   setEventHandlers()
   server.richpresence.setDiscordToggle(htEntities.discordrp)
 }

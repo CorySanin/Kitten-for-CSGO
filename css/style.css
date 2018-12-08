@@ -111,3 +111,22 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   top:0;
   bottom:0;
 }
+#dragDropOverlay{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  max-width:initial;
+  z-index:100;
+  padding: 2em;
+  background-color: rgba(0,0,0,.80);
+}
+#dragDropOverlay #overlayText{
+  font-size:18pt;
+  padding:3em 1em;
+  height:100%;
+  border-radius:1em;
+  border:5px solid #fff;
+  pointer-events:none;
+}
