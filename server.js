@@ -11,6 +11,7 @@ const COMMANDS = {
   'MVP':'mvp',
   'FREEZETIME':'freezetime',
   'LIVE':'live',
+  'WARMUP':'warmup',
   'WIN':'win',
   'LOSE':'lose',
   'PLANTED':'planted'
@@ -22,7 +23,8 @@ const GAMEMODES = {
   'scrimcomp2v2': 'Wingman',
   'gungametrbomb': 'Demolition',
   'gungameprogressive': 'Arms Race',
-  'deathmatch': 'Deathmatch'
+  'deathmatch': 'Deathmatch',
+  'survival': 'Danger Zone'
 }
 
 const MAPS = {
@@ -53,7 +55,8 @@ const MAPS = {
   'de_subzero': 'Subzero',
   'de_sugarcane': 'Sugarcane',
   'de_train': 'Train',
-  'gd_rialto': 'Rialto'
+  'gd_rialto': 'Rialto',
+  'dz_blacksite': 'Blacksite'
 }
 
 let server = false
@@ -130,7 +133,14 @@ function handleResponse(body){
     updateTeam(parsed)
     console.log('\nPOST payload:')
     console.log(parsed)
-    if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')) {
+    let phase = false
+    if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('phase')){
+      phase = parsed.round.phase
+    }
+    else if (parsed.hasOwnProperty('map') && parsed.map.hasOwnProperty('phase')){
+      phase = parsed.map.phase
+    }
+    if (phase) {
       if(parsed.hasOwnProperty('map')){
         try{
           let teamname = (teamCT)?'ct':'t'
@@ -143,20 +153,23 @@ function handleResponse(body){
             scores.push(parsed.map.team_ct.score)
           }
 
-          richpresence({
+          let rpData = {
             details: resolveName(parsed.map.mode, GAMEMODES) + ' ' + resolveName(parsed.map.name, MAPS),
             state: teamname.toUpperCase() + ' ' + scores.join('-'),
             largeImageKey: parsed.map.name,
             largeImageText: parsed.map.name,
             smallImageKey: teamname,
             smallImageText: teamname.toUpperCase() + ' Team'
-          }, true)
-
-          if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch'){
-            richpresence({
-              state: teamname.toUpperCase() + ' ' + parsed.player.match_stats.kills + ' kills',
-            }, true)
           }
+
+          if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch' || parsed.map.mode === 'survival'){
+            rpData['state'] = teamname.toUpperCase() + ' ' + parsed.player.match_stats.kills + ' kills'
+            if(parsed.map.mode === 'survival'){
+              rpData['smallImageKey'] = 'battleroyale'
+              rpData['smallImageText'] = resolveName(parsed.map.mode, GAMEMODES)
+            }
+          }
+          richpresence(rpData, true)
         }
         catch(err) {
           console.log(err)
@@ -164,18 +177,28 @@ function handleResponse(body){
       }
 
 
-      if (parsed.round.hasOwnProperty('bomb') && parsed.round.bomb === COMMANDS.PLANTED) {
+      if (parsed.hasOwnProperty('round') && parsed.round.hasOwnProperty('bomb') && parsed.round.bomb === COMMANDS.PLANTED) {
         console.log('sending a '+COMMANDS.PLANTED)
         callback({type:'command', content:COMMANDS.PLANTED})
-      } else if (parsed.round.phase === COMMANDS.FREEZETIME || parsed.round.phase === COMMANDS.LIVE) {
-        console.log('sending a ' + parsed.round.phase)
-        callback({type:'command', content:parsed.round.phase})
+      } else if (
+                  (
+                    phase === COMMANDS.FREEZETIME ||
+                    phase === COMMANDS.LIVE ||
+                    phase === COMMANDS.WARMUP
+                  ) &&
+                  (!parsed.hasOwnProperty('map') || !parsed.map.hasOwnProperty('phase') || phase !== 'gameover')
+                ) {
+        if(phase === COMMANDS.WARMUP){
+          phase = COMMANDS.LIVE
+        }
+        console.log('sending a ' + phase)
+        callback({type:'command', content:phase})
         if (parsed.player.hasOwnProperty('steamid') && parsed.player.steamid === steamid) {
           if (parsed.player.hasOwnProperty('match_stats') && ~isNaN(parsed.player.match_stats.mvps)) {
             mvps = parsed.player.match_stats.mvps
           }
         }
-      } else if (parsed.round.phase === 'over') {
+      } else if (phase === 'over') {
         if (parsed.round.hasOwnProperty('win_team')) {
           let teamname = (teamCT) ? 'CT' : 'T'
           let comSend = COMMANDS.LOSE
