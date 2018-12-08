@@ -124,6 +124,51 @@ function previewFreezetime(){
   player.playFreezetime(this.value)
 }
 
+function dropHandler(e) {
+  let zipPath = e.dataTransfer.files[0].path
+  if(isDirectory(state.audioDir)){
+    let destDirectory = path.join(
+      state.audioDir,
+      path.basename(
+        zipPath,
+        path.extname(zipPath)
+      )
+    )
+    if(!isDirectory(destDirectory)){
+      fs.mkdir(destDirectory)
+      decompress(zipPath, destDirectory, {
+        strip:1
+      }).then(
+        function(files){
+          if(files.length === 0){
+            fs.unlink(destDirectory, function(err){
+              if(err){
+                console.log('Can\'t delete the folder for some stupid reason. Sorry, I tried.')
+              }
+              scanForKits()
+            })
+          }
+          else{
+            scanForKits()
+          }
+        }
+      )
+    }
+    else{
+      ipc.send('dialog', 'A directory with that name already exists in your music kit folder', 'Error')
+    }
+  }
+  overlayDown()
+}
+
+function overlayUp(e){
+  htEntities.addKitsOverlay.style.display = 'block'
+}
+
+function overlayDown(e){
+  htEntities.addKitsOverlay.style.display = 'none'
+}
+
 function setEventHandlers(){
   let toggles = document.getElementsByClassName('settingstoggle')
   for(let i = 0; i < toggles.length; i++){
@@ -148,6 +193,25 @@ function setEventHandlers(){
       htEntities.preview.freezetime2.onclick =
       htEntities.preview.freezetime3.onclick =
         previewFreezetime
+
+  //unzip-feature
+  htEntities.body.ondragover = (ev) => {
+    overlayUp(ev)
+  }
+
+  htEntities.addKitsOverlay.ondragover = (ev) => {
+    ev.preventDefault()
+  }
+
+  htEntities.addKitsOverlay.ondragend =
+  htEntities.addKitsOverlay.ondragleave =
+  htEntities.addKitsOverlay.ondragexit = (ev) => {
+    overlayDown(ev)
+  }
+
+  htEntities.addKitsOverlay.ondrop = (ev) => {
+    dropHandler(ev)
+  }
 }
 
 function doCommand(obj){
@@ -174,7 +238,12 @@ function doCommand(obj){
 }
 
 function isDirectory(str){
-  return fs.lstatSync(str).isDirectory()
+  try{
+    return fs.lstatSync(str).isDirectory()
+  }
+  catch(err){
+    return false
+  }
 }
 
 function getConfigFilename(){
@@ -347,6 +416,11 @@ function getHtEntities(){
     lose: document.getElementById('losePreview'),
     stop: document.getElementById('stopPreview')
   }
+
+  //unzip-feature
+  htEntities.addKitsOverlay = document.getElementById('dragDropOverlay')
+
+
   setEventHandlers()
   server.richpresence.setDiscordToggle(htEntities.discordrp)
 }
