@@ -124,33 +124,43 @@ function previewFreezetime(){
   player.playFreezetime(this.value)
 }
 
-// unzip-feature
-function unzip(src, dest){
-  decompress(src, dest).then((files) => {
-    console.log('extraction complete!')
-  })
-}
-
-function isZip(fileName){
-  if(fileName.split('.').pop() === 'zip'){
-    return true
-  }else{
-    return false
-  }
-}
-
 function dropHandler(e) {
-  console.log(e.dataTransfer.files[0].name + ' dropped!')
   let zipPath = e.dataTransfer.files[0].path
-  if(isDirectory(state.audioDir) && isZip(e.dataTransfer.files[0].name)){
-    let destDirectory = path.join(state.audioDir,path.basename(e.dataTransfer.files[0].name, '.zip'))
-    fs.mkdir(destDirectory)
-    unzip(zipPath, destDirectory)
+  if(isDirectory(state.audioDir)){
+    let destDirectory = path.join(
+      state.audioDir,
+      path.basename(
+        zipPath,
+        path.extname(zipPath)
+      )
+    )
+    if(!isDirectory(destDirectory)){
+      fs.mkdir(destDirectory)
+      decompress(zipPath, destDirectory, {
+        strip:1
+      }).then(
+        function(files){
+          if(files.length === 0){
+            fs.unlink(destDirectory, function(err){
+              if(err){
+                console.log('Can\'t delete the folder for some stupid reason. Sorry, I tried.')
+              }
+              scanForKits()
+            })
+          }
+          else{
+            scanForKits()
+          }
+        }
+      )
+    }
+    else{
+      ipc.send('dialog', 'A directory with that name already exists in your music kit folder', 'Error')
+    }
   }
-  else{console.log('dropHandler() failed. Your music kitten is stuck in the tree.')}
   overlayDown()
 }
-  
+
 function overlayUp(e){
   htEntities.addKitsOverlay.style.display = 'block'
 }
@@ -183,7 +193,7 @@ function setEventHandlers(){
       htEntities.preview.freezetime2.onclick =
       htEntities.preview.freezetime3.onclick =
         previewFreezetime
-  
+
   //unzip-feature
   htEntities.body.ondragover = (ev) => {
     overlayUp(ev)
@@ -193,7 +203,7 @@ function setEventHandlers(){
     ev.preventDefault()
   }
 
-  htEntities.addKitsOverlay.ondragend = 
+  htEntities.addKitsOverlay.ondragend =
   htEntities.addKitsOverlay.ondragleave =
   htEntities.addKitsOverlay.ondragexit = (ev) => {
     overlayDown(ev)
@@ -228,7 +238,12 @@ function doCommand(obj){
 }
 
 function isDirectory(str){
-  return fs.lstatSync(str).isDirectory()
+  try{
+    return fs.lstatSync(str).isDirectory()
+  }
+  catch(err){
+    return false
+  }
 }
 
 function getConfigFilename(){

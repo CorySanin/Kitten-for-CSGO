@@ -100,7 +100,7 @@ ipc.on('open-kitten-dir', function (event, callback){
 
 
 
-ipc.on('dialog', function (event, message, title, response) {
+ipc.on('dialog', function (event, message, title, response = false) {
   const options = {
     type: 'info',
     title,
@@ -108,7 +108,9 @@ ipc.on('dialog', function (event, message, title, response) {
     buttons: ['OK']
   }
   electron.dialog.showMessageBox(mainWindow, options, function (index) {
-    event.sender.send(response, index)
+    if(response){
+      event.sender.send(response, index)
+    }
   })
 })
 
