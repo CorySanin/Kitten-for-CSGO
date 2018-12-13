@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
@@ -29,9 +29,9 @@
   "license": "GPL-3.0",
   "dependencies": {
     "discord-rpc": "3.0.1",
-    "register-scheme": "github:devsnek/node-register-scheme",
-    "electron-updater": "3.1.6",
-    "fs-extra": "7.0.0",
+    "register-scheme": "0.0.2",
+    "electron-updater": "4.0.6",
+    "fs-extra": "7.0.1",
     "http-shutdown": "1.2.0",
     "@node-steam/vdf": "2.0.1",
     "winreg": "1.2.4",
@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "electron": "3.0.3",
-    "electron-builder": "~>20.31.2"
+    "electron-builder": "~>20.38.3"
   },
   "build": {
     "appId": "net.musickitten.app",
