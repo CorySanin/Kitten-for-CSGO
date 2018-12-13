@@ -2,7 +2,9 @@ language: node_js
 node_js: "node"
 matrix:
   include:
-  - os: osx
+  - os:
+    - linux
+    - osx
 notifications:
   email: false
 install:
@@ -11,4 +13,9 @@ install:
 script:
   - node insertVersion.js
   - rm insertVersion.js
-  - npm run dist
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then
+    npm run distDeb
+    else
+    npm run distMac
+    npm run distWin
+    fi

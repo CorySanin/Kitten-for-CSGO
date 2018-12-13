@@ -8,10 +8,14 @@
     "start": "electron .",
     "test": "electron-builder --dir",
     "dist": "electron-builder -mwl --x64 --publish=always",
-    "distWin": "electron-builder --win --x64 --ia32",
-    "distMac": "electron-builder --mac",
-    "distLin": "electron-builder --linux",
-    "debugPackage": "asar extract app.asar app-asar"
+    "distWin": "electron-builder --win --x64 --ia32 --publish=always",
+    "distMac": "electron-builder --mac --publish=always",
+    "distDeb": "electron-builder --linux deb --publish=always",
+    "distApp": "electron-builder --linux AppImage --publish=always",
+    "distPac": "electron-builder --linux pacman --publish=always",
+    "distRpm": "electron-builder --linux rpm --publish=always",
+    "distBsd": "electron-builder --linux freebsd --publish=always",
+    "debugPackage": "asar extract app.asar app-asar --publish=always"
   },
   "repository": "https://github.com/CorySanin/Kitten-for-CSGO",
   "homepage": "https://www.musickitten.net",
@@ -41,7 +45,7 @@
   },
   "devDependencies": {
     "electron": "3.0.3",
-    "electron-builder": "~>20.38.3"
+    "electron-builder": "~>20.31.2"
   },
   "build": {
     "appId": "net.musickitten.app",
@@ -67,7 +71,6 @@
       "oneClick": false
     },
     "linux": {
-      "target": "deb",
       "synopsis": "Use custom CS:GO music kits",
       "category": "Utility",
       "publish": {
