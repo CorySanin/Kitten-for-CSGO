@@ -13,10 +13,9 @@ install:
 script:
   - node insertVersion.js
   - rm insertVersion.js
-  - echo $TRAVIS_OS_NAME
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
-    npm run distDeb
+    npm run distDeb;
     else
-    npm run distMac
-    npm run distWin
+    npm run distMac;
+    npm run distWin;
     fi
