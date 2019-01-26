@@ -2,6 +2,7 @@ const HOST = '127.0.0.1'
 const DEFAULT_PORT = '8793'
 const AUTH = 'WooMeowWoo'
 const http = require('http')
+const request = require('request')
 const httpshutdown = require('http-shutdown')
 const drp = require('./richpresence.js')
 const richpresence = drp.update
@@ -25,36 +26,27 @@ const GAMEMODES = {
   'deathmatch': 'Deathmatch'
 }
 
-const MAPS = {
-  'ar_baggage': 'Baggage',
-  'ar_dizzy': 'Dizzy',
-  'ar_monastery': 'Monastery',
-  'ar_shoots': 'Shoots',
-  'cs_agency': 'Agency',
-  'cs_assault': 'Assault',
-  'cs_italy': 'Italy',
-  'cs_office': 'Office',
-  'de_austria': 'Austria',
-  'de_bank': 'Bank',
-  'de_biome': 'Biome',
-  'de_cache': 'Cache',
-  'de_canals': 'Canals',
-  'de_cbble': 'Cobblestone',
-  'de_dust2': 'Dust II',
-  'de_inferno': 'Inferno',
-  'de_lake': 'Lake',
-  'de_mirage': 'Mirage',
-  'de_nuke': 'Nuke',
-  'de_overpass': 'Overpass',
-  'de_safehouse': 'Safehouse',
-  'de_shortdust': 'Shortdust',
-  'de_shortnuke': 'Shortnuke',
+let MAPS = {
   'de_stmarc': 'St. Marc',
-  'de_subzero': 'Subzero',
-  'de_sugarcane': 'Sugarcane',
-  'de_train': 'Train',
-  'gd_rialto': 'Rialto'
+  'de_cbble': 'Cobblestone',
+  'de_dust2': 'Dust II'
 }
+request(
+  {
+    url: 'https://www.musickitten.net/maps.json',
+    json:true
+  },
+  function(error, response, body) {
+    if(!error){
+      MAPS = body
+    }
+    else{
+      console.log(error);
+      console.log(response);
+    }
+  }
+)
+
 
 let server = false
 let steamid = null
@@ -65,9 +57,14 @@ let mvps = -1
 let running = false
 let heartbeat = 30.0
 
-function resolveName(name, nameobj){
+function resolveName(name, nameobj, guess=false){
   if(name in nameobj){
     return nameobj[name]
+  }
+  if(guess){
+    let split = name.split('_')
+    split = split[split.length-1]
+    return split.charAt(0).toUpperCase() + split.slice(1);
   }
   return name
 }
@@ -144,7 +141,7 @@ function handleResponse(body){
           }
 
           richpresence({
-            details: resolveName(parsed.map.mode, GAMEMODES) + ' ' + resolveName(parsed.map.name, MAPS),
+            details: resolveName(parsed.map.mode, GAMEMODES) + ' ' + resolveName(parsed.map.name, MAPS, true),
             state: teamname.toUpperCase() + ' ' + scores.join('-'),
             largeImageKey: parsed.map.name,
             largeImageText: parsed.map.name,

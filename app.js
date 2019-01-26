@@ -440,7 +440,7 @@ function init(){
 window.onload = init
 
 ipc.on('show-kitten-dir', function(){
-  if(isDirectory(state.audioDir){
+  if(isDirectory(state.audioDir)){
     shell.openItem(state.audioDir)
   }
 })
