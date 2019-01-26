@@ -125,37 +125,39 @@ function previewFreezetime(){
 }
 
 function dropHandler(e) {
-  let zipPath = e.dataTransfer.files[0].path
-  if(isDirectory(state.audioDir)){
-    let destDirectory = path.join(
-      state.audioDir,
-      path.basename(
-        zipPath,
-        path.extname(zipPath)
+  for(let i = 0; i < e.dataTransfer.files.length; i++){
+    let zipPath = e.dataTransfer.files[i].path
+    if(isDirectory(state.audioDir)){
+      let destDirectory = path.join(
+        state.audioDir,
+        path.basename(
+          zipPath,
+          path.extname(zipPath)
+        )
       )
-    )
-    if(!isDirectory(destDirectory)){
-      fs.mkdir(destDirectory)
-      decompress(zipPath, destDirectory, {
-        strip:1
-      }).then(
-        function(files){
-          if(files.length === 0){
-            fs.unlink(destDirectory, function(err){
-              if(err){
-                console.log('Can\'t delete the folder for some stupid reason. Sorry, I tried.')
-              }
+      if(!isDirectory(destDirectory)){
+        fs.mkdir(destDirectory)
+        decompress(zipPath, destDirectory, {
+          strip:1
+        }).then(
+          function(files){
+            if(files.length === 0){
+              fs.unlink(destDirectory, function(err){
+                if(err){
+                  console.log('Can\'t delete the folder for some stupid reason. Sorry, I tried.')
+                }
+                scanForKits()
+              })
+            }
+            else{
               scanForKits()
-            })
+            }
           }
-          else{
-            scanForKits()
-          }
-        }
-      )
-    }
-    else{
-      ipc.send('dialog', 'A directory with that name already exists in your music kit folder', 'Error')
+        )
+      }
+      else{
+        ipc.send('dialog', 'A directory with that name already exists in your music kit folder', 'Error')
+      }
     }
   }
   overlayDown()
@@ -437,6 +439,11 @@ function init(){
 
 window.onload = init
 
+ipc.on('show-kitten-dir', function(){
+  if(isDirectory(state.audioDir)){
+    shell.openItem(state.audioDir)
+  }
+})
 ipc.on('welcome-message-done', newAudioDir)
 
 //executes when the selected directory dialog is completed

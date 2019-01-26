@@ -13,6 +13,8 @@ menu.append(new electron.MenuItem({ label: 'Kitten [$VERSION$]',
     enabled: false}))
 menu.append(new electron.MenuItem({ label: 'Launch CS:GO',
     click: function(){electron.shell.openExternal('steam://rungameid/730')}}))
+menu.append(new electron.MenuItem({ label: 'Open Kitten Folder',
+    click: function(){mainWindow.webContents.send('show-kitten-dir')}}))
 menu.append(new electron.MenuItem({ label: 'Developer Tools',
     click: function(){mainWindow.webContents.openDevTools()}}))
 
