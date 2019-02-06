@@ -1,8 +1,12 @@
 language: node_js
 node_js: "node"
-os:
-  - linux
-  - osx
+matrix:
+  include:
+    - os: linux
+      env: snap=false
+    - os: linux
+      env: snap=true
+    - os: osx
 notifications:
   email: false
 install:
@@ -12,7 +16,11 @@ script:
   - node insertVersion.js
   - rm insertVersion.js
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
+    if [ $snap == "true" ]; then
+    npm run distSnap;
+    else
     npm run distDeb;
+    fi
     else
     npm run distMac;
     npm run distWin;
