@@ -17,7 +17,7 @@ script:
   - rm insertVersion.js
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
     if [ $snap == "true" ]; then
-    npm run distSnap
+    npm run distSnap;
     else
     npm run distDeb;
     fi
