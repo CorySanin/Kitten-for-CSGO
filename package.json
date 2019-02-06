@@ -13,9 +13,7 @@
     "distMac": "electron-builder --mac --publish=always",
     "distDeb": "electron-builder --linux deb --publish=always",
     "distApp": "electron-builder --linux AppImage --publish=always",
-    "distPac": "electron-builder --linux pacman --publish=always",
-    "distRpm": "electron-builder --linux rpm --publish=always",
-    "distBsd": "electron-builder --linux freebsd --publish=always",
+    "distSnap": "electron-builder --linux snap --publish=always",
     "debugPackage": "asar extract app.asar app-asar --publish=always"
   },
   "repository": "https://github.com/CorySanin/Kitten-for-CSGO",
