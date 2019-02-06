@@ -156,7 +156,7 @@ function handleResponse(body){
             largeImageText: parsed.map.name,
             smallImageKey: teamname,
             smallImageText: teamname.toUpperCase() + ' Team'
-          }
+          })
 
           if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch' || parsed.map.mode === 'survival'){
             rpData['state'] = teamname.toUpperCase() + ' ' + parsed.player.match_stats.kills + ' kills'
