@@ -6,25 +6,14 @@ const BrowserWindow = electron.BrowserWindow // Module to create native browser 
 const path = require('path')
 const url = require('url')
 const os = require('os')
-
+const i18n = require('./locales/index.js')
 
 const menu = new electron.Menu()
-menu.append(new electron.MenuItem({ label: 'Kitten [$VERSION$]',
-    enabled: false}))
-menu.append(new electron.MenuItem({ label: 'Launch CS:GO',
-    click: function(){electron.shell.openExternal('steam://rungameid/730')}}))
-menu.append(new electron.MenuItem({ label: 'Open Kitten Folder',
-    click: function(){mainWindow.webContents.send('show-kitten-dir')}}))
-menu.append(new electron.MenuItem({ label: 'Developer Tools',
-    click: function(){mainWindow.webContents.openDevTools()}}))
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-let port = 8793
-let steamid = ''
-let mvps = 0
-let teamCT = false
+let _
 
 function createWindow () {
   // Create the browser window.
@@ -58,6 +47,15 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
   autoUpdater.checkForUpdatesAndNotify()
+  _ = i18n.translate(app.getLocale())
+  menu.append(new electron.MenuItem({ label: 'Kitten [$VERSION$]',
+      enabled: false}))
+  menu.append(new electron.MenuItem({ label: _('misc.launchgame'),
+      click: function(){electron.shell.openExternal('steam://rungameid/730')}}))
+  menu.append(new electron.MenuItem({ label: _('misc.openkittendir'),
+      click: function(){mainWindow.webContents.send('show-kitten-dir')}}))
+  menu.append(new electron.MenuItem({ label: _('misc.devtools'),
+      click: function(){mainWindow.webContents.openDevTools()}}))
   createWindow()
 })
 
@@ -107,7 +105,7 @@ ipc.on('dialog', function (event, message, title, response = false) {
     type: 'info',
     title,
     message: message,
-    buttons: ['OK']
+    buttons: [_('dialog.ok')]
   }
   electron.dialog.showMessageBox(mainWindow, options, function (index) {
     if(response){
@@ -121,7 +119,7 @@ ipc.on('yes-no', function (event, message, title, response) {
     type: 'question',
     title,
     message: message,
-    buttons: ['No!', 'Yes']
+    buttons: [_('dialog.no'), _('dialog.yes')]
   }
   electron.dialog.showMessageBox(mainWindow, options, function (index) {
     event.sender.send(response, index === 1)

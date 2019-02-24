@@ -40,6 +40,8 @@
     "winreg": "1.2.4",
     "download": "7.1.0",
     "decompress": "4.2.0",
+    "i18next": "15.0.4",
+    "i18next-sync-fs-backend": "1.1.0",
     "howler": "2.1.1"
   },
   "optionalDependencies": {

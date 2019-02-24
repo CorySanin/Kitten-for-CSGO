@@ -1,0 +1,12 @@
+{
+  "dialog":{
+    "yes": "Yes",
+    "no": "No!",
+    "ok": "OK"
+  },
+  "misc":{
+    "launchgame": "Launch CS:GO",
+    "openkittendir": "Open Kitten Folder",
+    "devtools": "Developer Tools"
+  }
+}
