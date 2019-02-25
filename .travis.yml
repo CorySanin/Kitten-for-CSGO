@@ -15,7 +15,6 @@ script:
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
     npm run distSnap;
     npm run distDeb;
-    fi
     else
     npm run distMac;
     npm run distWin;
