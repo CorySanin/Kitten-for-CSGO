@@ -132,3 +132,7 @@ ipc.on('resize', function (event, args) {
   let height = ('height' in args)?args.height:dim[1]
   mainWindow.setSize(width, height, true)
 })
+
+ipc.on('lang', function (event) {
+  event.sender.send('lang', app.getLocale())
+})
