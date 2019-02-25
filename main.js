@@ -9,6 +9,7 @@ const os = require('os')
 const i18n = require('./locales/index.js')
 
 const menu = new electron.Menu()
+const launchcsgo = 'steam://rungameid/730'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -51,11 +52,19 @@ app.on('ready', function(){
   menu.append(new electron.MenuItem({ label: 'Kitten [$VERSION$]',
       enabled: false}))
   menu.append(new electron.MenuItem({ label: _('misc.launchgame'),
-      click: function(){electron.shell.openExternal('steam://rungameid/730')}}))
+      click: function(){electron.shell.openExternal(launchcsgo)}}))
   menu.append(new electron.MenuItem({ label: _('misc.openkittendir'),
       click: function(){mainWindow.webContents.send('show-kitten-dir')}}))
   menu.append(new electron.MenuItem({ label: _('misc.devtools'),
       click: function(){mainWindow.webContents.openDevTools()}}))
+  app.setUserTasks([
+    {
+      type: 'task',
+      program: launchcsgo,
+      title: _('misc.launchgame'),
+      description: _('misc.launchgame')
+    }
+  ])
   createWindow()
 })
 
