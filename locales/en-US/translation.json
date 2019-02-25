@@ -2,7 +2,14 @@
   "dialog":{
     "yes": "Yes",
     "no": "No!",
-    "ok": "OK"
+    "ok": "OK",
+    "hey": "Hey!",
+    "welcome": "Welcome!",
+    "nokitsfound": "No kits found",
+    "choosedir": "You must select a directory to store everything in. This is also where Kitten looks for music kits.",
+    "sample": "No kits were found in that directory. Would you like to download the sample kit?",
+    "mustchoosedir": "A configuration directory must be chosen.",
+    "anotherdirexists": "A directory with that name already exists in your music kit folder"
   },
   "ui":{
     "mute": "Mute",

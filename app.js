@@ -160,7 +160,7 @@ function dropHandler(e) {
         )
       }
       else{
-        ipc.send('dialog', 'A directory with that name already exists in your music kit folder', 'Error')
+        ipc.send('dialog', _('dialog.anotherdirexists'), 'Error')
       }
     }
   }
@@ -285,8 +285,8 @@ function selectKit(){
 
 function noKits(){
   ipc.send('yes-no',
-           'No kits were found in that directory. Would you like to download the sample kit?',
-           'No kits found',
+           _('dialog.sample'),
+           _('dialog.nokitsfound'),
            'no-kits-response'
           )
 }
@@ -365,9 +365,8 @@ function loadSettingsIntoDom(){
 
 function tryLoadSettings(){
   if(state.audioDir == null){
-    let msg = 'You must select a directory to store everything in. '
-    msg += 'This is also where Kitten looks for music kits.'
-    ipc.send('dialog', msg, 'Welcome!', 'welcome-message-done')
+    let msg = _('dialog.choosedir')
+    ipc.send('dialog', msg, _('dialog.welcome'), 'welcome-message-done')
   }
   else{
     try{
@@ -494,8 +493,8 @@ ipc.on('selected-directory', function(event, path){
     tryLoadSettings()
   }
   else if(state.audioDir == null){
-    let msg = 'A configuration directory must be chosen.'
-    ipc.send('dialog', msg, 'Hey!', 'welcome-message-done')
+    let msg = _('dialog.mustchoosedir')
+    ipc.send('dialog', msg, _('dialog.hey'), 'welcome-message-done')
   }
 })
 
