@@ -32,7 +32,6 @@ function saveConfig(config){
   getCSGOPath(function(pth){
     fs.writeFile(path.join(pth, GSIFILENAME), cfg)
     if(os.platform() === 'win32'){
-      console.log(path.resolve(pth, '..', '..', 'csgo.exe'));
       ipc.send('csgoicon', path.resolve(pth, '..', '..', 'csgo.exe'))
     }
   })

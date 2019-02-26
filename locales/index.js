@@ -25,7 +25,7 @@ exports.translate = function(locale){
     fallbackLng,
     lngs,
     backend: {
-		    loadPath: path.join(langPath,'{{lng}}','translation.json'),
+      loadPath: path.join(langPath,'{{lng}}','translation.json'),
     },
     initImmediate: false
   })
