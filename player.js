@@ -169,6 +169,16 @@ class KittenPlayer{
     }
   }
 
+  halt(){
+    let p = ('player' in ops)?ops.player:this.current
+    if(p != null && (!('stopping' in p) || !p.stopping)){
+      p.stop()
+    }
+    if(p === this.current){
+      this.current = null
+    }
+  }
+
   fadein(ops={}){
     let time = ('time' in ops)?ops.time:2500
     let p = ('player' in ops)?ops.player:this.current
@@ -205,6 +215,11 @@ class KittenPlayer{
       }
       else if(command === COMMANDS.PLANTED){
         this.playPlanted()
+      }
+      else if(command === COMMANDS.HALT){
+        this.halt()
+        this.command = null
+        this.current = null
       }
       else{
         this.fadeout()

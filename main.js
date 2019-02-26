@@ -62,7 +62,9 @@ app.on('ready', function(){
       type: 'task',
       program: launchcsgo,
       title: _('misc.launchgame'),
-      description: _('misc.launchgame')
+      description: _('misc.launchgame'),
+      iconPath: path.join(__dirname,'icon','csgo.ico'),
+      iconIndex: 0
     }
   ])
   createWindow()

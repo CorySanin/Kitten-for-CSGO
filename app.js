@@ -448,7 +448,7 @@ function getHtEntities(){
   translatableText.mvp = [htEntities.preview.mvp]
   translatableText.win = [htEntities.preview.win]
   translatableText.lose = [htEntities.preview.lose]
-  translatableText.stop = [htEntities.preview.menu]
+  translatableText.stop = [htEntities.preview.stop]
   translatableText.dropkithere = [document.getElementById('overlayText')]
 
 

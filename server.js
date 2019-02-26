@@ -15,7 +15,9 @@ const COMMANDS = {
   'WARMUP':'warmup',
   'WIN':'win',
   'LOSE':'lose',
-  'PLANTED':'planted'
+  'PLANTED':'planted',
+  'STOP':'stop',
+  'HALT':'halt'
 }
 
 const GAMEMODES = {
@@ -57,7 +59,8 @@ let callback = function(args){}
 let teamCT = false
 let mvps = -1
 let running = false
-let heartbeat = 30.0
+let heartbeat = 4.0
+let timeout = null
 
 function resolveName(name, nameobj, guess=false){
   if(name in nameobj){
@@ -119,6 +122,14 @@ function init(){
 }
 
 function handleResponse(body){
+  if(timeout != null){
+    clearTimeout(timeout)
+  }
+  timeout = setTimeout(function(){
+    timeout = null
+    console.log('stopping due to inactivity')
+    callback({type:'command', content:COMMANDS.HALT})
+  }, 1000 * (heartbeat + 3))
   let parsed = JSON.parse(body)
   if (parsed.hasOwnProperty('auth') &&
       parsed.auth.hasOwnProperty('token') &&
@@ -159,13 +170,14 @@ function handleResponse(body){
           })
 
           if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch' || parsed.map.mode === 'survival'){
+            let rpData = {}
             rpData['state'] = teamname.toUpperCase() + ' ' + parsed.player.match_stats.kills + ' kills'
             if(parsed.map.mode === 'survival'){
               rpData['smallImageKey'] = 'battleroyale'
               rpData['smallImageText'] = resolveName(parsed.map.mode, GAMEMODES)
             }
+            richpresence(rpData, true)
           }
-          richpresence(rpData, true)
         }
         catch(err) {
           console.log(err)
