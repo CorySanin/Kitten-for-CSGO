@@ -3,9 +3,6 @@ node_js: "node"
 matrix:
   include:
     - os: linux
-      env: snap=false
-    - os: linux
-      env: snap=true
     - os: osx
 notifications:
   email: false
@@ -13,14 +10,11 @@ install:
   - rm package-lock.json
   - npm install
 script:
-  - node insertVersion.js
-  - rm insertVersion.js
+  - node prebuild.js
+  - rm prebuild.js
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
-    if [ $snap == "true" ]; then
     npm run distSnap;
-    else
     npm run distDeb;
-    fi
     else
     npm run distMac;
     npm run distWin;

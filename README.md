@@ -1,4 +1,5 @@
-# Music Kitten for CS:GO
+[![Music Kitten for CS:GO](https://raw.githubusercontent.com/CorySanin/Kitten-for-CSGO/master/assets/readme-header.png "Music Kitten for CS:GO")](https://musickitten.net)
+
 [![Travis CI Build Status](https://api.travis-ci.org/CorySanin/Kitten-for-CSGO.svg?branch=master)](https://travis-ci.org/CorySanin/Kitten-for-CSGO)
 [![node.js dependencies](https://david-dm.org/CorySanin/Kitten-for-CSGO.svg)](https://david-dm.org/CorySanin/Kitten-for-CSGO)
 [![node.js devDependencies](https://david-dm.org/CorySanin/Kitten-for-CSGO/dev-status.svg)](https://david-dm.org/CorySanin/Kitten-for-CSGO?type=dev)
@@ -10,7 +11,7 @@ tracks when CS:GO gives it certain cues. Essentially, this allows you to
 create and use your own music kits.
 
 ## Getting Started
-Grab the latest "stable" release
+Download the latest stable release
 [here](https://www.musickitten.net/download/).
 
 To run Music Kitten from source, you'll need node. If you've never

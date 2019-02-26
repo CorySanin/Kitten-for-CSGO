@@ -1,5 +1,6 @@
 const server = require('./server.js')
 const Player = require('./player.js').player
+const i18n = require('./locales/index.js')
 const saveConfig = require('./gamestateIntegration.js').saveConfig
 const ipc = require('electron').ipcRenderer
 const shell = require('electron').shell
@@ -8,6 +9,7 @@ const download = require('download')
 const decompress = require('decompress')
 const path = require('path')
 const os = require('os')
+const getElementById = document.getElementById
 const doNothing = function(){
 }
 
@@ -21,11 +23,13 @@ let settings = {
   discordrichpresence: false
 }
 let htEntities = {}
+let translatableText = {}
 let state = {
   muteVol: 0
 }
 let player = new Player()
 let expanded = false
+let _
 
 function toggleExpanded(){
   if(expanded){
@@ -156,7 +160,7 @@ function dropHandler(e) {
         )
       }
       else{
-        ipc.send('dialog', 'A directory with that name already exists in your music kit folder', 'Error')
+        ipc.send('dialog', _('dialog.anotherdirexists'), 'Error')
       }
     }
   }
@@ -281,8 +285,8 @@ function selectKit(){
 
 function noKits(){
   ipc.send('yes-no',
-           'No kits were found in that directory. Would you like to download the sample kit?',
-           'No kits found',
+           _('dialog.sample'),
+           _('dialog.nokitsfound'),
            'no-kits-response'
           )
 }
@@ -361,9 +365,8 @@ function loadSettingsIntoDom(){
 
 function tryLoadSettings(){
   if(state.audioDir == null){
-    let msg = 'You must select a directory to store everything in. '
-    msg += 'This is also where Kitten looks for music kits.'
-    ipc.send('dialog', msg, 'Welcome!', 'welcome-message-done')
+    let msg = _('dialog.choosedir')
+    ipc.send('dialog', msg, _('dialog.welcome'), 'welcome-message-done')
   }
   else{
     try{
@@ -422,6 +425,32 @@ function getHtEntities(){
   //unzip-feature
   htEntities.addKitsOverlay = document.getElementById('dragDropOverlay')
 
+  let toggles = document.getElementsByClassName('settingstoggle')
+  for(let i = 0; i < toggles.length; i++){
+    translatableText[toggles[i].value + 'toggle'] = document.getElementById(toggles[i].value + 'label')
+  }
+  translatableText.mute = [htEntities.muteBtn]
+  translatableText.volume = [document.getElementById('volumeLabel')]
+  translatableText.port = [document.getElementById('portLabel')]
+  translatableText.musickit = [document.getElementById('kitLabel')]
+  translatableText.previewkit = [htEntities.previewBtn]
+  translatableText.refreshkits = [htEntities.refreshKitsBtn]
+  translatableText.changedir = [htEntities.dirChange]
+  translatableText.settings = [htEntities.settingsBtn, document.getElementById('settingsTitle')]
+  translatableText.save = [htEntities.saveBtn]
+  translatableText.menu = [htEntities.preview.menu]
+  translatableText.freezetime = [htEntities.preview.freezetime]
+  translatableText.freezetime1 = [htEntities.preview.freezetime1]
+  translatableText.freezetime2 = [htEntities.preview.freezetime2]
+  translatableText.freezetime3 = [htEntities.preview.freezetime3]
+  translatableText.live = [htEntities.preview.live]
+  translatableText.planted = [htEntities.preview.planted]
+  translatableText.mvp = [htEntities.preview.mvp]
+  translatableText.win = [htEntities.preview.win]
+  translatableText.lose = [htEntities.preview.lose]
+  translatableText.stop = [htEntities.preview.stop]
+  translatableText.dropkithere = [document.getElementById('overlayText')]
+
 
   setEventHandlers()
   server.richpresence.setDiscordToggle(htEntities.discordrp)
@@ -431,6 +460,8 @@ function init(){
   console.log('Music Kitten for CS:GO\nVersion [$VERSION$]\nBy Cory Sanin')
   getHtEntities()
 
+  ipc.send('lang')
+
   state.audioDir = localStorage.getItem('audioDir')
   server.changeCallback(doCommand)
 
@@ -438,6 +469,15 @@ function init(){
 }
 
 window.onload = init
+
+ipc.on('lang', function(event, lang){
+  _ = i18n.translate(lang)
+  for(let key in translatableText){
+    for(let i = 0; i < translatableText[key].length; i++){
+      translatableText[key][i].innerHTML = _('ui.' + key)
+    }
+  }
+})
 
 ipc.on('show-kitten-dir', function(){
   if(isDirectory(state.audioDir)){
@@ -453,8 +493,8 @@ ipc.on('selected-directory', function(event, path){
     tryLoadSettings()
   }
   else if(state.audioDir == null){
-    let msg = 'A configuration directory must be chosen.'
-    ipc.send('dialog', msg, 'Hey!', 'welcome-message-done')
+    let msg = _('dialog.mustchoosedir')
+    ipc.send('dialog', msg, _('dialog.hey'), 'welcome-message-done')
   }
 })
 
