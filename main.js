@@ -57,7 +57,9 @@ app.on('ready', function(){
       click: function(){mainWindow.webContents.send('show-kitten-dir')}}))
   menu.append(new electron.MenuItem({ label: _('misc.devtools'),
       click: function(){mainWindow.webContents.openDevTools()}}))
-  app.setUserTasks([])
+  if(os.platform() === 'win32'){
+    app.setUserTasks([]) //why does it need to be initialized first???
+  }
   createWindow()
 })
 
@@ -140,14 +142,16 @@ ipc.on('lang', function (event) {
 })
 
 ipc.on('csgoicon', function (event, exepath){
-  app.setUserTasks([
-    {
-      type: 'task',
-      program: launchcsgo,
-      title: _('misc.launchgame'),
-      description: _('misc.launchgame'),
-      iconPath: exepath,
-      iconIndex: 0
-    }
-  ])
+  if(os.platform() === 'win32'){
+    app.setUserTasks([
+      {
+        type: 'task',
+        program: launchcsgo,
+        title: _('misc.launchgame'),
+        description: _('misc.launchgame'),
+        iconPath: exepath,
+        iconIndex: 0
+      }
+    ])
+  }
 })
