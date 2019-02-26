@@ -169,7 +169,7 @@ class KittenPlayer{
     }
   }
 
-  halt(){
+  halt(ops={}){
     let p = ('player' in ops)?ops.player:this.current
     if(p != null && (!('stopping' in p) || !p.stopping)){
       p.stop()
