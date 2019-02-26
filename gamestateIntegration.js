@@ -3,6 +3,7 @@ const Registry = require('winreg')
 const fs = require('fs-extra')
 const path = require('path')
 const os = require('os')
+const ipc = require('electron').ipcRenderer
 
 const REG = 'SteamPath'
 const WINSTEAMLIB = path.join('steamapps','libraryfolders.vdf')
@@ -30,6 +31,10 @@ function saveConfig(config){
   })
   getCSGOPath(function(pth){
     fs.writeFile(path.join(pth, GSIFILENAME), cfg)
+    if(os.platform() === 'win32'){
+      console.log(path.resolve(pth, '..', '..', 'csgo.exe'));
+      ipc.send('csgoicon', path.resolve(pth, '..', '..', 'csgo.exe'))
+    }
   })
 }
 

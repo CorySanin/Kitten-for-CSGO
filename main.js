@@ -57,16 +57,7 @@ app.on('ready', function(){
       click: function(){mainWindow.webContents.send('show-kitten-dir')}}))
   menu.append(new electron.MenuItem({ label: _('misc.devtools'),
       click: function(){mainWindow.webContents.openDevTools()}}))
-  app.setUserTasks([
-    {
-      type: 'task',
-      program: launchcsgo,
-      title: _('misc.launchgame'),
-      description: _('misc.launchgame'),
-      iconPath: path.join(__dirname,'icon','csgo.ico'),
-      iconIndex: 0
-    }
-  ])
+  app.setUserTasks([])
   createWindow()
 })
 
@@ -146,4 +137,17 @@ ipc.on('resize', function (event, args) {
 
 ipc.on('lang', function (event) {
   event.sender.send('lang', app.getLocale())
+})
+
+ipc.on('csgoicon', function (event, exepath){
+  app.setUserTasks([
+    {
+      type: 'task',
+      program: launchcsgo,
+      title: _('misc.launchgame'),
+      description: _('misc.launchgame'),
+      iconPath: exepath,
+      iconIndex: 0
+    }
+  ])
 })
