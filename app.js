@@ -450,6 +450,11 @@ function getHtEntities(){
   translatableText.lose = [htEntities.preview.lose]
   translatableText.stop = [htEntities.preview.stop]
   translatableText.dropkithere = [document.getElementById('overlayText')]
+  translatableText.mainmenutoggle = [document.getElementById('mainmenulabel')]
+  translatableText.startroundtoggle = [document.getElementById('startroundlabel')]
+  translatableText.bombplantedtoggle = [document.getElementById('bombplantedlabel')]
+  translatableText.mvptoggle = [document.getElementById('mvplabel')]
+  translatableText.discordrichpresencetoggle = [document.getElementById('discordrichpresencelabel')]
 
 
   setEventHandlers()
