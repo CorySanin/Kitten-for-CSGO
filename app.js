@@ -469,8 +469,6 @@ function init(){
 
   state.audioDir = localStorage.getItem('audioDir')
   server.changeCallback(doCommand)
-
-  tryLoadSettings()
 }
 
 window.onload = init
@@ -482,6 +480,7 @@ ipc.on('lang', function(event, lang){
       translatableText[key][i].innerHTML = _('ui.' + key)
     }
   }
+  tryLoadSettings()
 })
 
 ipc.on('show-kitten-dir', function(){
