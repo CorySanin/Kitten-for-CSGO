@@ -22,5 +22,7 @@ for(i in mainFiles){
     console.log(err)
   }
 }
+let data = fs.readFileSync('./package.json', 'utf8').replace('--publish=never', '--publish=always')
+fs.writeFileSync('./package.json', data)
 
 copyLocale('en-US', 'en')
