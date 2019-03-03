@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
@@ -8,13 +8,13 @@
     "start": "electron .",
     "test": "electron-builder --dir",
     "dist": "electron-builder",
-    "distAll": "electron-builder -mwl --x64 --publish=always",
-    "distWin": "electron-builder --win --x64 --ia32 --publish=always",
-    "distMac": "electron-builder --mac --publish=always",
-    "distDeb": "electron-builder --linux deb --publish=always",
-    "distApp": "electron-builder --linux AppImage --publish=always",
-    "distSnap": "electron-builder --linux snap --publish=always",
-    "debugPackage": "asar extract app.asar app-asar --publish=always"
+    "distAll": "electron-builder -mwl --x64 --publish=never",
+    "distWin": "electron-builder --win --x64 --ia32 --publish=never",
+    "distMac": "electron-builder --mac --publish=never",
+    "distDeb": "electron-builder --linux deb --publish=never",
+    "distApp": "electron-builder --linux AppImage --publish=never",
+    "distSnap": "electron-builder --linux snap --publish=never",
+    "debugPackage": "asar extract app.asar app-asar --publish=never"
   },
   "repository": "https://github.com/CorySanin/Kitten-for-CSGO",
   "homepage": "https://www.musickitten.net",
@@ -63,6 +63,27 @@
         "releaseType": "draft"
       }
     },
+    "dmg": {
+      "title": "Music Kitten",
+      "icon": "icon/dmgicon.icns",
+      "background": "icon/background.tiff",
+      "iconSize": "112",
+      "contents": [
+        {
+          "x": 190,
+          "y": 465,
+          "type": "link",
+          "path": "/Applications",
+          "name": " "
+        },
+        {
+          "x": 190,
+          "y": 100,
+          "type": "file",
+          "path": ""
+        }
+      ]
+    },
     "win": {
       "icon": "icon/icon.ico",
       "target": "nsis",
@@ -72,7 +93,13 @@
       }
     },
     "nsis": {
-      "oneClick": false
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": false,
+      "allowElevation": false,
+      "installerSidebar": "icon/installersidebar.bmp",
+      "createDesktopShortcut": false,
+      "menuCategory": "WORM\\Kitten",
+      "shortcutName": "Music Kitten"
     },
     "linux": {
       "synopsis": "Use custom CS:GO music kits",
@@ -82,31 +109,5 @@
         "releaseType": "draft"
       }
     }
-  },
-  "dmg": {
-    "title": "Music Kitten",
-    "icon": "icon/dmgicon.icns",
-    "contents": [
-      {
-        "x": 375,
-        "y": 225,
-        "type": "link",
-        "path": "/Applications"
-      },
-      {
-        "x": 150,
-        "y": 225,
-        "type": "file",
-        "path": ""
-      }
-    ]
-  },
-  "nsis": {
-    "oneClick": false,
-    "perMachine": true,
-    "allowElevation": true,
-    "createDesktopShortcut": false,
-    "menuCategory": "WORM\\Kitten",
-    "shortcutName": "Music Kitten"
   }
 }

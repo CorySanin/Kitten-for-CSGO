@@ -450,6 +450,11 @@ function getHtEntities(){
   translatableText.lose = [htEntities.preview.lose]
   translatableText.stop = [htEntities.preview.stop]
   translatableText.dropkithere = [document.getElementById('overlayText')]
+  translatableText.mainmenutoggle = [document.getElementById('mainmenulabel')]
+  translatableText.startroundtoggle = [document.getElementById('startroundlabel')]
+  translatableText.bombplantedtoggle = [document.getElementById('bombplantedlabel')]
+  translatableText.mvptoggle = [document.getElementById('mvplabel')]
+  translatableText.discordrichpresencetoggle = [document.getElementById('discordrichpresencelabel')]
 
 
   setEventHandlers()
@@ -464,8 +469,6 @@ function init(){
 
   state.audioDir = localStorage.getItem('audioDir')
   server.changeCallback(doCommand)
-
-  tryLoadSettings()
 }
 
 window.onload = init
@@ -477,6 +480,7 @@ ipc.on('lang', function(event, lang){
       translatableText[key][i].innerHTML = _('ui.' + key)
     }
   }
+  tryLoadSettings()
 })
 
 ipc.on('show-kitten-dir', function(){
