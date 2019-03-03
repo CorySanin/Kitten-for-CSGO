@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const v = require('./package').version
-const rep = '[$'+'VERSION'+'$]'
+const rep = /\[\$VERSION\$\]/gi
 const mainFiles = ['./app.js','./main.js']
 
 function copyLocale(source, dest){
@@ -22,7 +22,7 @@ for(i in mainFiles){
     console.log(err)
   }
 }
-let data = fs.readFileSync('./package.json', 'utf8').replace('--publish=never', '--publish=always')
+let data = fs.readFileSync('./package.json', 'utf8').replace(/--publish=never/g, '--publish=always')
 fs.writeFileSync('./package.json', data)
 
 copyLocale('en-US', 'en')
