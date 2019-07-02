@@ -31,25 +31,25 @@
   },
   "license": "GPL-3.0",
   "dependencies": {
-    "discord-rpc": "3.0.1",
-    "electron-updater": "4.0.6",
-    "fs-extra": "7.0.1",
+    "discord-rpc": "3.0.2",
+    "electron-updater": "4.0.14",
+    "fs-extra": "8.1.0",
     "request": "2.88.0",
-    "http-shutdown": "1.2.0",
+    "http-shutdown": "1.2.1",
     "@node-steam/vdf": "2.0.1",
     "winreg": "1.2.4",
     "download": "7.1.0",
     "decompress": "4.2.0",
-    "i18next": "15.0.6",
-    "i18next-sync-fs-backend": "1.1.0",
-    "howler": "2.1.1"
+    "i18next": "17.0.6",
+    "i18next-sync-fs-backend": "1.1.1",
+    "howler": "2.1.2"
   },
   "optionalDependencies": {
     "register-scheme": "0.0.2"
   },
   "devDependencies": {
     "electron": "3.0.3",
-    "electron-builder": "~>20.39.0"
+    "electron-builder": "~>20.44.4"
   },
   "build": {
     "appId": "net.musickitten.app",
