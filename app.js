@@ -4,6 +4,7 @@ const i18n = require('./locales/index.js')
 const saveConfig = require('./gamestateIntegration.js').saveConfig
 const ipc = require('electron').ipcRenderer
 const shell = require('electron').shell
+const remote = require('electron').remote
 const fs = require('fs-extra')
 const download = require('download')
 const decompress = require('decompress')
@@ -217,6 +218,18 @@ function setEventHandlers(){
 
   htEntities.addKitsOverlay.ondrop = (ev) => {
     dropHandler(ev)
+  }
+
+  if(os.platform() === 'win32'){
+    let window = remote.getCurrentWindow()
+    let titlebar = document.getElementById('titlebar')
+    titlebar.style.display = 'block'
+    document.getElementById('minButton').onclick = (ev) => {
+      window.minimize()
+    }
+    document.getElementById('closeButton').onclick = (ev) => {
+      window.close()
+    }
   }
 }
 
