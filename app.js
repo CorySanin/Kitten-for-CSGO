@@ -220,16 +220,19 @@ function setEventHandlers(){
     dropHandler(ev)
   }
 
-  if(os.platform() === 'win32'){
-    let window = remote.getCurrentWindow()
-    let titlebar = document.getElementById('titlebar')
-    titlebar.style.display = 'block'
-    document.getElementById('minButton').onclick = (ev) => {
-      window.minimize()
+  if(os.platform() === 'win32' || os.platform() == 'darwin'){
+    document.getElementById('titlebar').style.display = 'block'
+    if(os.platform() === 'win32'){
+      document.getElementById('windowControls').style.display = 'block'
+      let window = remote.getCurrentWindow()
+      document.getElementById('minButton').onclick = (ev) => {
+        window.minimize()
+      }
+      document.getElementById('closeButton').onclick = (ev) => {
+        window.close()
+      }
     }
-    document.getElementById('closeButton').onclick = (ev) => {
-      window.close()
-    }
+    
   }
 }
 

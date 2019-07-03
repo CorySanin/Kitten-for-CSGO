@@ -140,9 +140,10 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   background-color:#111;
   color:#EEEEEE;
 }
-#titlebar div{
+#titlebar div, #titlebar span{
   padding:0;
   text-align:center;
+  user-select:none;
 }
 #titlebar #dragRegion{
   position:relative;
@@ -151,6 +152,7 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   padding-top:1px;
 }
 #titlebar #windowControls{
+  display:none;
   position:absolute;
   right:0;
   top:0;
@@ -159,7 +161,6 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   display:inline-block;
   width:46px;
   height:30px;
-  user-select:none;
   -webkit-app-region:no-drag;
 }
 #titlebar #windowControls .tbButton:hover{
