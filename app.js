@@ -227,7 +227,7 @@ function setEventHandlers(){
     dropHandler(ev)
   }
 
-  if(os.platform() === 'win32' || os.platform() == 'darwin'){
+  if(os.platform() === 'win32' || os.platform() === 'darwin'){
     document.getElementById('titlebar').style.display = 'block'
     if(os.platform() === 'win32'){
       document.getElementById('windowControls').style.display = 'block'
@@ -240,6 +240,9 @@ function setEventHandlers(){
         window.close()
       }
     }
+  }
+  else{
+    htEntities.body.style.border = 'none'
   }
   adjustHeight()
 }
