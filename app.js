@@ -4,6 +4,7 @@ const i18n = require('./locales/index.js')
 const saveConfig = require('./gamestateIntegration.js').saveConfig
 const ipc = require('electron').ipcRenderer
 const shell = require('electron').shell
+const remote = require('electron').remote
 const fs = require('fs-extra')
 const download = require('download')
 const decompress = require('decompress')
@@ -36,13 +37,13 @@ function toggleExpanded(){
     ipc.send('resize', {
       width:380
     })
-    htEntities.body.classList.remove('expanded')
+    htEntities.content.classList.remove('expanded')
   }
   else{
     ipc.send('resize', {
-      width:760
+      width:762
     })
-    htEntities.body.classList.add('expanded')
+    htEntities.content.classList.add('expanded')
   }
   expanded = !expanded
 }
@@ -175,6 +176,12 @@ function overlayDown(e){
   htEntities.addKitsOverlay.style.display = 'none'
 }
 
+function adjustHeight(){
+  ipc.send('resize', {
+    height: htEntities.content.clientHeight
+  })
+}
+
 function setEventHandlers(){
   let toggles = document.getElementsByClassName('settingstoggle')
   for(let i = 0; i < toggles.length; i++){
@@ -188,6 +195,7 @@ function setEventHandlers(){
   htEntities.muteBtn.onclick = toggleMute
   htEntities.previewBtn.onclick = togglePreview
   htEntities.settingsBtn.onclick = toggleSettingsPane
+  htEntities.content.onresize = adjustHeight
 
   //preview elements
   htEntities.preview.menu.onclick = htEntities.preview.freezetime.onclick =
@@ -218,6 +226,25 @@ function setEventHandlers(){
   htEntities.addKitsOverlay.ondrop = (ev) => {
     dropHandler(ev)
   }
+
+  if(os.platform() === 'win32' || os.platform() === 'darwin'){
+    document.getElementById('titlebar').style.display = 'block'
+    if(os.platform() === 'win32'){
+      document.getElementById('windowControls').style.display = 'block'
+      document.getElementById('windowIcon').style.display = 'block'
+      let window = remote.getCurrentWindow()
+      document.getElementById('minButton').onclick = (ev) => {
+        window.minimize()
+      }
+      document.getElementById('closeButton').onclick = (ev) => {
+        window.close()
+      }
+    }
+  }
+  else{
+    htEntities.body.style.border = 'none'
+  }
+  adjustHeight()
 }
 
 function doCommand(obj){
@@ -392,6 +419,7 @@ function tryLoadSettings(){
 
 function getHtEntities(){
   htEntities.body = document.getElementsByTagName('body')[0]
+  htEntities.content = document.getElementById('content')
   htEntities.kitSelect = document.getElementById('kit')
   htEntities.volumeSlider = document.getElementById('volSlider')
   htEntities.portNum = document.getElementById('portNum')

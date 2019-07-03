@@ -10,55 +10,71 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
   </head>
   <body>
-    <div id="loading">
-      <img src="assets/loader.svg" alt="Loading..."/>
-    </div>
-    <div id="main">
-      <h1 id="h1" class="center top-margin">Music Kitten</h1>
-      <div class="relative">
-        <img id="coverPic" width="150px" height="150px" />
-        <button id="muteBtn">mute</button>
+    <div id="content">
+      <div id="loading">
+        <img src="assets/loader.svg" alt="Loading..."/>
       </div>
-      <div class="grid">
-        <label for="volSlider" id="volumeLabel">volume</label>
-        <input type="range" id="volSlider" min="0" max="1" step=".01" value=".5"/>
-        <label for="portNum" id="portLabel">port</label><input id="portNum" type="number" value="8793"/>
-        <label for="kit" id="kitLabel">musickit</label><select id="kit"></select>
+      <header id="titlebar">
+        <div id="dragRegion">
+            <img id="windowIcon" src="icon/kitten.svg" />
+            <span id="windowTitle">Music Kitten</span>
+            <div id="windowControls">
+              <div class="tbButton" id="minButton">
+                <span>─</span>
+              </div>
+              <div class="tbButton" id="closeButton">
+                <span>✕</span>
+              </div>
+            </div>
+        </div>
+      </header>
+      <div id="main">
+        <h1 id="h1" class="center top-margin">Music Kitten</h1>
+        <div class="relative">
+          <img id="coverPic" width="150px" height="150px" />
+          <button id="muteBtn">mute</button>
+        </div>
+        <div class="grid">
+          <label for="volSlider" id="volumeLabel">volume</label>
+          <input type="range" id="volSlider" min="0" max="1" step=".01" value=".5"/>
+          <label for="portNum" id="portLabel">port</label><input id="portNum" type="number" value="8793"/>
+          <label for="kit" id="kitLabel">musickit</label><select id="kit"></select>
+        </div>
+        <div class="fill">
+          <button id="previewKit">previewkit</button>
+          <button id="refreshKitsBtn">refreshkits</button>
+          <button id="dirChange">changedir</button>
+          <button id="settingsBtn">settings</button>
+          <button id="saveBtn">save</button>
+        </div>
       </div>
-      <div class="fill">
-        <button id="previewKit">previewkit</button>
-        <button id="refreshKitsBtn">refreshkits</button>
-        <button id="dirChange">changedir</button>
-        <button id="settingsBtn">settings</button>
-        <button id="saveBtn">save</button>
+      <div id="preview" class="none">
+        <div class="fill">
+          <button id="menuPreview" value="menu" title="mainmenu">menu</button>
+          <button id="freezetimePreview" value="freezetime" title="startround (random)">freezetime</button>
+          <button id="freezetime1Preview" value="1" title="startround_01">freezetime1</button>
+          <button id="freezetime2Preview" value="2" title="startround_02">freezetime2</button>
+          <button id="freezetime3Preview" value="3" title="startround_03">freezetime3</button>
+          <button id="livePreview" value="live" title="startaction">live</button>
+          <button id="plantedPreview" value="planted" title="bombplanted -> bombtenseccount">planted</button>
+          <button id="mvpPreview" value="mvp" title="roundmvpanthem_01">mvp</button>
+          <button id="winPreview" value="win" title="wonround">win</button>
+          <button id="losePreview" value="lose" title="lostround">lose</button>
+          <button id="stopPreview" value="😺">stop</button>
+        </div>
       </div>
-    </div>
-    <div id="preview" class="none">
-      <div class="fill">
-        <button id="menuPreview" value="menu" title="mainmenu">menu</button>
-        <button id="freezetimePreview" value="freezetime" title="startround (random)">freezetime</button>
-        <button id="freezetime1Preview" value="1" title="startround_01">freezetime1</button>
-        <button id="freezetime2Preview" value="2" title="startround_02">freezetime2</button>
-        <button id="freezetime3Preview" value="3" title="startround_03">freezetime3</button>
-        <button id="livePreview" value="live" title="startaction">live</button>
-        <button id="plantedPreview" value="planted" title="bombplanted -> bombtenseccount">planted</button>
-        <button id="mvpPreview" value="mvp" title="roundmvpanthem_01">mvp</button>
-        <button id="winPreview" value="win" title="wonround">win</button>
-        <button id="losePreview" value="lose" title="lostround">lose</button>
-        <button id="stopPreview" value="😺">stop</button>
+      <div id="extrasettings" class="none">
+        <h1 id="settingsTitle">settings</h1>
+        <label><input class="settingstoggle" type="checkbox" value="mainmenu"/> <span id="mainmenulabel">mainmenutoggle</span></span></label><br/>
+        <label><input class="settingstoggle" type="checkbox" value="startround"/> <span id="startroundlabel">startroundtoggle</span></label><br/>
+        <label><input class="settingstoggle" type="checkbox" value="bombplanted"/> <span id="bombplantedlabel">bombplantedtoggle</span></label><br/>
+        <label><input class="settingstoggle" type="checkbox" value="mvp"/> <span id="mvplabel">mvptoggle</span></label><br/>
+        <label><input class="settingstoggle" type="checkbox" value="discordrichpresence" id="discordrichpresence"/> <span id="discordrichpresencelabel">discordrichpresencetoggle</span></label>
       </div>
-    </div>
-    <div id="extrasettings" class="none">
-      <h1 id="settingsTitle">settings</h1>
-      <label><input class="settingstoggle" type="checkbox" value="mainmenu"/> <span id="mainmenulabel">mainmenutoggle</span></span></label><br/>
-      <label><input class="settingstoggle" type="checkbox" value="startround"/> <span id="startroundlabel">startroundtoggle</span></label><br/>
-      <label><input class="settingstoggle" type="checkbox" value="bombplanted"/> <span id="bombplantedlabel">bombplantedtoggle</span></label><br/>
-      <label><input class="settingstoggle" type="checkbox" value="mvp"/> <span id="mvplabel">mvptoggle</span></label><br/>
-      <label><input class="settingstoggle" type="checkbox" value="discordrichpresence" id="discordrichpresence"/> <span id="discordrichpresencelabel">discordrichpresencetoggle</span></label>
-    </div>
-    <div id="dragDropOverlay" class="none">
-      <div id="overlayText" class="center">
-        dropkithere
+      <div id="dragDropOverlay" class="none">
+        <div id="overlayText" class="center">
+          dropkithere
+        </div>
       </div>
     </div>
   </body>

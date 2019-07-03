@@ -1,11 +1,14 @@
 html, body{
-    font-family:sans-serif;
-    box-sizing:border-box;
-    background-color:#212121;
-    color:#fff;
-    height:100%;
-    margin:0px;
-    overflow:hidden;
+  font-family:sans-serif;
+  box-sizing:border-box;
+  background-color:#212121;
+  color:#fff;
+  height:100%;
+  margin:0px;
+  overflow:hidden;
+}
+body{
+  border:2px solid #111;
 }
 *, *:before, *:after {
   box-sizing:inherit;
@@ -28,6 +31,7 @@ button, .button{
   padding:0 .25em;
   text-decoration:none;
   cursor:pointer;
+  user-select:none;
 }
 button:hover, .button:hover{
   background-color:rgba(255,255,255,1);
@@ -60,7 +64,7 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   margin:4px;
 }
 .grid > .textareaContainer{
-  width: auto;
+  width:auto;
   overflow:hidden;
 }
 .grid > .textareaContainer > textarea{
@@ -80,7 +84,7 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
 .expanded > div{
   max-width:calc(50% - 3px);
   display:inline-block;
-  vertical-align:text-top;
+  vertical-align:top;
 }
 #coverPic{
   margin-top:4px;
@@ -94,6 +98,9 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
 .loading #loading{
   display:block;
 }
+#content{
+  padding:0;
+}
 #loading{
   z-index:100;
   background-color:rgba(25,25,25,.75);
@@ -102,7 +109,7 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
 #loading img{
   width:5em;
   height:5em;
-  margin: auto;
+  margin:auto;
 }
 #loading,#loading img{
   position:absolute;
@@ -119,8 +126,8 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   right:0;
   max-width:initial;
   z-index:100;
-  padding: 2em;
-  background-color: rgba(0,0,0,.80);
+  padding:2em;
+  background-color:rgba(0,0,0,.80);
 }
 #dragDropOverlay #overlayText{
   font-size:18pt;
@@ -129,4 +136,50 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   border-radius:1em;
   border:5px solid #fff;
   pointer-events:none;
+}
+#titlebar{
+  display:none;
+  height:32px;
+  line-height:32px;
+  background-color:#111;
+  color:#EEEEEE;
+}
+#titlebar div, #titlebar span{
+  padding:0;
+  text-align:center;
+  user-select:none;
+}
+#titlebar #dragRegion{
+  position:relative;
+  height:32px;
+  -webkit-app-region:drag;
+  padding-top:1px;
+}
+#titlebar img{
+  position:absolute;
+  display:none;
+  left:4px;
+  top:4px;
+  bottom:0;
+  height:22px;
+  width:22px;
+}
+#titlebar #windowControls{
+  display:none;
+  position:absolute;
+  right:0;
+  top:0;
+}
+#titlebar #windowControls .tbButton{
+  display:inline-block;
+  width:46px;
+  height:30px;
+  -webkit-app-region:no-drag;
+}
+#titlebar #windowControls .tbButton:hover{
+  background-color:rgba(255,255,255,0.2);
+  color:#fff;
+}
+#titlebar #windowControls #closeButton:hover{
+  background: #E81123;
 }
