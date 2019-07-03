@@ -31,6 +31,7 @@ button, .button{
   padding:0 .25em;
   text-decoration:none;
   cursor:pointer;
+  user-select:none;
 }
 button:hover, .button:hover{
   background-color:rgba(255,255,255,1);
@@ -83,7 +84,7 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
 .expanded > div{
   max-width:calc(50% - 3px);
   display:inline-block;
-  vertical-align:text-top;
+  vertical-align:top;
 }
 #coverPic{
   margin-top:4px;
@@ -96,6 +97,9 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
 }
 .loading #loading{
   display:block;
+}
+#content{
+  padding:0;
 }
 #loading{
   z-index:100;
@@ -150,6 +154,15 @@ button[disabled][disabled], .button.disabled.disabled.disabled, button[disabled]
   height:32px;
   -webkit-app-region:drag;
   padding-top:1px;
+}
+#titlebar img{
+  position:absolute;
+  display:none;
+  left:4px;
+  top:4px;
+  bottom:0;
+  height:22px;
+  width:22px;
 }
 #titlebar #windowControls{
   display:none;

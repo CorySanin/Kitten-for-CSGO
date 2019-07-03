@@ -37,13 +37,13 @@ function toggleExpanded(){
     ipc.send('resize', {
       width:380
     })
-    htEntities.body.classList.remove('expanded')
+    htEntities.content.classList.remove('expanded')
   }
   else{
     ipc.send('resize', {
-      width:760
+      width:762
     })
-    htEntities.body.classList.add('expanded')
+    htEntities.content.classList.add('expanded')
   }
   expanded = !expanded
 }
@@ -176,6 +176,12 @@ function overlayDown(e){
   htEntities.addKitsOverlay.style.display = 'none'
 }
 
+function adjustHeight(){
+  ipc.send('resize', {
+    height: htEntities.content.clientHeight
+  })
+}
+
 function setEventHandlers(){
   let toggles = document.getElementsByClassName('settingstoggle')
   for(let i = 0; i < toggles.length; i++){
@@ -189,6 +195,7 @@ function setEventHandlers(){
   htEntities.muteBtn.onclick = toggleMute
   htEntities.previewBtn.onclick = togglePreview
   htEntities.settingsBtn.onclick = toggleSettingsPane
+  htEntities.content.onresize = adjustHeight
 
   //preview elements
   htEntities.preview.menu.onclick = htEntities.preview.freezetime.onclick =
@@ -224,6 +231,7 @@ function setEventHandlers(){
     document.getElementById('titlebar').style.display = 'block'
     if(os.platform() === 'win32'){
       document.getElementById('windowControls').style.display = 'block'
+      document.getElementById('windowIcon').style.display = 'block'
       let window = remote.getCurrentWindow()
       document.getElementById('minButton').onclick = (ev) => {
         window.minimize()
@@ -232,8 +240,8 @@ function setEventHandlers(){
         window.close()
       }
     }
-    
   }
+  adjustHeight()
 }
 
 function doCommand(obj){
@@ -408,6 +416,7 @@ function tryLoadSettings(){
 
 function getHtEntities(){
   htEntities.body = document.getElementsByTagName('body')[0]
+  htEntities.content = document.getElementById('content')
   htEntities.kitSelect = document.getElementById('kit')
   htEntities.volumeSlider = document.getElementById('volSlider')
   htEntities.portNum = document.getElementById('portNum')
