@@ -6,7 +6,9 @@ const BrowserWindow = electron.BrowserWindow // Module to create native browser 
 const path = require('path')
 const url = require('url')
 const os = require('os')
+const request = require('request')
 const i18n = require('./locales/index.js')
+const { JSDOM } = require("jsdom")
 
 const menu = new electron.Menu()
 const launchcsgo = 'steam://rungameid/730'
@@ -155,4 +157,14 @@ ipc.on('csgoicon', function (event, exepath){
       }
     ])
   }
+})
+
+ipc.on('inviteUrl', function (event, steamid){
+  request('https://steamcommunity.com/profiles/' + steamid, function(err, resp, body){
+    if (!err && resp.statusCode === 200) {
+      let dom = new JSDOM(body, { runScripts: "outside-only" })
+      let joinBtn = dom.window.document.querySelector('.profile_in_game_joingame a');
+      event.sender.send('inviteUrl', (joinBtn !== null)?joinBtn.href:'')
+    }
+  })
 })

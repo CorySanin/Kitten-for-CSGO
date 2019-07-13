@@ -6,6 +6,7 @@ const request = require('request')
 const httpshutdown = require('http-shutdown')
 const drp = require('./richpresence.js')
 const richpresence = drp.update
+const ipc = require('electron').ipcRenderer
 
 const COMMANDS = {
   'MENU':'menu',
@@ -50,7 +51,13 @@ request(
     }
   }
 )
-
+const MENURPC = {
+  state: 'Menu',
+  largeImageKey: 'csgo',
+  largeImageText: 'Counter-Strike: Global Offensive',
+  smallImageKey: 'kitten',
+  smallImageText: 'musickitten.net'
+}
 
 let server = false
 let steamid = null
@@ -232,13 +239,13 @@ function handleResponse(body){
     } else if (parsed.player.hasOwnProperty('activity') && parsed.player.activity === 'menu') {
       console.log('sending a menu')
       callback({type:'command', content:COMMANDS.MENU})
-      richpresence({
-        state: 'Menu',
-        largeImageKey: 'csgo',
-        largeImageText: 'Counter-Strike: Global Offensive',
-        smallImageKey: 'kitten',
-        smallImageText: 'musickitten.net'
-      }, false)
+
+      if(steamid !== null){
+        ipc.send('inviteUrl', steamid)
+      }
+      else{
+        richpresence(MENURPC, false)
+      }
     }
   }
 }
@@ -295,6 +302,18 @@ function getUrl(){
 function getAuth(){
   return AUTH
 }
+
+ipc.on('inviteUrl', function(event, partyId){
+  richpresence(MENURPC, false)
+  if(partyId.includes('joinlobby')){
+    richpresence({
+      partyId: btoa(partyId),
+      partySize: 1,
+      partyMax: 5,
+      joinSecret: partyId
+    }, true)
+  }
+})
 
 exports.start = startServer
 exports.stop = stopServer
