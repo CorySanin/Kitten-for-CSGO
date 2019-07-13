@@ -2,7 +2,7 @@
 https://discordapp.com/developers/docs/rich-presence/how-to#updating-presence-update-presence-payload-fields
 https://github.com/discordjs/RPC/blob/master/example/main.js
 */
-
+const { shell } = require('electron')
 const DiscordRPC = require('discord-rpc')
 const clientId = '508480505583370272'
 
@@ -37,6 +37,10 @@ function setActivity(){
 }
 
 rpc.on('ready', () => {
+  rpc.subscribe('GAME_JOIN', function(payload){
+    shell.openExternal(payload.secret)
+  })
+
   setActivity()
 
   // activity can only be set every 15 seconds
