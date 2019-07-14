@@ -16,13 +16,11 @@ function setDiscordToggle(toggle){
 }
 
 function updateInfo(data, appyToExisting){
-  if(appyToExisting){
-    for(let key in data){
-      state[key] = data[key]
-    }
+  if(!appyToExisting){
+    state = {}
   }
-  else{
-    state = data
+  for(let key in data){
+    state[key] = data[key]
   }
 }
 
@@ -38,7 +36,7 @@ function setActivity(){
 
 rpc.on('ready', () => {
   rpc.subscribe('GAME_JOIN', function(payload){
-    shell.openExternal(payload.secret)
+    shell.openExternal('steam://joinlobby/730/' + payload.secret)
   })
 
   setActivity()

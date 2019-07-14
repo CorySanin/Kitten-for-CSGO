@@ -304,14 +304,19 @@ function getAuth(){
 }
 
 ipc.on('inviteUrl', function(event, partyId){
-  richpresence(MENURPC, false)
-  if(partyId.includes('joinlobby')){
-    richpresence({
-      partyId: btoa(partyId),
-      partySize: 1,
-      partyMax: 5,
-      joinSecret: partyId
-    }, true)
+  let includesLobbyId = partyId.includes('joinlobby')
+  richpresence(MENURPC, includesLobbyId)
+  if(includesLobbyId){
+    let split = partyId.split('/')
+    if(split.length >= 6){
+      let lobbyId = split[4]
+      richpresence({
+        partyId: btoa(lobbyId),
+        partySize: 1,
+        partyMax: 5,
+        joinSecret: [lobbyId, split[5]].join('/')
+      }, true)
+    }
   }
 })
 
