@@ -28,7 +28,8 @@ const GAMEMODES = {
   'gungametrbomb': 'Demolition',
   'gungameprogressive': 'Arms Race',
   'deathmatch': 'Deathmatch',
-  'survival': 'Danger Zone'
+  'survival': 'Danger Zone',
+  'coopmission': 'Co-op Mission'
 }
 
 let MAPS = {
@@ -176,12 +177,15 @@ function handleResponse(body){
             smallImageText: teamname.toUpperCase() + ' Team'
           })
 
-          if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch' || parsed.map.mode === 'survival'){
+          if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch' || parsed.map.mode === 'survival' || parsed.map.mode === 'coopmission'){
             let rpData = {}
             rpData['state'] = teamname.toUpperCase() + ' ' + parsed.player.match_stats.kills + ' kills'
             if(parsed.map.mode === 'survival'){
               rpData['smallImageKey'] = 'battleroyale'
               rpData['smallImageText'] = resolveName(parsed.map.mode, GAMEMODES)
+            }
+            else if(parsed.map.mode === 'coopmission' && !(parsed.map.name in MAPS)){
+              rpData['largeImageKey'] = 'operation'
             }
             richpresence(rpData, true)
           }
