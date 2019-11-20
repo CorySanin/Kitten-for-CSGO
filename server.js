@@ -336,4 +336,7 @@ exports.getAuth = getAuth
 exports.running = function(){
   return running
 }
+exports.getId = function(){
+  return steamid;
+}
 exports.richpresence = drp

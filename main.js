@@ -52,14 +52,16 @@ function createWindow () {
 app.on('ready', function(){
   autoUpdater.checkForUpdatesAndNotify()
   _ = i18n.translate(app.getLocale())
-  menu.append(new electron.MenuItem({ label: 'Kitten [$VERSION$]',
-      enabled: false}))
-  menu.append(new electron.MenuItem({ label: _('misc.launchgame'),
-      click: function(){electron.shell.openExternal(launchcsgo)}}))
   menu.append(new electron.MenuItem({ label: _('misc.openkittendir'),
       click: function(){mainWindow.webContents.send('show-kitten-dir')}}))
+  menu.append(new electron.MenuItem({ label: _('misc.csgostats'),
+      click: function(){mainWindow.webContents.send('open-csgostats')}}))
+  menu.append(new electron.MenuItem({ label: _('misc.launchgame'),
+      click: function(){electron.shell.openExternal(launchcsgo)}}))
   menu.append(new electron.MenuItem({ label: _('misc.devtools'),
       click: function(){mainWindow.webContents.openDevTools()}}))
+  menu.append(new electron.MenuItem({ label: 'Kitten [$VERSION$]',
+      enabled: false}))
   if(os.platform() === 'win32'){
     app.setUserTasks([]) //why does it need to be initialized first???
   }
