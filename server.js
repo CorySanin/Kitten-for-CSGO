@@ -35,7 +35,8 @@ const GAMEMODES = {
 let MAPS = {
   'de_stmarc': 'St. Marc',
   'de_cbble': 'Cobblestone',
-  'de_dust2': 'Dust II'
+  'de_dust2': 'Dust II',
+  'dz_junglety': 'Jungle'
 }
 request(
   {
