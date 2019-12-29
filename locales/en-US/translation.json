@@ -42,6 +42,7 @@
   "misc":{
     "launchgame": "Launch CS:GO",
     "openkittendir": "Open Kitten Folder",
-    "devtools": "Developer Tools"
+    "devtools": "Developer Tools",
+    "csgostats": "Current Game on CS:GO Stats"
   }
 }

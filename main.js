@@ -18,12 +18,14 @@ const launchcsgo = 'steam://rungameid/730'
 let mainWindow
 let _
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({backgroundColor: '#212121',
-  width: 380, height: 575, resizable: false, maximizable: false, fullscreenable:false,
-  frame: os.platform() !== 'win32', titleBarStyle: 'hiddenInset',
-  icon:path.join(__dirname,'icon',(os.platform() == 'win32')?'icon.ico':'icon_512.png')})
+  mainWindow = new BrowserWindow({
+    backgroundColor: '#212121',
+    width: 380, height: 575, resizable: false, maximizable: false, fullscreenable: false,
+    frame: os.platform() !== 'win32', titleBarStyle: 'hiddenInset',
+    icon: path.join(__dirname, 'icon', (os.platform() == 'win32') ? 'icon.ico' : 'icon_512.png')
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -49,18 +51,32 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', function(){
+app.on('ready', function () {
   autoUpdater.checkForUpdatesAndNotify()
   _ = i18n.translate(app.getLocale())
-  menu.append(new electron.MenuItem({ label: 'Kitten [$VERSION$]',
-      enabled: false}))
-  menu.append(new electron.MenuItem({ label: _('misc.launchgame'),
-      click: function(){electron.shell.openExternal(launchcsgo)}}))
-  menu.append(new electron.MenuItem({ label: _('misc.openkittendir'),
-      click: function(){mainWindow.webContents.send('show-kitten-dir')}}))
-  menu.append(new electron.MenuItem({ label: _('misc.devtools'),
-      click: function(){mainWindow.webContents.openDevTools()}}))
-  if(os.platform() === 'win32'){
+  menu.append(new electron.MenuItem({
+    label: _('misc.openkittendir'),
+    click: function () { mainWindow.webContents.send('show-kitten-dir') }
+  }))
+  menu.append(new electron.MenuItem({
+    label: _('misc.csgostats'),
+    click: function () { mainWindow.webContents.send('open-csgostats') }
+  }))
+  if (!process.env.SNAP) {
+    menu.append(new electron.MenuItem({
+      label: _('misc.launchgame'),
+      click: function () { electron.shell.openExternal(launchcsgo) }
+    }))
+  }
+  menu.append(new electron.MenuItem({
+    label: _('misc.devtools'),
+    click: function () { mainWindow.webContents.openDevTools() }
+  }))
+  menu.append(new electron.MenuItem({
+    label: 'Kitten [$VERSION$]',
+    enabled: false
+  }))
+  if (os.platform() === 'win32') {
     app.setUserTasks([]) //why does it need to be initialized first???
   }
   createWindow()
@@ -94,7 +110,7 @@ ipc.on('show-context-menu', function (event) {
   menu.popup(win)
 })
 
-ipc.on('open-kitten-dir', function (event, callback){
+ipc.on('open-kitten-dir', function (event, callback) {
   electron.dialog.showOpenDialog({
     properties: ['openDirectory']
   }, function (files) {
@@ -115,7 +131,7 @@ ipc.on('dialog', function (event, message, title, response = false) {
     buttons: [_('dialog.ok')]
   }
   electron.dialog.showMessageBox(mainWindow, options, function (index) {
-    if(response){
+    if (response) {
       event.sender.send(response, index)
     }
   })
@@ -135,8 +151,8 @@ ipc.on('yes-no', function (event, message, title, response) {
 
 ipc.on('resize', function (event, args) {
   let dim = mainWindow.getSize()
-  let width = ('width' in args)?args.width:dim[0]
-  let height = ('height' in args)?args.height:dim[1]
+  let width = ('width' in args) ? args.width : dim[0]
+  let height = ('height' in args) ? args.height : dim[1]
   mainWindow.setSize(width, height, true)
 })
 
@@ -144,8 +160,8 @@ ipc.on('lang', function (event) {
   event.sender.send('lang', app.getLocale())
 })
 
-ipc.on('csgoicon', function (event, exepath){
-  if(os.platform() === 'win32'){
+ipc.on('csgoicon', function (event, exepath) {
+  if (os.platform() === 'win32') {
     app.setUserTasks([
       {
         type: 'task',
@@ -159,12 +175,12 @@ ipc.on('csgoicon', function (event, exepath){
   }
 })
 
-ipc.on('inviteUrl', function (event, steamid){
-  request('https://steamcommunity.com/profiles/' + steamid, function(err, resp, body){
+ipc.on('inviteUrl', function (event, steamid) {
+  request('https://steamcommunity.com/profiles/' + steamid, function (err, resp, body) {
     if (!err && resp.statusCode === 200) {
       let dom = new JSDOM(body, { runScripts: "outside-only" })
       let joinBtn = dom.window.document.querySelector('.profile_in_game_joingame a');
-      event.sender.send('inviteUrl', (joinBtn !== null)?joinBtn.href:'')
+      event.sender.send('inviteUrl', (joinBtn !== null) ? joinBtn.href : '')
     }
   })
 })

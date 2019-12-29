@@ -516,6 +516,17 @@ ipc.on('show-kitten-dir', function(){
     shell.openItem(state.audioDir)
   }
 })
+
+ipc.on('open-csgostats', function(){
+  let steamid = server.getId();
+  if(steamid){
+    shell.openExternal(`https://csgostats.gg/player/${steamid}#/live`)
+  }
+  else{
+    shell.openExternal('https://csgostats.gg')
+  }
+})
+
 ipc.on('welcome-message-done', newAudioDir)
 
 //executes when the selected directory dialog is completed

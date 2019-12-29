@@ -28,13 +28,15 @@ const GAMEMODES = {
   'gungametrbomb': 'Demolition',
   'gungameprogressive': 'Arms Race',
   'deathmatch': 'Deathmatch',
-  'survival': 'Danger Zone'
+  'survival': 'Danger Zone',
+  'coopmission': 'Co-op Mission'
 }
 
 let MAPS = {
   'de_stmarc': 'St. Marc',
   'de_cbble': 'Cobblestone',
-  'de_dust2': 'Dust II'
+  'de_dust2': 'Dust II',
+  'dz_junglety': 'Jungle'
 }
 request(
   {
@@ -176,12 +178,15 @@ function handleResponse(body){
             smallImageText: teamname.toUpperCase() + ' Team'
           })
 
-          if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch' || parsed.map.mode === 'survival'){
+          if(parsed.map.mode === 'gungameprogressive' || parsed.map.mode === 'deathmatch' || parsed.map.mode === 'survival' || parsed.map.mode === 'coopmission'){
             let rpData = {}
             rpData['state'] = teamname.toUpperCase() + ' ' + parsed.player.match_stats.kills + ' kills'
             if(parsed.map.mode === 'survival'){
               rpData['smallImageKey'] = 'battleroyale'
               rpData['smallImageText'] = resolveName(parsed.map.mode, GAMEMODES)
+            }
+            else if(parsed.map.mode === 'coopmission' && !(parsed.map.name in MAPS)){
+              rpData['largeImageKey'] = 'operation'
             }
             richpresence(rpData, true)
           }
@@ -331,5 +336,8 @@ exports.getUrl = getUrl
 exports.getAuth = getAuth
 exports.running = function(){
   return running
+}
+exports.getId = function(){
+  return steamid;
 }
 exports.richpresence = drp
