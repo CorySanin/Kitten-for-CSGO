@@ -1,6 +1,6 @@
 {
   "name": "music-kitten",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Use your own soundtrack in Counter-Strike: Global Offensive",
   "main": "main.js",
   "scripts": {
@@ -111,7 +111,8 @@
       }
     },
     "snap": {
-      "summary": "Use custom CS:GO music kits"
+      "summary": "Use custom CS:GO music kits",
+      "confinement": "classic"
     }
   }
 }

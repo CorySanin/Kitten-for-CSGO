@@ -62,12 +62,10 @@ app.on('ready', function () {
     label: _('misc.csgostats'),
     click: function () { mainWindow.webContents.send('open-csgostats') }
   }))
-  if (!process.env.SNAP) {
-    menu.append(new electron.MenuItem({
-      label: _('misc.launchgame'),
-      click: function () { electron.shell.openExternal(launchcsgo) }
-    }))
-  }
+  menu.append(new electron.MenuItem({
+    label: _('misc.launchgame'),
+    click: function () { electron.shell.openExternal(launchcsgo) }
+  }))
   menu.append(new electron.MenuItem({
     label: _('misc.devtools'),
     click: function () { mainWindow.webContents.openDevTools() }
