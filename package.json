@@ -100,7 +100,8 @@
       "installerSidebar": "icon/installersidebar.bmp",
       "createDesktopShortcut": false,
       "menuCategory": "WORM\\Kitten",
-      "shortcutName": "Music Kitten"
+      "shortcutName": "Music Kitten",
+      "license": "LICENSE"
     },
     "linux": {
       "synopsis": "Use custom CS:GO music kits",
@@ -113,6 +114,9 @@
     "snap": {
       "summary": "Use custom CS:GO music kits",
       "confinement": "classic"
+    },
+    "appImage": {
+      "license": "LICENSE"
     }
   }
 }
