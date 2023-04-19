@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "electron": "3.0.3",
-    "electron-builder": "21.2.0"
+    "electron-builder": "23.6.0"
   },
   "build": {
     "appId": "net.musickitten.app",
