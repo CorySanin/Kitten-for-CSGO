@@ -32,7 +32,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "discord-rpc": "3.1.0",
-    "jsdom": "15.2.1",
+    "jsdom": "16.6.0",
     "electron-updater": "4.2.0",
     "fs-extra": "8.1.0",
     "request": "2.88.0",
