@@ -35,7 +35,7 @@
     "jsdom": "15.2.1",
     "electron-updater": "4.2.0",
     "fs-extra": "8.1.0",
-    "request": "2.88.0",
+    "request": "2.88.2",
     "http-shutdown": "1.2.1",
     "@node-steam/vdf": "2.1.0",
     "winreg": "1.2.4",
